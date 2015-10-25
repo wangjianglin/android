@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   	android:layout_width="match_parent"
+   	android:layout_height="match_parent"
+     	android:gravity="center_horizontal"
+     	android:orientation="vertical" 
+     	android:layout_weight="1">               	
+       <ImageView
+   		android:id="@id/tabbar_tiem_bar_img_id"
+		android:layout_width="wrap_content"
+		android:layout_height="32dp" 
+     	android:paddingTop="3dp"
+		android:clickable="false"/>
+       <TextView
+   		android:id="@id/tabbar_tiem_bar_text_id"
+   		android:layout_width="wrap_content"
+   		android:layout_height="wrap_content"
+   		android:clickable="false"
+     	android:paddingTop="2dp"
+   		android:textColor="#fff"
+   		android:textSize="14sp" /> 
+   		<View
+           android:layout_width="match_parent"
+   	android:layout_height="match_parent"
+   	android:id="@id/tabbar_tiem_bar_overlay_view_id"
+   	/>               
+ </LinearLayout>

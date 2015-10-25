@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="#0000"
+    android:layout_height="match_parent">
+    
+    
+    
+  <!--   <ScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    
+        > -->
+        
+        <ImageView 
+        android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_centerInParent="true"
+        android:id="@+id/imagepicker_item_image_id"
+        />
+    <!-- </ScrollView> -->
+    
+    <ImageView 
+        android:layout_width="60dp"
+    android:layout_height="60dp"
+    android:layout_centerInParent="true"
+        android:src="@drawable/lin_core_images_pick_edit_and_add"
+        android:id="@+id/images_pick_edit_and_add"
+        />
+    
+</RelativeLayout>

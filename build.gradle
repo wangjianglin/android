@@ -1,0 +1,161 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+
+apply plugin: 'maven'
+//apply plugin: 'com.android.library'
+
+
+def propFile = new File("set.properties");
+
+
+def prop=new Properties();
+if(propFile.exists()) {
+    prop.load(propFile.newReader("utf8"));
+}
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.2.3'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+
+
+//task uploadArchives{
+//println '==========='
+//}
+////
+//task sourcesJar(type: Jar) {
+//    println '==========='
+//}
+//
+//task javadoc(type: Javadoc) {
+//    println '==========='
+//}
+//
+//task javadocJar(type: Jar, dependsOn: javadoc) {
+//    println '==========='
+//}
+
+
+//android {
+//    compileSdkVersion 22
+//    buildToolsVersion "23.0.0 rc2"
+//
+//}
+
+
+allprojects {
+
+    apply plugin: 'maven'
+//    apply plugin: 'com.android.library'
+
+    configurations.all {
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    }
+    repositories {
+        maven {url prop.getProperty('maven.url')}
+//        jcenter()
+    }
+
+
+
+//    uploadArchives {
+//
+//    }
+}
+
+subprojects {
+
+//    android {
+//        compileSdkVersion 22
+//        buildToolsVersion "23.0.0 rc2"
+//
+//        compileSdkVersion 16
+//        buildToolsVersion "23.0.0 rc2"
+//
+////    defaultConfig {
+////        minSdkVersion 14
+////        targetSdkVersion 22
+////    }
+//
+//        defaultConfig {
+//            minSdkVersion 14
+//            targetSdkVersion 22
+//            versionCode 1
+//            versionName "0.0.1-SNAPSHOT"
+//        }
+//
+//        sourceSets{
+//            main {
+////            manifest.srcFile 'AndroidManifest.xml'
+//                java.srcDirs = ['src']
+//                resources.srcDirs = ['src']
+//                aidl.srcDirs = ['src']
+//                renderscript.srcDirs = ['src']
+//                res.srcDirs = ['res']
+//                assets.srcDirs = ['assets']
+//            }
+//        }
+//    }
+
+
+    uploadArchives {
+//        println 'project.name:'+project.name
+        configuration = configurations.archives
+        repositories.mavenDeployer {
+//            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+//            repository(url: prop.getProperty('snapshots.repo')) {//仓库地址
+//                authentication(userName: prop.getProperty('maven.username'),//用户名
+//                        password: prop.getProperty('maven.password'))//密码
+//            }
+            snapshotRepository(url: prop.getProperty('snapshots.repo')) {//仓库地址
+                authentication(userName: prop.getProperty('maven.username'),//用户名
+                        password: prop.getProperty('maven.password'))//密码
+            }
+
+            pom.project {
+//                name 'juude-library'
+                name project.name
+                packaging 'aar'
+                description 'none'
+                url prop.getProperty('snapshots.repo')//仓库地址
+                groupId "lin"
+//                artifactId rootProject.name //LibA
+                artifactId project.name //LibA
+//                version android.defaultConfig.versionName
+//                version android.defaultConfig.versionName
+                version "0.0.1-SNAPSHOT"
+            }
+        }
+    }
+//
+//    task sourcesJar(type: Jar) {
+//        println 'project.name:'+project.name
+//
+//        println 'android.sourceSets.main.java.srcDirs:'+project.android
+//        from android.sourceSets.main.java.srcDirs
+//        classifier = 'sources'
+//    }
+//
+//    task javadoc(type: Javadoc) {
+////        source = android.sourceSets.main.java.srcDirs
+////        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//    }
+//
+//    task javadocJar(type: Jar, dependsOn: javadoc) {
+//        classifier = 'javadoc'
+//        from javadoc.destinationDir
+//    }
+//
+//    artifacts {
+//        archives javadocJar
+//        archives sourcesJar
+//    }
+}

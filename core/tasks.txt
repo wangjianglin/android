@@ -1,0 +1,7 @@
+
+注解支持多个id，如@Click(value={1,2})
+
+TabBar 上设置
+        lin:tab_text_color="#eee"
+        lin:tab_text_activate_color="#00f"
+    不生效

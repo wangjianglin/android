@@ -1,0 +1,68 @@
+<!-- <?xml version="1.0" encoding="UTF-8"?>
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android"> 
+
+	<solid android:color="#00000000" />
+
+	<stroke android:width="1dp" android:color="#dadada" />
+	<stroke android:width="1dp" android:color="#f00" />
+
+	<padding android:left="-1dp" android:top="1dp" android:right="-1dp" android:bottom="-10dp" />
+
+</shape> -->
+  
+<!-- 底部圆角 白色背景 灰色边框 长方体 -->    
+<!-- <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item>
+        <shape android:shape="rectangle" >
+            <stroke
+                android:width="1dp"
+                android:color="#00f" />
+        </shape>
+    </item>
+
+    <item
+        android:left="2dp"
+        android:right="2dp"
+        android:top="2dp">
+        在实际使用中我发现1dp达不到显示效果，而2dp正好可以显示边框
+
+        <shape android:shape="line" >
+            <solid android:color="#0ff" />
+        </shape>
+    </item>
+</layer-list> -->
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:top="5dp">
+<shape android:shape="line">
+     <!-- 显示一条虚线，破折线的宽度为dashWith，破折线之间的空隙的宽度为dashGap，当dashGap=0dp时，为实线 -->
+   <stroke android:width="1dp" android:color="#00f"    
+             android:dashWidth="2dp" android:dashGap="0dp" />   
+             <!-- 虚线的高度 --> 
+     <size android:height="1dp" />    
+     
+</shape>
+
+</item>
+ <item>
+    <rotate
+        android:fromDegrees="0"
+        android:toDegrees="0"
+        android:pivotX="0%" >
+        <shape 
+            android:shape="line"
+            android:top="1dip" >
+            <stroke
+                android:width="1dip"  android:color="#0f0" 
+                 />
+        </shape>
+    </rotate>
+</item>
+
+ <item>
+     
+     <clip />
+ </item>
+
+</layer-list>

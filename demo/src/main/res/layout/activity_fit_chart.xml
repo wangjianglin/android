@@ -1,0 +1,33 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="lin.test.FitChartActivity">
+
+
+    <!--<FrameLayout-->
+        <!--android:layout_width="300dp"-->
+        <!--android:layout_height="300dp"-->
+        <!--android:layout_centerInParent="true">-->
+
+        <!--<lin.core.fitChart.FitChart-->
+            <!--android:id="@+id/fitChart"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent" >-->
+
+            <!--</lin.core.fitChart.FitChart>-->
+
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:text="正在下载..."/>-->
+    <!--</FrameLayout>-->
+
+    <lin.core.ImagePicker
+        android:layout_width="300dp"
+        android:layout_height="400dp"
+        android:id="@+id/imagePickerId"></lin.core.ImagePicker>
+
+</RelativeLayout>

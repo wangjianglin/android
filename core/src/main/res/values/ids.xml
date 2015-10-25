@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <!-- 导航相关id 开始 -->
+    <item type="id" name="nav_title_view" />
+    <item type="id" name="nav_title" />
+    <item type="id" name="nav_right_buttons" />
+    <item type="id" name="nav_left_buttons" />
+    <item type="id" name="navigation_main_root_view" />
+    
+    <!-- 导航相关id 结束 -->
+    
+    
+    <!-- TabBar 相关id 开始 -->
+    <item type="id" name="tabbar_bar_layout" />
+    <item type="id" name="tabbar_content" />
+    <item type="id" name="tabbar_main_bottom" />
+    <item type="id" name="tabbar_tiem_bar_img_id" />
+    <item type="id" name="tabbar_tiem_bar_text_id" />
+    <item type="id" name="tabbar_tiem_bar_overlay_view_id" />
+    
+    <!-- TabBar 相关id 结束 -->
+</resources>

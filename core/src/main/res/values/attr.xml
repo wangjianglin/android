@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+   <declare-styleable name="lin">
+
+
+        <attr name="view_theme" format="reference"/>
+        
+        <attr name="tab_icon" format="reference"/>
+        <attr name="tab_activate_icon" format="reference"/>
+        <attr name="tab_background" format="reference|color"/>
+        <attr name="tab_text_color" format="reference|color"/>
+        <attr name="tab_text_activate_color" format="reference|color"/>
+        <attr name="tab_activate_background" format="reference|color"/>
+        <attr name="tab_name" format="reference|string"/>
+        <!-- <attr name="tab_theme" format="reference|integer"/> -->
+        <attr name="tab_item_theme" format="reference"/>
+        <attr name="tab_overlay" format="reference|color"/>
+        
+        <attr name="nav_title" format="reference|string"/>
+        <attr name="nav_title_color" format="reference|color"/>
+        <attr name="nav_tag" format="string"/>
+        <attr name="nav_show_title" format="reference|boolean"/>
+        <attr name="nav_background" format="reference|color"/>
+        <!-- <attr name="nav_background_color" format="reference|color"/> -->
+        <!-- <attr name="nav_theme" format="reference|integer"/> -->
+        
+        
+        <attr name="form_row_text" format="string|reference"/>
+        <attr name="form_row_title" format="reference|string"/>
+        <attr name="form_row_accessory" format="boolean"/>
+        
+        
+        
+        <attr name="segmenteds" format="reference"/>
+        <attr name="images_picker_edit" format="boolean"/>
+    </declare-styleable>
+
+
+     <declare-styleable name="FitChart">
+          <attr name="strokeSize" format="dimension|reference" />
+          <attr name="valueStrokeColor" format="color|reference" />
+          <attr name="backStrokeColor" format="color|reference" />
+          <attr name="animationMode">
+               <enum name="linear" value="0" />
+               <enum name="overdraw" value="1" />
+          </attr>
+     </declare-styleable>
+</resources>

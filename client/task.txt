@@ -1,0 +1,1 @@
+用HttpURLConnection实现HTTP通信
