@@ -122,6 +122,11 @@
             android:label="@string/title_activity_controls"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+        <activity
+            android:name=".GroupListActivity"
+            android:label="@string/title_activity_group_list"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
     </application>
 
 </manifest>

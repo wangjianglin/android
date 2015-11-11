@@ -77,6 +77,15 @@ public class MainActivity extends ActionBarActivity {
                 MainActivity.this.startActivity(intent);
             }
         });
+
+        Button groupListButton = (Button) this.findViewById(R.id.groupListId);
+        groupListButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,GroupListActivity.class);
+                MainActivity.this.startActivity(intent);
+            }
+        });
     }
 
     @Override

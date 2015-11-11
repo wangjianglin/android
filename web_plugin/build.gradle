@@ -28,6 +28,10 @@ dependencies {
 //    testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:22+'
 
+//    compile project(':util')
+//    compile project(':client')
+//    compile project(':core')
+
     compile 'lin:util:0.0.1-SNAPSHOT'
     compile 'lin:client:0.0.1-SNAPSHOT'
     compile 'lin:core:0.0.1-SNAPSHOT'

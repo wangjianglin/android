@@ -44,4 +44,11 @@
         android:text="controls"
         android:id="@+id/controlsId"/>
 
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="group list"
+        android:id="@+id/groupListId"/>
+
 </LinearLayout>

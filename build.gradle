@@ -5,12 +5,12 @@ apply plugin: 'maven'
 //apply plugin: 'com.android.library'
 
 
-def propFile = new File("set.properties");
-
 
 def prop=new Properties();
-if(propFile.exists()) {
-    prop.load(propFile.newReader("utf8"));
+if(new File("set.properties").exists()) {
+    prop.load(new File("set.properties").newReader("utf8"));
+}else if(new File("../set.properties").exists()){
+    prop.load(new File("../set.properties").newReader("utf8"));
 }
 
 buildscript {
