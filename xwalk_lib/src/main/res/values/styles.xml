@@ -31,7 +31,7 @@
   <style name="SelectActionMenuWebSearch">
     
         
-    <item name="android:icon">@drawable/ic_menu_search_holo_light</item>
+    <item name="android:icon">@drawable/ic_search</item>
     
     
   </style>

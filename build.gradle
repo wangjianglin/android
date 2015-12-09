@@ -111,31 +111,30 @@ subprojects {
 
 
     uploadArchives {
-//        println 'project.name:'+project.name
-        configuration = configurations.archives
-        repositories.mavenDeployer {
+
+        doFirst {
+
+            //configuration = configurations.archives
+            repositories.mavenDeployer {
 //            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 //            repository(url: prop.getProperty('snapshots.repo')) {//仓库地址
 //                authentication(userName: prop.getProperty('maven.username'),//用户名
 //                        password: prop.getProperty('maven.password'))//密码
 //            }
-            snapshotRepository(url: prop.getProperty('snapshots.repo')) {//仓库地址
-                authentication(userName: prop.getProperty('maven.username'),//用户名
-                        password: prop.getProperty('maven.password'))//密码
-            }
+                snapshotRepository(url: prop.getProperty('snapshots.repo')) {//仓库地址
+                    authentication(userName: prop.getProperty('maven.username'),//用户名
+                            password: prop.getProperty('maven.password'))//密码
+                }
 
-            pom.project {
-//                name 'juude-library'
-                name project.name
-                packaging 'aar'
-                description 'none'
-                url prop.getProperty('snapshots.repo')//仓库地址
-                groupId "lin"
-//                artifactId rootProject.name //LibA
-                artifactId project.name //LibA
-//                version android.defaultConfig.versionName
-//                version android.defaultConfig.versionName
-                version "0.0.1-SNAPSHOT"
+                pom.project {
+                    name project.name
+                    packaging 'aar'
+                    description project.description
+                    url prop.getProperty('snapshots.repo')//仓库地址
+                    groupId project.group
+                    artifactId project.name //LibA
+                    version project.version
+                }
             }
         }
     }
