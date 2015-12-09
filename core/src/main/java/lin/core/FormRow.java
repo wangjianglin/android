@@ -40,7 +40,8 @@ public class FormRow extends ResourceView{
 	private TextView titleView;
 	
 	@Override
-	protected void onViewCreate() {
+//	protected void onViewCreate() {
+	protected void onInited(){
 		this.setMinimumHeight((int)(44 * this.getContext().getResources().getDisplayMetrics().density + 0.5));
 //		textView = (TextView) this.findViewById(R.id.form_row_text);
 //		titleView = (TextView) this.findViewById(R.id.form_row_title);

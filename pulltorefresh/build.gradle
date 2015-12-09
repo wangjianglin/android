@@ -1,5 +1,18 @@
 apply plugin: 'com.android.library'
 
+group = 'lin'
+version = '0.0.1-SNAPSHOT'
+
+def prop=new Properties();
+if(new File("set.properties").exists()) {
+    prop.load(new File("set.properties").newReader("utf8"));
+}else if(new File("../set.properties").exists()){
+    prop.load(new File("../set.properties").newReader("utf8"));
+}
+
+def mavenDependency = prop.getProperty('maven.dependency') == 'true'
+
+
 android {
     compileSdkVersion 22
     buildToolsVersion "23.0.1"

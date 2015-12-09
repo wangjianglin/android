@@ -86,6 +86,18 @@ public class MainActivity extends ActionBarActivity {
                 MainActivity.this.startActivity(intent);
             }
         });
+
+        Button webViewButton = (Button) this.findViewById(R.id.webViewId);
+        webViewButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,WebViewActivity.class);
+                MainActivity.this.startActivity(intent);
+            }
+        });
+
+
+
     }
 
     @Override

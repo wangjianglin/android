@@ -12,6 +12,8 @@ import android.net.http.SslError;
 import android.webkit.ValueCallback;
 import android.webkit.WebResourceResponse;
 
+import java.io.InputStream;
+
 public class LinXWalkClient extends XWalkResourceClient{
 
 	private Activity activity = null;
@@ -52,11 +54,15 @@ public class LinXWalkClient extends XWalkResourceClient{
 	@Override
 	public WebResourceResponse shouldInterceptLoadRequest(XWalkView view,
 			String url) {
-		WebResourceResponse response = WebCache.cache(this.activity, url);
-		if(response == null){
+		InputStream in = WebCache.cache(this.activity, url);
+		WebResourceResponse response = null;
+		if(in == null){
 			response = super.shouldInterceptLoadRequest(view, url);
+		}else{
+			response = new WebResourceResponse("images/*","utf-8",in);
 		}
 		return response;
+//		return super.shouldInterceptLoadRequest(view, url);
 	}
 
 	@SuppressLint("DefaultLocale")

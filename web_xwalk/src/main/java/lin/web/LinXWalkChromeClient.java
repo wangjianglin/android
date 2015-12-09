@@ -210,7 +210,7 @@ public class LinXWalkChromeClient extends XWalkUIClient{
 
 	@Override
 	public void onPageLoadStarted(XWalkView view, String url) {
-		System.out.println("url:"+url);
+//		System.out.println("url:"+url);
 		super.onPageLoadStarted(view, url);
 	}
 

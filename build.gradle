@@ -71,7 +71,11 @@ allprojects {
 //    }
 }
 
+def mavenDependency = prop.getProperty('maven.dependency') == 'true'
+
 subprojects {
+
+
 
 //    android {
 //        compileSdkVersion 22

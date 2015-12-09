@@ -17,6 +17,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets {
+        main {
+            assets {
+                srcDir '/work/code/buyers'
+            }
+//            assets.srcDirs = ['/lin/code/html5']
+        }
+    }
+
     lintOptions {
         abortOnError false
     }
@@ -36,8 +46,13 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     //    compile 'com.android.support:support-v4:22.2.0'
-    compile project(':core')
+    compile project(':util')
+    compile project(':pulltorefresh')
     compile project(':client')
+    compile project(':core')
+    compile project(':web_plugin')
+    compile project(':xwalk_lib')
+    compile project(':web_xwalk')
     compile 'com.android.support:appcompat-v7:22+'
     compile 'com.android.support:design:22.2.0'
 }

@@ -125,27 +125,27 @@ public class ResourceView extends ContentView implements ActivieyLifeCycle{
 //		}
 		this.initAnnotation();
 	}
-	private boolean isInitAnnotation;
-	private boolean isInited;
+//	private boolean isInitAnnotation;
+//	private boolean isInited;
 	private Handler mHandler = new Handler();
 	private void initAnnotation(){
-		if(isInitAnnotation){
-			return;
-		}
-		isInitAnnotation = true;
+//		if(isInitAnnotation){
+//			return;
+//		}
+//		isInitAnnotation = true;
 		initFieldAnnotation();
 		initMethodAnnotation();
-		this.onViewCreate();
-		mHandler.post(new Runnable(){
-
-			@Override
-			public void run() {
-				if(isAttached){
-					return;
-				}
-				isInited = true;
-				onInited();
-			}});
+//		this.onViewCreate();
+//		mHandler.post(new Runnable(){
+//
+//			@Override
+//			public void run() {
+//				if(isAttached){
+//					return;
+//				}
+//				isInited = true;
+//				onInited();
+//			}});
 	}
 	
 	private static Map<Class<?>,Object> processors = new HashMap<Class<?>,Object>();
@@ -244,7 +244,7 @@ public class ResourceView extends ContentView implements ActivieyLifeCycle{
 	
 
 	protected void onInited(){}
-	protected void onViewCreate(){}
+//	protected void onViewCreate(){}
 	
 	@Override
 	public void addView(View child) {
@@ -300,7 +300,10 @@ public class ResourceView extends ContentView implements ActivieyLifeCycle{
 	@Override
 	protected void onAttachedToWindow() {
 		log.info("attached window");
-		if(isInitAnnotation && isInited == false){
+		//if(isInitAnnotation && isInited == false){
+			//isInited = true;
+		if(!isAttached){
+//			this.init();
 			this.onInited();
 		}
 		
@@ -320,6 +323,7 @@ public class ResourceView extends ContentView implements ActivieyLifeCycle{
 		log.info("detached window");
 	}
 
+	@Deprecated
 	protected void onFirstAttachedToWindow(){}
 
 	@Override

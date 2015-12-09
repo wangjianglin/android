@@ -1,5 +1,18 @@
 apply plugin: 'com.android.library'
 
+group = 'lin'
+version = '0.0.1-SNAPSHOT'
+
+def prop=new Properties();
+if(new File("set.properties").exists()) {
+    prop.load(new File("set.properties").newReader("utf8"));
+}else if(new File("../set.properties").exists()){
+    prop.load(new File("../set.properties").newReader("utf8"));
+}
+
+def mavenDependency = prop.getProperty('maven.dependency') == 'true'
+
+
 android {
     compileSdkVersion 22
     buildToolsVersion "23.0.1"
@@ -34,16 +47,30 @@ android {
 //    }
 }
 
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22+'
+if(mavenDependency) {
+    dependencies {
+        compile fileTree(dir: 'libs', include: ['*.jar'])
+        compile 'com.android.support:appcompat-v7:22+'
+        //    compile 'com.android.support:support-v4:22.2.0'
+        //    compile project(':util')
+        //    compile project(':client')
+        //    compile project(':pulltorefresh')
+        compile 'lin:util:0.0.1-SNAPSHOT'
+        compile 'lin:client:0.0.1-SNAPSHOT'
+        compile 'lin:pulltorefresh:0.0.1-SNAPSHOT'
+    }
+}else{
+    dependencies {
+        compile fileTree(dir: 'libs', include: ['*.jar'])
+        compile 'com.android.support:appcompat-v7:22+'
 //    compile 'com.android.support:support-v4:22.2.0'
-//    compile project(':util')
-//    compile project(':client')
-//    compile project(':pulltorefresh')
-    compile 'lin:util:0.0.1-SNAPSHOT'
-    compile 'lin:client:0.0.1-SNAPSHOT'
-    compile 'lin:pulltorefresh:0.0.1-SNAPSHOT'
+    compile project(':util')
+    compile project(':client')
+    compile project(':pulltorefresh')
+//        compile 'lin:util:0.0.1-SNAPSHOT'
+//        compile 'lin:client:0.0.1-SNAPSHOT'
+//        compile 'lin:pulltorefresh:0.0.1-SNAPSHOT'
+    }
 }
 
 task sourcesJar(type: Jar) {

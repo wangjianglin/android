@@ -41,7 +41,8 @@ public class FormSection extends ResourceView{
 //	private View header;
 //	private View footer;
 	@Override
-	protected void onViewCreate() {
+//	protected void onViewCreate() {
+	protected void onInited(){
 //		containerView = (ViewGroup) this.findViewById(R.id.form_section_container);
 //		header = this.findViewById(R.id.form_section_header);
 //		footer = this.findViewById(R.id.form_section_footer);

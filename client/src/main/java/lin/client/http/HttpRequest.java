@@ -67,6 +67,9 @@ public class HttpRequest implements Aboutable{
 					try {
 						//HTTP请求
 						post = new HttpPost(HttpUtils.uri(impl,pack));
+						for (Map.Entry<String,String> item : impl.defaultHeaders.entrySet()){
+							post.addHeader(item.getKey(),item.getValue());
+						}
 						post.addHeader(Constants.HTTP_COMM_PROTOCOL, "");
 						if(impl.isDebug()){
 							post.addHeader(Constants.HTTP_COMM_PROTOCOL_DEBUG, "");

@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.os.Looper;
 import android.widget.Toast;
 
+import lin.core.log.Log;
+
 
 /**
  * UncaughtException处理类,当程序发生Uncaught异常的时候,有该类来接管程序,并记录发送错误报告
@@ -48,7 +50,13 @@ public class CrashHandler {
 
 			@Override
 			public void uncaughtException(Thread thread, Throwable ex) {
-				CrashHandler.this.uncaughtException(thread, ex);
+				try {
+					CrashHandler.this.uncaughtException(thread, ex);
+				}catch (Throwable e){
+					try {
+						Log.crash(printStackTrace(e));
+					}catch (Throwable e1){e1.printStackTrace();}
+				}
 			}});
 	}
 

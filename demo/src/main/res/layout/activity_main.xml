@@ -51,4 +51,11 @@
         android:text="group list"
         android:id="@+id/groupListId"/>
 
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="web view"
+        android:id="@+id/webViewId"/>
+
 </LinearLayout>

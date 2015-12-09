@@ -5,7 +5,9 @@ import java.lang.ref.SoftReference;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.client.CookieStore;
 import org.apache.http.impl.client.BasicCookieStore;
@@ -49,7 +51,17 @@ public class HttpCommunicateImpl{// implements HttpCommunicate{
 	
 //	public HttpCommunicateImpl(){
 //	}
-	
+
+
+	Map<String,String> defaultHeaders = new HashMap<String,String>();
+
+	public void addHeader(String name,String value){
+		defaultHeaders.put(name,value);
+	}
+
+	public void removeHeader(String name){
+		defaultHeaders.remove(name);
+	}
 	public String getName(){
 		return name;
 	}

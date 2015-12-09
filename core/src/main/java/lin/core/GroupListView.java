@@ -8,8 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -201,7 +203,44 @@ public class GroupListView extends XListView {
 
     public <SV,RV> void setGroupAdapter(GroupListViewAdapter<SV,RV> adapter){
         this.adapter = adapter;
+        //this.getRefreshableView().setOnItemSelectedListener();
     }
+
+    public void setOnItemSelectedListener(OnItemSelectedListener listener){
+        this.listener = listener;
+        if(listener != null){
+            this.getRefreshableView().setOnItemSelectedListener(listListener);
+        }else{
+            this.getRefreshableView().setOnItemSelectedListener(null);
+        }
+    }
+    private OnItemSelectedListener listener = null;
+    private ListView.OnItemSelectedListener listListener = new ListView.OnItemSelectedListener(){
+
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            if(listener == null || datasRow.get(position) < 0){
+                return;
+            }
+            listener.onItemSelected(parent,view,datasSection.get(position),datasRow.get(position),id);
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+            if(listener != null){
+                listener.onNothingSelected(parent);
+            }
+        }
+    };
+
+    public static interface OnItemSelectedListener{
+
+        void onItemSelected(AdapterView<?> parent, View view, int sectionIndex,int row, long id);
+        void onNothingSelected(AdapterView<?> parent);
+    }
+
+
+
 //
 //    public void setDatas(List<Category<SV,RV>> datas){
 //        this.datas = datas;
@@ -237,9 +276,7 @@ public class GroupListView extends XListView {
                 groupListView.mAdapter.notifyDataSetChanged();
             }
         }
-        public List<Category<SV,RV>> getDatas(){
-            return null;
-        }
+        public abstract List<Category<SV,RV>> getDatas();
 
         private View getDefaultView(String value, View convertView, ViewGroup parent,int height,int background){
             TextView textView = null;
