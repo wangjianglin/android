@@ -5,3 +5,6 @@ TabBar 上设置
         lin:tab_text_color="#eee"
         lin:tab_text_activate_color="#00f"
     不生效
+
+
+    UpdateService 下载 不采用 DownloadManager

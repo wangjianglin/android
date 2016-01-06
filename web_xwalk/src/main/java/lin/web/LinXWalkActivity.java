@@ -1,7 +1,7 @@
 package lin.web;
 
 import lin.web.plugin.Config;
-import lin.web.plugin.JavaScriptInterface;
+import lin.web.plugin.JavaScriptObject;
 
 import org.xwalk.core.JavascriptInterface;
 
@@ -24,11 +24,11 @@ public class LinXWalkActivity  extends Activity{
 	private LinXWalkView webView;
 	private LinXWalkChromeClient chromeClient;
 	
-	class XWalkJavaScriptInterface{
+	class XWalkJavaScriptObject{
 		
-		private JavaScriptInterface impl = null;
-		public XWalkJavaScriptInterface(Context context){
-			impl = new JavaScriptInterface(context);
+		private JavaScriptObject impl = null;
+		public XWalkJavaScriptObject(Context context){
+			impl = new JavaScriptObject(context);
 		}
 		@JavascriptInterface
 		public String exec(String args){
@@ -45,7 +45,7 @@ public class LinXWalkActivity  extends Activity{
 		chromeClient = new LinXWalkChromeClient(webView,this);
 		webView.setUIClient(chromeClient);
 		webView.setResourceClient(new LinXWalkClient(webView,this));
-		webView.addJavascriptInterface(new XWalkJavaScriptInterface(this), "AndroidInterface");
+		webView.addJavascriptInterface(new XWalkJavaScriptObject(this), "AndroidInterface");
 	
 //		webView.set
 //	WebSettings webSettins = webView.getSettings();

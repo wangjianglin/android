@@ -1,6 +1,7 @@
 package lin.test;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -9,7 +10,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.List;
+
+import lin.client.http.*;
+import lin.client.http.Error;
+import lin.core.UpdateManager;
 import lin.core.UpdateService;
+import lin.util.Procedure;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -19,7 +26,23 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        UpdateService.update(this, "https://www.feicuibaba.com/chuncui/chuncui.php?version=true&android=true", "https://www.feicuibaba.com/chuncui/ccn.apk", "ccn.apk");
+        final String url = "http://i.feicuibaba.com/test/test.txt.gzip";
+//        String url = "https://www.feicuibaba.com/proxy/proxy-channel2.apk.php?channel=own";
+        //HttpCommunicate.download("https://www.feicuibaba.com/proxy/proxy-channel.apk.php?channel=own", new ResultListener() {
+//        HttpCommunicate.download("http://i.feicuibaba.com/apk/buyers/0.3.3-alpha-2/buyers_alpha.apk", new ResultListener() {
+        HttpCommunicate.download(url, new ResultListener() {
+            @Override
+            public void result(Object obj, List<Error> warning) {
+                System.out.println("ok.");
+            }
+
+            @Override
+            public void fault(Error error) {
+                System.out.println("ok.");
+            }
+        });
+
+//        UpdateService.update(this, "https://www.feicuibaba.com/proxy/proxy.php?version=new&android=true&channel=own", "https://www.feicuibaba.com/proxy/proxy-channel2.apk.php?channel=own", "buyers.apk");
         Button button = (Button) this.findViewById(R.id.pullToRefreshTestId);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +116,25 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this,WebViewActivity.class);
                 MainActivity.this.startActivity(intent);
+            }
+        });
+
+
+        Button httpButton = (Button) this.findViewById(R.id.httpId);
+        httpButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                HttpCommunicate.download(url, new ResultListener() {
+                    @Override
+                    public void result(Object obj, List<Error> warning) {
+                        System.out.println("ok.");
+                    }
+
+                    @Override
+                    public void fault(Error error) {
+                        System.out.println("ok.");
+                    }
+                });
             }
         });
 

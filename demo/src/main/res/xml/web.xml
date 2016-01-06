@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="lin.buyers" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    
+    <name>ses</name>
+    <description>
+        A sample Apache Cordova application that responds to the deviceready event.
+    </description>
+    <author email="dev@cordova.apache.org" href="http://cordova.io">
+        Apache Cordova Team
+    </author>
+    <access origin="*" />
+    <content src="index.html" />
+    <!-- <preference name="AllowInlineMediaPlayback" value="false" />
+    <preference name="AutoHideSplashScreen" value="true" />
+    <preference name="BackupWebStorage" value="cloud" />
+    <preference name="DisallowOverscroll" value="false" />
+    <preference name="EnableViewportScale" value="false" />
+    <preference name="FadeSplashScreen" value="true" />
+    <preference name="FadeSplashScreenDuration" value=".25" />
+    <preference name="KeyboardDisplayRequiresUserAction" value="true" />
+    <preference name="MediaPlaybackRequiresUserAction" value="false" />
+    <preference name="ShowSplashScreenSpinner" value="true" />
+    <preference name="SuppressesIncrementalRendering" value="false" />
+    <preference name="TopActivityIndicator" value="gray" />
+    <preference name="GapBetweenPages" value="0" />
+    <preference name="PageLength" value="0" />
+    <preference name="PaginationBreakingMode" value="page" />
+    <preference name="PaginationMode" value="unpaginated" /> -->
+    
+    <plugin name="app">
+        <param name="android-package" value="lin.web.plugin.LinAppPlugin" />
+    </plugin>
+    <plugin name="device">
+        <param name="android-package" value="lin.web.plugin.LinDevicePlugin" />
+    </plugin>
+    <plugin name="weixin">
+        <param name="android-package" value="lin.buyers.plugin.LinWeixinPlugin" />
+    </plugin>
+    <plugin name="alipay">
+        <param name="android-package" value="lin.buyers.plugin.AlipayPlugin" />
+    </plugin>
+    <plugin name="wxpay">
+        <param name="android-package" value="lin.buyers.plugin.WXPayPlugin" />
+    </plugin>
+    <plugin name="video">
+        <param name="android-package" value="lin.web.plugin.VideoPlugin" />
+    </plugin>
+    <plugin name="weixinShareVideo">
+        <param name="android-package" value="lin.buyers.plugin.WeiXinVideoSharePlugin"/>
+    </plugin>
+    <!-- <plugin name="storage">
+        <param name="ios-package" value="LinStoragePlugin" />
+    </plugin> -->
+    
+<!--    <plugin name="NetworkStatus">-->
+<!--        <param name="ios-package" value="CDVConnection" />-->
+<!--    </plugin>-->
+<!--    <plugin name="Zip">-->
+<!--        <param name="ios-package" value="Zip" />-->
+<!--    </plugin>-->
+<!--    <plugin name="UnZipHelper">-->
+<!--        <param name="ios-package" value="ExtractZipFilePlugin" />-->
+<!--    </plugin>-->
+<!--    <plugin name="File">-->
+<!--        <param name="onload" value="true" />-->
+<!--        <param name="ios-package" value="CDVFile" />-->
+<!--    </plugin>-->
+<!--    <plugin name="FileTransfer">-->
+<!--        <param name="ios-package" value="CDVFileTransfer" />-->
+<!--    </plugin>-->
+<!--    <plugin name="PDF">-->
+<!--        <param name="ios-package" value="CDVPDFPlugin" />-->
+<!--    </plugin>-->
+<!--    <plugin name="App">-->
+<!--        <param name="ios-package" value="CDVAppPlugin" />-->
+<!--    </plugin>-->
+<!--    <plugin name="Device">-->
+<!--        <param name="ios-package" value="CDVDevice" />-->
+<!--    </plugin>-->
+<!--    -->
+<!--    <plugin name="Media">-->
+<!--        <param name="ios-package" value="CDVSound" />-->
+<!--    </plugin>-->
+<!--    -->
+<!--    <plugin name="FileDownload">-->
+<!--        <param name="ios-package" value="FileDownload" />-->
+<!--    </plugin>-->
+<!--    -->
+<!--    <plugin name="ChromeStorage">-->
+<!--        <param name="ios-package" value="ChromeStorage" />-->
+<!--    </plugin>-->
+</widget>

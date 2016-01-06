@@ -1,5 +1,8 @@
 apply plugin: 'com.android.library'
 
+
+//com.android.build.gradle.LibraryPlugin
+
 group = 'lin'
 version = '0.0.1-SNAPSHOT'
 
@@ -19,6 +22,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets{
+        main{
+            resources.srcDirs = ['src/main/resources','build/tmp/jarResources']
+        }
+    }
+
 //    sourceSets{
 //        main {
 //            Manifest.srcFile 'AndroidManifest.xml'
@@ -38,27 +48,46 @@ dependencies {
 //    compile 'com.android.support:support-v4:22.2.0'
 }
 
-task sourcesJar(type: Jar) {
-//    println 'project.name:'+project.name
-
-//    println 'android.sourceSets.main.java.srcDirs:'+project.android
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-//task javadoc(type: Javadoc) {
-//        source = android.sourceSets.main.java.srcDirs
-//        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//task sourcesJar(type: Jar) {
+////    println 'project.name:'+project.name
+//
+////    println 'android.sourceSets.main.java.srcDirs:'+project.android
+//    from android.sourceSets.main.java.srcDirs
+//    classifier = 'sources'
 //}
 //
-//task javadocJar(type: Jar, dependsOn: javadoc) {
-//    classifier = 'javadoc'
-//    from javadoc.destinationDir
+////task build2 {
+////    println('===')
+////}
+//
+////println build.getClass()
+////println build2.getClass()
+////build2.dependsOn build
+////task javadoc(type: Javadoc) {
+////        source = android.sourceSets.main.java.srcDirs
+////        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+////}
+////
+////task javadocJar(type: Jar, dependsOn: javadoc) {
+////    classifier = 'javadoc'
+////    from javadoc.destinationDir
+////}
+//
+//artifacts {
+////    archives javadocJar
+//    archives sourcesJar
 //}
 
-artifacts {
-//    archives javadocJar
-    archives sourcesJar
-}
+//build.dependsOn(deleteManifest)
+//build.dependsOn(overrideManifest)
 
-
+//build << {
+//    println '******************************************'
+//    //doFirst{
+//        println '============================='
+//        //overrideManifest();
+//        File src = file('build/tmp/jar/MANIFEST.MF')
+//        File dst = file('META-INF/MANIFEST.MF')
+//        org.apache.commons.io.FileUtils.copyFile(src, dst)
+////    }
+//}

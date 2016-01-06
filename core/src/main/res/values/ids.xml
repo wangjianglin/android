@@ -20,4 +20,7 @@
     <item type="id" name="tabbar_tiem_bar_overlay_view_id" />
     
     <!-- TabBar 相关id 结束 -->
+
+
+    <item type="drawable" name="ic_launcher" />
 </resources>

@@ -106,9 +106,9 @@ public class UpdateService  extends Service {
 			} catch (RemoteException e) {
 			}
 		}
-	};
-	
-    private void updateServiceImpl(){
+	}
+
+	private void updateServiceImpl(){
           
     	UpdateInfo updateInfo = UpdateManager.updateInfo(this.getApplicationContext(), versionUrl);
     	if(updateInfo == null){
@@ -119,7 +119,9 @@ public class UpdateService  extends Service {
 		procedureUri.flag = updateInfo.getFlag();
 		procedureUri.message = updateInfo.getMessage();
 
-		DownloadResult result = UpdateManager.downloadApk(this,apkDownloadUrl, apkName, updateInfo.getVersion(), procedureUri);
+		DownloadResult result = UpdateManager.downloadApk(this, apkDownloadUrl, apkName, updateInfo.getVersion(), procedureUri);
+//		DownloadResult result = UpdateManager.downloadApkWithDownloadManager(this,apkDownloadUrl, apkName, updateInfo.getVersion(), procedureUri);
+
     	
 		if(result == null){
 			return;
@@ -213,10 +215,10 @@ public class UpdateService  extends Service {
 				e.printStackTrace();
 			}
 		}
-	};
-		
-    
-    public static void update(Context context,String versionUrl,String apkDownloadUrl,String apkName){
+	}
+
+
+	public static void update(Context context,String versionUrl,String apkDownloadUrl,String apkName){
     	
     	
     	Message message = new Message();
@@ -241,7 +243,7 @@ public class UpdateService  extends Service {
      */  
     private static void installAPK(final Context context,final Uri apk,int flag,String message) {  
           
-    	if(builder != null){
+    	if(builder != null || apk == null){
     		return;
     	}
     	if(message == null || "".equals(message)){

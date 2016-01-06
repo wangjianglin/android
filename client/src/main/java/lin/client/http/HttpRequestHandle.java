@@ -12,7 +12,7 @@ import org.apache.http.message.AbstractHttpMessage;
  */
 public interface HttpRequestHandle {
 	
-	Map<String,Object> getParams(AbstractHttpMessage httpMessage,lin.client.http.HttpPackage pack);
+	Map<String,Object> getParams(AbstractHttpMessage httpMessage,HttpPackage pack);
 
-    void response(lin.client.http.HttpPackage pack, byte[] bytes, ResultListener listener);
+    void response(HttpPackage pack, byte[] bytes, ResultListener listener);
 }

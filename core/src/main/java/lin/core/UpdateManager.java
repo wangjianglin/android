@@ -2,7 +2,10 @@ package lin.core;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 
@@ -14,6 +17,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -144,20 +148,21 @@ public class UpdateManager {
         	Uri uri =  null;
             //判断是否下载完成的广播  
             if (intent.getAction().equals(  
-                    DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {  
-                  
-                //获取下载的文件id  
+                    DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
+
+				//获取下载的文件id
 //                long downId = intent.getLongExtra(  
 //                        DownloadManager.EXTRA_DOWNLOAD_ID, -1);  
 //                  System.out.println("ok.");
-            	uri = manager.getUriForDownloadedFile(downId);
-           	 }
-            if(callback != null){
-          		 callback.procedure(uri);
-            }else{
-          		callback.procedure(null);
-         	 }
-            context.unregisterReceiver(this);
+				uri = manager.getUriForDownloadedFile(downId);
+
+				if (callback != null) {
+					callback.procedure(uri);
+				} else {
+					callback.procedure(null);
+				}
+				context.unregisterReceiver(this);
+			}
 //                cM
 //                Message message = new Message();
 //                message.what = DOWNLOAD_COMPLETE;
@@ -185,8 +190,127 @@ public class UpdateManager {
 			return reference;
 		}
 	}
-	
+
+	private static boolean isComplate(Context context,String apkFilename){
+		boolean result = false;
+		try {
+			PackageManager pm = context.getPackageManager();
+//			Log.e("archiveFilePath", filePath);
+			PackageInfo info = pm.getPackageArchiveInfo(apkFilename,
+					PackageManager.GET_ACTIVITIES);
+			String packageName = null;
+			if (info != null) {
+				result = true;
+			}
+		} catch (Exception e) {
+			result = false;
+			//Log.e(TAG,*****  解析未安装的 apk 出现异常 *****+e.getMessage,e);
+		}
+		return result;
+	}
+
 	public static DownloadResult downloadApk(Context context,String apkDownloadUrl,String apkName,String version,Procedure<Uri> callback){
+
+		File file = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS + "/apks");
+
+		if (file == null) {
+			file = new File(context.getCacheDir() + "/" + Environment.DIRECTORY_DOWNLOADS + "/apks");
+		}
+		File apkFile = new File(file.getAbsoluteFile() + "/" + apkName + version);
+		if(apkFile.exists()){
+			if(isComplate(context,apkFile.getAbsolutePath())) {
+				if (callback != null) {
+					callback.procedure(Uri.fromFile(apkFile));
+				}
+				return null;
+			}
+			apkFile.delete();
+		}
+		file.deleteOnExit();
+		file.mkdirs();
+
+
+		try {
+			URL url = new URL(apkDownloadUrl);
+			// 创建连接
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setInstanceFollowRedirects(true);
+
+			conn.connect();
+
+			// 获取文件大小
+			int length = conn.getContentLength();
+			// 创建输入流
+			InputStream is = conn.getInputStream();
+
+//			File file = apkFile;
+//			// 判断文件目录是否存在
+//			if (!file.exists())
+//			{
+//				file.mkdir();
+//			}
+//			File apkFile = new File(mSavePath, apkFileName);
+			FileOutputStream fos = new FileOutputStream(apkFile);
+			//int count = 0;
+			// 缓存
+			byte buf[] = new byte[4096];
+			// 写入到文件中
+
+			int numread = 0;
+				//count += numread;
+				// 计算进度条位置
+				//progress = (int) (((float) count / length) * 100);
+				// 更新进度
+				//mHandler.sendEmptyMessage(DOWNLOAD);
+//				if (numread <= 0)
+//				{
+//					// 下载完成
+//					mHandler.sendEmptyMessage(DOWNLOAD_FINISH);
+//					break;
+//				}
+				// 写入文件
+			while ((numread = is.read(buf)) != -1) {
+				fos.write(buf, 0, numread);
+			}
+
+
+			fos.close();
+
+			if(isComplate(context,apkFile.getAbsolutePath())) {
+				callback.procedure(Uri.fromFile(apkFile));
+			}
+
+
+//			down.setDestinationUri(Uri.fromFile(apkFile));
+//
+//			// 将下载请求放入队列
+//			long reference = manager.enqueue(down);
+
+	//
+
+			//注册下载广播
+
+//			DownloadCompleteReceiver receiver = new DownloadCompleteReceiver(manager,reference,callback);
+//
+////			context.registerReceiver(receiver, new IntentFilter(
+////					DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+//	//        context.registerReceiver(receiver, null);
+//			DownloadResult result = new DownloadResult();
+//			result.context = context;
+//			result.broadcastReceiver = receiver;
+//			result.reference = reference;
+//			return result;
+
+		} catch (Throwable e) {
+//			e.printStackTrace();
+			try {
+				apkFile.delete();
+			}catch (Throwable e2) {}
+		}
+
+		return null;
+	}
+	public static DownloadResult downloadApkWithDownloadManager(Context context,String apkDownloadUrl,String apkName,String version,Procedure<Uri> callback){
 		
 		
 		 File file = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS + "/apks");

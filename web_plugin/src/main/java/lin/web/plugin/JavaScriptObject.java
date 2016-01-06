@@ -9,10 +9,10 @@ import android.content.Context;
 import android.provider.Settings;
 import lin.util.JsonUtil;
 
-public class JavaScriptInterface {
+public class JavaScriptObject {
 	private Context context;
 	
-	public JavaScriptInterface(Context context){
+	public JavaScriptObject(Context context){
 		this.context = context;
 	}
 	private Map<String,LinWebPlugin> objs = new HashMap<String,LinWebPlugin>();
@@ -43,7 +43,7 @@ public class JavaScriptInterface {
 			return plugin;
 	}
 	
-	public String actions(String action){
+	private String actions(String action){
 	    if ("platform".equals(action)) {
 	        return "android";
 	    }else if ("productName".equals(action)){

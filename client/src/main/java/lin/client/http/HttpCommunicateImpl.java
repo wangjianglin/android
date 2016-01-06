@@ -17,7 +17,7 @@ import org.apache.http.impl.client.HttpClients;
 import android.content.Context;
 import android.os.Handler;
 import lin.util.Action;
-import lin.util.thread.AutoResetEvent;
+//import lin.util.thread.AutoResetEvent;
 
 /**
  * 
@@ -207,7 +207,7 @@ private CloseableHttpClient http;// = HttpClients.custom().useSystemProperties()
 		this.fireRequestListener(pack);
 		
 		final HttpCommunicateResult httpHesult = new HttpCommunicateResult();
-		final AutoResetEvent set = new AutoResetEvent(false);
+//		final AutoResetEvent set = new AutoResetEvent(false);
 		HttpRequest request = new HttpRequest(this,pack, new ResultListener() {
 			
 			@Override
@@ -263,7 +263,7 @@ private CloseableHttpClient http;// = HttpClients.custom().useSystemProperties()
 			}
 		},httpHesult,http);
 		httpHesult.request = request;
-		httpHesult.set = set;
+//		httpHesult.set = set;
 		request.request();
 		return httpHesult;
 	}
@@ -278,10 +278,11 @@ private CloseableHttpClient http;// = HttpClients.custom().useSystemProperties()
 							try{
 								listener.result(obj, warning);
 							}finally{
-								httpResult.set.set();
-								if(obj instanceof File){
-									((File) obj).delete();
-								}
+//								httpResult.set.set();
+								httpResult.getAutoResetEvent().set();
+//								if(obj instanceof File){
+//									((File) obj).delete();
+//								}
 							}
 						}});
 					return false;
@@ -289,7 +290,8 @@ private CloseableHttpClient http;// = HttpClients.custom().useSystemProperties()
 					try{
 						listener.result(obj, warning);
 					}finally{
-						httpResult.set.set();
+//						httpResult.set.set();
+						httpResult.getAutoResetEvent().set();
 					}
 					return true;
 				}
@@ -311,14 +313,16 @@ private CloseableHttpClient http;// = HttpClients.custom().useSystemProperties()
 						try{
 							listener.fault(error);
 						}finally{
-							httpResult.set.set();
+							//httpResult.set.set();
+							httpResult.getAutoResetEvent().set();
 						}
 					}});
 			}else{
 				try{
 					listener.fault(error);
 				}finally{
-					httpResult.set.set();
+					//httpResult.set.set();
+					httpResult.getAutoResetEvent().set();
 				}
 			}
 		}
@@ -345,14 +349,18 @@ private CloseableHttpClient http;// = HttpClients.custom().useSystemProperties()
 
 	public HttpCommunicateResult download(String file, final ResultListener listener){
 
+		return  null;
+	}
+
+	public HttpCommunicateResult download(URL file,final ResultListener listener){
 		ProgressResultListener pListener = null;
 		if(listener instanceof ProgressResultListener) {
 			pListener = (ProgressResultListener) listener;
 		}
 
 		final HttpCommunicateResult httpHesult = new HttpCommunicateResult();
-		final AutoResetEvent set = new AutoResetEvent(false);
-		httpHesult.set = set;
+//		final AutoResetEvent set = new AutoResetEvent(false);
+//		httpHesult.set = set;
 		final ProgressResultListener finalPListener = pListener;
 		fireRequestListener(null);
 		DownloadFile downloadFile = new DownloadFile(new ProgressResultListener(){
@@ -365,13 +373,13 @@ private CloseableHttpClient http;// = HttpClients.custom().useSystemProperties()
 						httpHesult.setResult(true,obj);
 						isDeleteFile = fireResult(httpHesult,listener, obj, warning);
 					}
-//					}, new Action() {
-//
-//						@Override
-//						public void action() {
-//
-//							set.set();
-//						}
+				}, new Action() {
+
+					@Override
+					public void action() {
+
+						httpHesult.getAutoResetEvent().set();
+					}
 				},new Action(){
 
 					@Override
@@ -397,12 +405,12 @@ private CloseableHttpClient http;// = HttpClients.custom().useSystemProperties()
 						httpHesult.setResult(false,null);
 						fireFault(httpHesult, listener, error);
 					}
-//				}, new Action() {
-//
-//					@Override
-//					public void action() {
-//						set.set();
-//					}
+				}, new Action() {
+
+					@Override
+					public void action() {
+						httpHesult.getAutoResetEvent().set();
+					}
 				},new Action(){
 
 					@Override
@@ -422,14 +430,10 @@ private CloseableHttpClient http;// = HttpClients.custom().useSystemProperties()
 
 		httpHesult.request = downloadFile;
 		downloadFile.context = context;
-		downloadFile.http = this.http;
+//		downloadFile.http = this.http;
 		downloadFile.download(file);
 
 		return httpHesult;
-	}
-
-	public HttpCommunicateResult download(URL file, ResultListener listener){
-		return null;
 	}
 
 	private boolean mainThread = false;

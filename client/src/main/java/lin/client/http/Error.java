@@ -8,21 +8,34 @@ package lin.client.http;
  */
 public class Error {
 
-	//private long code;
 	/**
-	 * 产生错误的具体原因，程序层面的
+	 * 产生错误的具体原因，程序层面的，如：NullPointException
 	 */
-	private String cause;// { get; internal set; }
-	private long code;// { get; internal set; }
+	private String cause;
+
 	/**
-	 * 产生的错误消息，用于展示给用户的
+	 * 错误的唯一标识码，用于精确定位错误源
 	 */
-	private String message;// { get; internal set; }
-	private String stackTrace;// { get; internal set; }
+	private long code;
+	/**
+	 * 产生的错误消息，用于展示给用户的，如：密码错误
+	 */
+	private String message;
 
-	private Object data ;//{ get; set; }
+	/**
+	 * 用跟踪错误的堆栈信息
+	 */
+	private String stackTrace;
 
-	private int dataType;// { get; set; }//数据类型,0、正常，1、后台验证错误
+	/**
+	 * 错误发生时，伴随的与错误相关的数据
+	 */
+	private Object data;
+
+	/**
+	 * 错误类型,0、由后台业务逻辑错误产生，1、后台请求前置验证不通过产生的错误，2、HTTP请求由于网络方面的原因产生的错误
+	 */
+	private int type = 3;
     
 	public long getCode() {
 		return code;
@@ -64,12 +77,12 @@ public class Error {
 		this.data = data;
 	}
 
-	public int getDataType() {
-		return dataType;
+	public int getType() {
+		return type;
 	}
 
-	void setDataType(int dataType) {
-		this.dataType = dataType;
+	void setType(int type) {
+		this.type = type;
 	}
 	
 }

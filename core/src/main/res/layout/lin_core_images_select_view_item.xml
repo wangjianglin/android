@@ -9,8 +9,7 @@
     <ImageView
         android:id="@+id/photoalbum_item_image"
         android:layout_width="70dip"
-        android:layout_height="70dip"
-        android:src="@drawable/ic_launcher" />
+        android:layout_height="70dip" />
 
     <TextView
         android:id="@+id/photoalbum_item_name"

@@ -21,6 +21,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets{
+        main{
+            resources.srcDirs = ['src/main/resources','build/tmp/jarResources']
+        }
+    }
 }
 
 
@@ -33,25 +39,25 @@ dependencies {
 }
 
 
-task sourcesJar(type: Jar) {
-//    println 'project.name:'+project.name
-
-//    println 'android.sourceSets.main.java.srcDirs:'+project.android
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-//task javadoc(type: Javadoc) {
-//        source = android.sourceSets.main.java.srcDirs
-//        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//task sourcesJar(type: Jar) {
+////    println 'project.name:'+project.name
+//
+////    println 'android.sourceSets.main.java.srcDirs:'+project.android
+//    from android.sourceSets.main.java.srcDirs
+//    classifier = 'sources'
 //}
 //
-//task javadocJar(type: Jar, dependsOn: javadoc) {
-//    classifier = 'javadoc'
-//    from javadoc.destinationDir
+////task javadoc(type: Javadoc) {
+////        source = android.sourceSets.main.java.srcDirs
+////        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+////}
+////
+////task javadocJar(type: Jar, dependsOn: javadoc) {
+////    classifier = 'javadoc'
+////    from javadoc.destinationDir
+////}
+//
+//artifacts {
+////    archives javadocJar
+//    archives sourcesJar
 //}
-
-artifacts {
-//    archives javadocJar
-    archives sourcesJar
-}

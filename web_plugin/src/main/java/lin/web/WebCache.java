@@ -9,9 +9,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -27,10 +30,15 @@ import lin.util.thread.AutoResetEvent;
 
 public class WebCache {
 
+	private static final int HTTP_TIMEOUT = 8000;
 	@SuppressLint("DefaultLocale")
 	public static InputStream cache(Context context,String url){
+		if(url == null){
+			return null;
+		}
 		String lurl = url.toLowerCase();
-	    if (lurl.endsWith(".jpg") || lurl.endsWith(".gif") || lurl.endsWith(".png") || lurl.endsWith(".bmp")) {
+	    if ((lurl.startsWith("http://") || lurl.startsWith("https://"))
+				&& (lurl.endsWith(".jpg") || lurl.endsWith(".gif") || lurl.endsWith(".png") || lurl.endsWith(".bmp"))) {
 			return asynCacheFile(context, url);
 //			return cacheDataAsyn2(context, url);
 //	    	return cacheData(context,url);
@@ -285,7 +293,9 @@ public class WebCache {
 		String fileName = path.getAbsolutePath() + "/imagecache/" + fileNameMD5;
 
 		try {
-			writeFileToLocal(context, path, fileName, urlString);
+			if(!writeFileToLocal(context, path, fileName, urlString)){
+				return null;
+			}
 			return fileName;
 		}catch (Throwable e) {
 			try {
@@ -301,7 +311,9 @@ public class WebCache {
 
 			fileName = path.getAbsolutePath() + "/imagecache/" + fileNameMD5;
 
-			writeFileToLocal(context, path, fileName, urlString);
+			if(!writeFileToLocal(context, path, fileName, urlString)){
+				return null;
+			}
 
 			return fileName;
 		}catch (Throwable e){
@@ -312,7 +324,7 @@ public class WebCache {
 		return null;
 	}
 
-	private static void writeFileToLocal(Context context,File path,String fileName,String urlString)throws Throwable{
+	private static boolean writeFileToLocal(Context context,File path,String fileName,String urlString)throws Throwable{
 //		try {
 		File dir = new File(path + "/imagecache/");
 		if(!dir.exists()){
@@ -324,7 +336,7 @@ public class WebCache {
 //				}else{
 //
 //				}
-			return;
+			return false;
 		}
 		InputStream _in = null;
 		try{
@@ -338,10 +350,38 @@ public class WebCache {
 		}
 
 		if(_in != null){
-			return;
+			return true;
 		}
 		URL url = new URL(urlString);
-		_in = url.openStream();
+
+//		_in = url.openStream();
+
+//		HttpURLConnection.setFollowRedirects(true);
+		HttpURLConnection conn = null;
+
+		List<String> urls = null;
+
+		conn = (HttpURLConnection) url.openConnection();
+		conn.setInstanceFollowRedirects(true);
+		conn.setReadTimeout(HTTP_TIMEOUT);
+
+		int statusCode = conn.getResponseCode();
+		while (statusCode == HttpURLConnection.HTTP_MOVED_TEMP
+				|| statusCode == HttpURLConnection.HTTP_MOVED_PERM){
+			if(urls == null){
+				urls = new ArrayList<String>();
+			}
+			urls.add(url.toString());
+			url = new URL(conn.getHeaderField("Location"));
+			if(urls.contains(url.toString())){
+				return false;
+			}
+			conn = (HttpURLConnection) url.openConnection();
+			conn.setReadTimeout(HTTP_TIMEOUT);
+			conn.setInstanceFollowRedirects(true);
+			statusCode = conn.getResponseCode();
+		}
+		_in = conn.getInputStream();
 
 		FileOutputStream _out = new FileOutputStream(new File(fileName));
 
@@ -354,6 +394,7 @@ public class WebCache {
 		}
 
 		_out.close();
+		return true;
 	}
 
 
@@ -383,7 +424,7 @@ public class WebCache {
 				}
 			}
 			try{
-				Thread.sleep(10);
+				Thread.sleep(1000);
 			}catch (Throwable e){}
 		}
 	}

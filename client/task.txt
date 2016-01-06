@@ -1,1 +1,8 @@
 用HttpURLConnection实现HTTP通信
+
+
+DownlaodFile：
+1、SQLite记录下载文件相关的信息
+2、实现cache功能
+3、删除过期的文件
+4、对同一个url只能一个线程在下载

@@ -18,14 +18,12 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.2.3'
+        classpath 'com.android.tools.build:gradle:1.5.0'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
-
-
 
 //task uploadArchives{
 //println '==========='
@@ -71,11 +69,16 @@ allprojects {
 //    }
 }
 
-def mavenDependency = prop.getProperty('maven.dependency') == 'true'
+def dateStr = new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss.SSS').format(new Date());
+
 
 subprojects {
-
-
+    if(project.name == 'demo'){
+        apply plugin: 'com.android.application'
+    }else {
+        apply plugin: 'com.android.library'
+    }
+//    apply plugin: 'java'
 
 //    android {
 //        compileSdkVersion 22
@@ -110,6 +113,24 @@ subprojects {
 //    }
 
 
+
+//
+//    task deleteManifest(type: Delete) {
+//        //delete 'META-INF/MANIFEST.MF'
+//        println '&&&&&&&&&&&&&&&&&&&&===='
+//    }
+
+    // copy the manifest back into the project directory at the end
+//    task overrideManifest << {
+//        println "******************"
+////        File src = file('build/tmp/jar/MANIFEST.MF')
+////        File dst = file('META-INF/MANIFEST.MF')
+////        org.apache.commons.io.FileUtils.copyFile(src, dst)
+//    }
+
+
+//    overrideManifest.dependsOn(build)
+
     uploadArchives {
 
         doFirst {
@@ -134,9 +155,27 @@ subprojects {
                     groupId project.group
                     artifactId project.name //LibA
                     version project.version
+//                    manifest{
+//                        provider 'lin'
+//                    }
+//                    build{
+//
+//                    }
                 }
             }
         }
+    }
+
+//    jar {
+//        manifest {
+//            attributes 'Implementation-Title': 'title', 'Implementation-Version': dateStr
+//        }
+//    }
+
+
+
+    task generateManifest << {
+        println('---')
     }
 //
 //    task sourcesJar(type: Jar) {
@@ -161,4 +200,42 @@ subprojects {
 //        archives javadocJar
 //        archives sourcesJar
 //    }
+
+
+    new File(project.buildDir.absolutePath + '/tmp/jarResources/META-INF').mkdirs();
+    new File(project.buildDir.absolutePath + '/tmp/jarResources/META-INF/MANIFEST.MF').createNewFile();
+
+    java.io.PrintWriter fo = new java.io.PrintWriter(new OutputStreamWriter(new FileOutputStream(project.buildDir.absolutePath + '/tmp/jarResources/META-INF/MANIFEST.MF',false)));
+
+    fo.print('Manifest-Version: ')
+    fo.println(version)
+
+    fo.println('Provider: lin')
+    fo.println('Date: ' + dateStr)
+    fo.println('\n');
+    fo.close();
+
+    task sourcesJar(type: Jar) {
+//    println 'project.name:'+project.name
+
+//    println 'android.sourceSets.main.java.srcDirs:'+project.android
+        from android.sourceSets.main.java.srcDirs
+        classifier = 'sources'
+    }
+
+//task javadoc(type: Javadoc) {
+//        source = android.sourceSets.main.java.srcDirs
+//        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//}
+//
+//task javadocJar(type: Jar, dependsOn: javadoc) {
+//    classifier = 'javadoc'
+//    from javadoc.destinationDir
+//}
+
+    artifacts {
+//    archives javadocJar
+        archives sourcesJar
+    }
+
 }

@@ -27,7 +27,11 @@ public class HttpCommunicateResult {
 
     private Boolean _result = null;
 
-	public AutoResetEvent set;
+	private AutoResetEvent set = new AutoResetEvent(false);
+
+    AutoResetEvent getAutoResetEvent(){
+        return set;
+    }
 
     public void abort()
     {

@@ -21,6 +21,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets{
+        main{
+            resources.srcDirs = ['src/main/resources','build/tmp/jarResources']
+        }
+    }
+
 //    sourceSets{
 //        main {
 //            Manifest.srcFile 'AndroidManifest.xml'
@@ -70,36 +77,36 @@ dependencies {
 //    }
 //}
 
-task sourcesJar(type: Jar) {
-//    println 'project.name:'+project.name
-
-//    println 'android.sourceSets.main.java.srcDirs:'+project.android
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-//task javadoc(type: Javadoc) {
-
-//failOnError false
-//source = android.sourceSets.main.java.source
-//options {
-//    links "http://docs.oracle.com/javase/7/docs/api/"
-//    linksOffline "http://d.android.com/reference", "${android.sdkDirectory}/docs/reference"
-//}
-
-//https://github.com/SpecialCyCi/AndroidResideMenu/blob/master/maven_push.gradle
-
-
-//        source = android.sourceSets.main.java.srcDirs
-//        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//task sourcesJar(type: Jar) {
+////    println 'project.name:'+project.name
+//
+////    println 'android.sourceSets.main.java.srcDirs:'+project.android
+//    from android.sourceSets.main.java.srcDirs
+//    classifier = 'sources'
 //}
 //
-//task javadocJar(type: Jar, dependsOn: javadoc) {
-//    classifier = 'javadoc'
-//    from javadoc.destinationDir
+////task javadoc(type: Javadoc) {
+//
+////failOnError false
+////source = android.sourceSets.main.java.source
+////options {
+////    links "http://docs.oracle.com/javase/7/docs/api/"
+////    linksOffline "http://d.android.com/reference", "${android.sdkDirectory}/docs/reference"
+////}
+//
+////https://github.com/SpecialCyCi/AndroidResideMenu/blob/master/maven_push.gradle
+//
+//
+////        source = android.sourceSets.main.java.srcDirs
+////        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+////}
+////
+////task javadocJar(type: Jar, dependsOn: javadoc) {
+////    classifier = 'javadoc'
+////    from javadoc.destinationDir
+////}
+//
+//artifacts {
+////    archives javadocJar
+//    archives sourcesJar
 //}
-
-artifacts {
-//    archives javadocJar
-    archives sourcesJar
-}

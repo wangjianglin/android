@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.io.File;
 import java.lang.ref.SoftReference;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.http.client.CookieStore;
+
+import lin.util.thread.AutoResetEvent;
 
 /**
  * 
@@ -227,12 +230,26 @@ public class HttpCommunicate {
 
 	public static HttpCommunicateResult download(String file,
 			ResultListener listener) {
-		return global.download(file, listener);
+		HttpCommunicateResult result = null;
+		try {
+			result = global.download(new URL(file), listener);
+		} catch (MalformedURLException e) {
+
+			//AutoResetEvent set = new AutoResetEvent();
+			result = new HttpCommunicateResult();
+			//result.set = set;
+			if(listener != null){
+				listener.fault(new Error());
+			}
+			result.getAutoResetEvent().set();
+		}
+		return result;
 	}
 
 	public static HttpCommunicateResult download(URL file,
 			ResultListener listener) {
 		return global.download(file, listener);
+		//return HttpCommunicateImpl.downloadImpl(file,listener);
 	}
 
 	private static Context context;
