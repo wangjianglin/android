@@ -3,9 +3,6 @@ package lin.client.http;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.http.entity.mime.content.ContentBody;
-import org.apache.http.message.AbstractHttpMessage;
-
 /**
  * 
  * @author lin
@@ -15,8 +12,7 @@ import org.apache.http.message.AbstractHttpMessage;
 public abstract class AbstractHttpRequestHandle implements HttpRequestHandle{
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, Object> getParams(AbstractHttpMessage httpMessage,
-			HttpPackage pack) {
+	public Map<String, Object> getParams(HttpPackage pack,HttpMessage httpMessage) {
 
 		Map<String,Object> params = pack.getParams();
 		if(params == null){
@@ -27,7 +23,7 @@ public abstract class AbstractHttpRequestHandle implements HttpRequestHandle{
 		Object item = null;
 		for(String key:params.keySet()){
 			item = params.get(key);
-			if(item instanceof ContentBody){
+			if(item instanceof FileParamInfo){
 				contentParams.put(key, item);
 			}else{
 				textParams.put(key, item);

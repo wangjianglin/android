@@ -6,3 +6,7 @@ DownlaodFile：
 2、实现cache功能
 3、删除过期的文件
 4、对同一个url只能一个线程在下载
+5、文件名
+
+
+可以适配，HttpClient、HttpURLConnection两种通信方式

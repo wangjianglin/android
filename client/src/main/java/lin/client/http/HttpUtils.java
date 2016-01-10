@@ -6,16 +6,17 @@ import java.util.Date;
 import java.util.List;
 
 
+
 /**
  * 
  * @author 王江林
  * @date 2013-7-16 下午12:02:38
  *
  */
-class HttpUtils {
+public class HttpUtils {
 
 
-	static void fireResult(ResultListener listener, Object obj, List<Error> warning){
+	public static void fireResult(ResultListener listener, Object obj, List<Error> warning){
 		if(listener != null){
 			listener.result(obj, warning);
 		}
@@ -25,7 +26,7 @@ class HttpUtils {
 //			listener.progress(count, total);
 //		}
 //	}
-	static void fireFault(ResultListener listener,Error error){
+	public static void fireFault(ResultListener listener,Error error){
 		if(listener != null){
 			listener.fault(error);
 		}
@@ -37,7 +38,7 @@ class HttpUtils {
     /// </summary>
     public synchronized static long getSequeue() { 
     	_Sequeue++; 
-    	return (long)((1L + _Sequeue + Long.MAX_VALUE) % (Long.MAX_VALUE + 1L));
+    	return (1L + _Sequeue + Long.MAX_VALUE) % (Long.MAX_VALUE + 1L);
     }
     //private static final long offset = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Ticks;
     /// <summary>
@@ -109,4 +110,5 @@ class HttpUtils {
 //         }
 		return uri;
 	}
+
 }

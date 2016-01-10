@@ -18,7 +18,7 @@ public class HttpCommunicateResult {
 //	ReentrantLock lock = new ReentrantLock();
 //	Condition condition = lock.newCondition();
     Aboutable request ;
-	HttpCommunicateResult()
+	public HttpCommunicateResult()
     {
 		//this.lock = lock;
         //this.are = are;
@@ -46,7 +46,7 @@ public class HttpCommunicateResult {
     	return this;
     }
     private  Object _obj;
-    void setResult(boolean result,Object obj){
+    public void setResult(boolean result,Object obj){
 //    	this.lock.lock();
     	this._result = result;
     	this._obj = obj;

@@ -2,18 +2,15 @@ package lin.client.http;
 
 import android.content.Context;
 
-import java.io.File;
 import java.lang.ref.SoftReference;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.client.CookieStore;
-
-import lin.util.thread.AutoResetEvent;
+import lin.client.http.httpclient.HttpClientCommunicateImpl;
+import lin.client.http.httpurlconnection.HttpURLConnectionCommunicateImpl;
 
 /**
  * 
@@ -22,6 +19,34 @@ import lin.util.thread.AutoResetEvent;
  * 
  */
 public class HttpCommunicate {
+
+	public static class Params{
+		private boolean mainThread;
+		private boolean debug;
+
+		public boolean isDebug() {
+			return debug;
+		}
+
+		public void setDebug(boolean debug) {
+			this.debug = debug;
+		}
+
+		public boolean isMainThread() {
+			return mainThread;
+		}
+
+		public void setMainThread(boolean mainThread) {
+			this.mainThread = mainThread;
+		}
+	}
+
+
+	private static HttpCommunicateType type = HttpCommunicateType.HttpURLConnection;
+
+	public static void setType(HttpCommunicateType type){
+		HttpCommunicate.type = type;
+	}
 
 	private HttpCommunicate(){}
 	private static HttpCommunicate _tmp = new HttpCommunicate();
@@ -73,13 +98,17 @@ public class HttpCommunicate {
 	};
 
 		public void newSession(){
-			global.newSession();
+			global().newSession();
 		}
 	//private static Map<String, HttpCommunicateImpl> impls = new HashMap<String, HttpCommunicateImpl>();
 	//	private static Map<String,WeakReference<HttpCommunicateImpl>> impls = new HashMap<String, WeakReference<HttpCommunicateImpl>>();
 		private static Map<String,SoftReference<HttpCommunicateImpl>> impls = new HashMap<String, SoftReference<HttpCommunicateImpl>>();
 
 	public static HttpCommunicateImpl get(String name) {
+		return get(name,type);
+	}
+
+	public static HttpCommunicateImpl get(String name,HttpCommunicateType type) {
 		SoftReference<HttpCommunicateImpl> impl = impls.get(name);
 		if (impl != null && impl.get() != null) {
 			return impl.get();
@@ -91,7 +120,13 @@ public class HttpCommunicate {
 				impls.remove(name);
 			}
 			if (impl == null || impl.get() == null) {
-				HttpCommunicateImpl himpl = new HttpCommunicateImpl(name,_tmp);
+//				HttpCommunicateImpl himpl = new HttpCommunicateImpl(name,_tmp);
+				HttpCommunicateImpl himpl =null;
+				if(type == HttpCommunicateType.HttpURLConnection){
+					himpl = new HttpURLConnectionCommunicateImpl(name,_tmp);
+				}else{
+					himpl = new HttpClientCommunicateImpl(name,_tmp);
+				}
 				impl = new SoftReference<HttpCommunicateImpl>(himpl);
 				himpl.addHttpRequestListener(globalListner);
 				himpl.init(context);
@@ -123,7 +158,21 @@ public class HttpCommunicate {
 		}
 	}
 
-	private final static HttpCommunicateImpl global = get("Global");
+//	private static HttpCommunicateImpl globalHttpURL = null;//get("Global",HttpCommunicateType.HttpURLConnection);
+
+	private static HttpCommunicateImpl globalImpl = null;
+
+	private static HttpCommunicateImpl global(){
+		if(globalImpl != null){
+			return globalImpl;
+		}
+		if(type == HttpCommunicateType.HttpClient){
+			globalImpl = get("Global",HttpCommunicateType.HttpClient);
+		}else{
+			globalImpl = get("Global",HttpCommunicateType.HttpURLConnection);
+		}
+		return globalImpl;
+	}
 
 	/**
 	 * 通信 URL
@@ -136,48 +185,56 @@ public class HttpCommunicate {
 	 * @param url
 	 */
 	public static void setCommUrl(URL url) {
-		global.setCommUrl(url);
+		global().setCommUrl(url);
 	}
 
 	public static URL getCommUrl() {
-		return global.getCommUrl();
+		return global().getCommUrl();
 	}
 
 	public static boolean isDebug() {
-		return global.isDebug();
+		return global().isDebug();
 	}
 	
 	public static void setMainThread(boolean mainThread){
-		global.setMainThread(mainThread);
+		global().setMainThread(mainThread);
 	}
 	
 	public static boolean isMainThread(){
-		return global.isMainThread();
+		return global().isMainThread();
 	}
 
 	public static void setDebug(boolean debug) {
-		global.setDebug(debug);
+		global().setDebug(debug);
 	}
-	/**
-	 * 设置代理
-	 * 
-	 * @param proxy
-	 */
+
+	public int getTimeout() {
+		return global().getTimeout();
+	}
+
+	public void setTimeout(int timeout) {
+		global().setTimeout(timeout);
+	}
+//	/**
+//	 * 设置代理
+//	 *
+//	 * @param proxy
+//	 */
 //	public static void setAuthenticationHandler(AuthenticationHandler proxy) {
 //		global.setAuthenticationHandler(proxy);
 //	}
 
 
-	/**
-	 * 
-	 * @param credsProvider
-	 */
+//	/**
+//	 *
+//	 * @param credsProvider
+//	 */
 //	public static void setCredentialsProvider(CredentialsProvider credsProvider) {
 //		global.setCredentialsProvider(credsProvider);
 //	}
 
 	public static void addHttpRequestListener(HttpRequestListener listener) {
-		global.addHttpRequestListener(listener);
+		global().addHttpRequestListener(listener);
 	}
 
 	public static void addGlobalHttpRequestListener(HttpRequestListener listener) {
@@ -199,20 +256,24 @@ public class HttpCommunicate {
 	}
 
 	// private static CookieStore cookieStore = new BasicCookieStore();
-	static CookieStore getCookieStore() {
-		return global.getCookieStore();
-	}
+//	static CookieStore getCookieStore() {
+//		return global.getCookieStore();
+//	}
 
 //	public static HttpCommunicateResult request(
 //			lin.client.http.packages.Package pack, final ResultListener listener) {
 //		return global.request(pack, listener);
 //	}
-	
+
 	public static HttpCommunicateResult request(lin.client.http.HttpPackage pack,ResultListener listener){
 //		if(listener != null){
 //			return global.request(pack,listener::result,listener::fault);
 //		}
-		return global.request(pack,listener);
+		return global().request(pack,listener);
+	}
+
+	public static HttpCommunicateResult request(lin.client.http.HttpPackage pack,ResultListener listener,Params params){
+		return global().request(pack,listener,params);
 	}
 	
 //	public static HttpCommunicateResult request(lin.client.http.Package pack,ResultFunction result){
@@ -228,27 +289,25 @@ public class HttpCommunicate {
 //		return global.upload(file, listener);
 //	}
 
-	public static HttpCommunicateResult download(String file,
-			ResultListener listener) {
-		HttpCommunicateResult result = null;
-		try {
-			result = global.download(new URL(file), listener);
-		} catch (MalformedURLException e) {
 
-			//AutoResetEvent set = new AutoResetEvent();
-			result = new HttpCommunicateResult();
-			//result.set = set;
-			if(listener != null){
-				listener.fault(new Error());
-			}
-			result.getAutoResetEvent().set();
-		}
-		return result;
+	public static HttpCommunicateResult download(String file,
+												 ResultListener listener) {
+		return global().download(file,listener);
+	}
+
+	public static HttpCommunicateResult download(String file,
+												 ResultListener listener,Params params) {
+		return global().download(file,listener,params);
 	}
 
 	public static HttpCommunicateResult download(URL file,
-			ResultListener listener) {
-		return global.download(file, listener);
+												 ResultListener listener) {
+		return global().download(file, listener);
+		//return HttpCommunicateImpl.downloadImpl(file,listener);
+	}
+	public static HttpCommunicateResult download(URL file,
+												  ResultListener listener,Params params) {
+		return global().download(file, listener);
 		//return HttpCommunicateImpl.downloadImpl(file,listener);
 	}
 

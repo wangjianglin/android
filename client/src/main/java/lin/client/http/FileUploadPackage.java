@@ -1,15 +1,10 @@
 package lin.client.http;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.content.ByteArrayBody;
-import org.apache.http.entity.mime.content.ContentBody;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.InputStreamBody;
 
 
 /**
@@ -31,8 +26,10 @@ public class FileUploadPackage extends HttpPackage {
 		return params;
 	}
 	
-	private Map<String,ContentBody> files = new HashMap<String,ContentBody>();
-	private static ContentType mimeType = ContentType.DEFAULT_BINARY;
+	//private Map<String,ContentBody> files = new HashMap<String,ContentBody>();
+	private Map<String,FileParamInfo> files = new HashMap<String,FileParamInfo>();
+//	private static ContentType mimeType = ContentType.DEFAULT_BINARY;
+	String mineType = "application/octet-stream";
 	@Override
 	public final boolean isMultipart(){
 		return true;
@@ -43,7 +40,11 @@ public class FileUploadPackage extends HttpPackage {
 			files.remove(name);
 			return;
 		}
-		files.put(name, new ByteArrayBody(bytes,mimeType,name));
+		FileParamInfo contentBody = new FileParamInfo();
+		contentBody.setFile(bytes);
+		contentBody.setMimeType(mineType);
+		contentBody.setFileName(name);
+		files.put(name, contentBody);
 	}
 	
 	protected void addByte(String name,byte[] bytes,String fileName){
@@ -51,7 +52,11 @@ public class FileUploadPackage extends HttpPackage {
 			files.remove(name);
 			return;
 		}
-		files.put(name, new ByteArrayBody(bytes,mimeType,fileName));
+		FileParamInfo contentBody = new FileParamInfo();
+		contentBody.setFile(bytes);
+		contentBody.setMimeType(mineType);
+		contentBody.setFileName(fileName);
+		files.put(name, contentBody);
 	}
 	
 //	public void addJpgByte(String name,byte[] bytes){
@@ -67,7 +72,11 @@ public class FileUploadPackage extends HttpPackage {
 			files.remove(name);
 			return;
 		}
-		files.put(name, new InputStreamBody(in,mimeType,name));
+		FileParamInfo contentBody = new FileParamInfo();
+		contentBody.setFile(in);
+		contentBody.setMimeType(mineType);
+		contentBody.setFileName(name);
+		files.put(name, contentBody);
 	}
 	
 	protected void addInputStream(String name,InputStream in,String fileName){
@@ -75,15 +84,23 @@ public class FileUploadPackage extends HttpPackage {
 			files.remove(name);
 			return;
 		}
-		files.put(name, new InputStreamBody(in,mimeType,fileName));
+		FileParamInfo contentBody = new FileParamInfo();
+		contentBody.setFile(in);
+		contentBody.setMimeType(mineType);
+		contentBody.setFileName(fileName);
+		files.put(name, contentBody);
 	}
 	
-	protected void addFile(String name,File file){
+	protected void addFile(String name,File file) throws FileNotFoundException {
 		if(file == null){
 			files.remove(file);
 			return;
 		}
-		files.put(name, new FileBody(file,mimeType,file.getName()));
+		FileParamInfo contentBody = new FileParamInfo();
+		contentBody.setFile(file);
+		contentBody.setMimeType(mineType);
+		contentBody.setFileName(file.getName());
+		files.put(name, contentBody);
 	}
 	
 	protected void removeFile(String name){

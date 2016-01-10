@@ -36,6 +36,22 @@ public class Error {
 	 * 错误类型,0、由后台业务逻辑错误产生，1、后台请求前置验证不通过产生的错误，2、HTTP请求由于网络方面的原因产生的错误
 	 */
 	private int type = 3;
+
+	public Error(long code,String message,String cause,String stackTrace){
+		this.code = code;
+		this.message = message;
+		this.cause = cause;
+		this.stackTrace = stackTrace;
+	}
+
+	public Error(long code,String message,String cause,String stackTrace,int type,Object data){
+		this.code = code;
+		this.message = message;
+		this.cause = cause;
+		this.stackTrace = stackTrace;
+		this.type = type;
+		this.data = data;
+	}
     
 	public long getCode() {
 		return code;

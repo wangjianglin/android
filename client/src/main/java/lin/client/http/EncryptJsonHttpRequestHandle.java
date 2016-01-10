@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.message.AbstractHttpMessage;
-
 import lin.client.Constants;
 import lin.util.JsonUtil;
 import lin.util.reflect.PropertyOperator;
@@ -83,7 +81,7 @@ public class EncryptJsonHttpRequestHandle implements HttpRequestHandle {
 		}
 	}
 	@Override
-	public Map<String, Object> getParams(AbstractHttpMessage httpMessage,HttpPackage pack) {
+	public Map<String, Object> getParams(HttpPackage pack,HttpMessage httpMessage) {
 		httpMessage.addHeader(Constants.HTTP_COMM_PROTOCOL, Constants.HTTP_VERSION);
 		StringBuilder sb = new StringBuilder();
         sb.append('{');
@@ -164,8 +162,8 @@ public class EncryptJsonHttpRequestHandle implements HttpRequestHandle {
 			resp = lin.util.Base64.decode(resp,"utf-8");
 		} catch (Throwable e1) {
 			e1.printStackTrace();
-			Error error = new Error();
-			error.setCode(-3);
+			Error error = new Error(-3,null,null,null);
+//			error.setCode(-3);
 			HttpUtils.fireFault(listener, error);
 			return;
 		}
@@ -177,10 +175,10 @@ public class EncryptJsonHttpRequestHandle implements HttpRequestHandle {
 //			obj  = lin.util.json.JSONUtil.deserialize(resp);
 //			ResultData resultData = (ResultData) lin.util.json.JSONUtil.deserialize(obj,ResultData.class);
 			@SuppressWarnings("rawtypes")
-			ResultData resultData = (ResultData) lin.util.JsonUtil.deserialize(resp,new JsonUtil.GeneralType(ResultData.class,pack.getRespType()));
+			ResultData resultData = JsonUtil.deserialize(resp,new JsonUtil.GeneralType(ResultData.class,pack.getRespType()));
 			///ResultData resltData = (ResultData) ad.util.json.JSONUtil.deserialize(resp, ResultData.class);
 			if(resultData.code <0){
-				error = new Error();
+				error = new Error(-2,null,null,null);
 				PropertyOperator.copy(resultData, error);
 			}else{
 //				@SuppressWarnings("unchecked")
@@ -191,8 +189,8 @@ public class EncryptJsonHttpRequestHandle implements HttpRequestHandle {
 			}
 		}catch(Throwable e){
 			e.printStackTrace();
-			error = new Error();
-			error.setCode(-1);
+			error = new Error(-1,null,null,null);
+//			error.setCode(-1);
 			//return;
 		}
 		if(error != null){

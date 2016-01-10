@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 
 import android.app.DownloadManager;
@@ -22,6 +23,9 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
+
+import lin.client.http.*;
+import lin.client.http.Error;
 import lin.util.Procedure;
 
 /**
@@ -50,7 +54,11 @@ public class UpdateManager {
 			UpdateInfo updateInfo = parseUpdateInfo(updateInfoString);
 			int[] updateVersions = updateInfo.versions;
 			PackageManager packageManager = context.getPackageManager();
-			int[] appVersions = parseVersion(packageManager.getPackageInfo(context.getPackageName(), 0).versionName);
+
+			updateInfo.appVersion = packageManager.getPackageInfo(context.getPackageName(), 0).versionName;
+			int[] appVersions = parseVersion(updateInfo.appVersion);
+			updateInfo.appVersions = appVersions;
+
 			if(updateVersions == null || appVersions == null){
 				return null;
 			}
@@ -105,6 +113,8 @@ public class UpdateManager {
 		private int flag;
 		private String version;
 		private int[] versions;
+		private String appVersion;
+		private int[] appVersions;
 		private String message;
 		public String getVersion() {
 			return version;
@@ -191,15 +201,16 @@ public class UpdateManager {
 		}
 	}
 
-	private static boolean isComplate(Context context,String apkFilename){
+	private static boolean isComplate(Context context,String apkFilename,UpdateInfo updateInfo){
 		boolean result = false;
 		try {
 			PackageManager pm = context.getPackageManager();
 //			Log.e("archiveFilePath", filePath);
 			PackageInfo info = pm.getPackageArchiveInfo(apkFilename,
 					PackageManager.GET_ACTIVITIES);
-			String packageName = null;
-			if (info != null) {
+			String packageName = info.packageName;
+			String version = info.versionName;
+			if (packageName.equals(context.getPackageName()) && version.equals(updateInfo.version)) {
 				result = true;
 			}
 		} catch (Exception e) {
@@ -209,16 +220,16 @@ public class UpdateManager {
 		return result;
 	}
 
-	public static DownloadResult downloadApk(Context context,String apkDownloadUrl,String apkName,String version,Procedure<Uri> callback){
+	public static DownloadResult downloadApk(Context context,String apkDownloadUrl,String apkName,UpdateInfo updateInfo,Procedure<Uri> callback){
 
 		File file = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS + "/apks");
 
 		if (file == null) {
 			file = new File(context.getCacheDir() + "/" + Environment.DIRECTORY_DOWNLOADS + "/apks");
 		}
-		File apkFile = new File(file.getAbsoluteFile() + "/" + apkName + version);
+		File apkFile = new File(file.getAbsoluteFile() + "/" + apkName + updateInfo.version);
 		if(apkFile.exists()){
-			if(isComplate(context,apkFile.getAbsolutePath())) {
+			if(isComplate(context,apkFile.getAbsolutePath(),updateInfo)) {
 				if (callback != null) {
 					callback.procedure(Uri.fromFile(apkFile));
 				}
@@ -229,84 +240,58 @@ public class UpdateManager {
 		file.deleteOnExit();
 		file.mkdirs();
 
+		HttpCommunicate.init(context);
 
-		try {
-			URL url = new URL(apkDownloadUrl);
-			// 创建连接
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setInstanceFollowRedirects(true);
+		File downloadFile = (File)HttpCommunicate.download(apkDownloadUrl,null).getResult();
 
-			conn.connect();
-
-			// 获取文件大小
-			int length = conn.getContentLength();
-			// 创建输入流
-			InputStream is = conn.getInputStream();
-
-//			File file = apkFile;
-//			// 判断文件目录是否存在
-//			if (!file.exists())
-//			{
-//				file.mkdir();
-//			}
-//			File apkFile = new File(mSavePath, apkFileName);
-			FileOutputStream fos = new FileOutputStream(apkFile);
-			//int count = 0;
-			// 缓存
-			byte buf[] = new byte[4096];
-			// 写入到文件中
-
-			int numread = 0;
-				//count += numread;
-				// 计算进度条位置
-				//progress = (int) (((float) count / length) * 100);
-				// 更新进度
-				//mHandler.sendEmptyMessage(DOWNLOAD);
-//				if (numread <= 0)
-//				{
-//					// 下载完成
-//					mHandler.sendEmptyMessage(DOWNLOAD_FINISH);
-//					break;
-//				}
-				// 写入文件
-			while ((numread = is.read(buf)) != -1) {
-				fos.write(buf, 0, numread);
-			}
-
-
-			fos.close();
-
-			if(isComplate(context,apkFile.getAbsolutePath())) {
+		if (downloadFile != null){
+			downloadFile.renameTo(apkFile);
+			if(isComplate(context,apkFile.getAbsolutePath(),updateInfo)) {
 				callback.procedure(Uri.fromFile(apkFile));
-			}
-
-
-//			down.setDestinationUri(Uri.fromFile(apkFile));
-//
-//			// 将下载请求放入队列
-//			long reference = manager.enqueue(down);
-
-	//
-
-			//注册下载广播
-
-//			DownloadCompleteReceiver receiver = new DownloadCompleteReceiver(manager,reference,callback);
-//
-////			context.registerReceiver(receiver, new IntentFilter(
-////					DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-//	//        context.registerReceiver(receiver, null);
-//			DownloadResult result = new DownloadResult();
-//			result.context = context;
-//			result.broadcastReceiver = receiver;
-//			result.reference = reference;
-//			return result;
-
-		} catch (Throwable e) {
-//			e.printStackTrace();
-			try {
+			}else{
 				apkFile.delete();
-			}catch (Throwable e2) {}
+			}
 		}
+
+//		try {
+//			URL url = new URL(apkDownloadUrl);
+//			// 创建连接
+//			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//			conn.setInstanceFollowRedirects(true);
+//
+//			conn.connect();
+//
+//			// 获取文件大小
+//			int length = conn.getContentLength();
+//			// 创建输入流
+//			InputStream is = conn.getInputStream();
+//
+//			FileOutputStream fos = new FileOutputStream(apkFile);
+//			//int count = 0;
+//			// 缓存
+//			byte buf[] = new byte[4096];
+//			// 写入到文件中
+//
+//			int numread = 0;
+//
+//			while ((numread = is.read(buf)) != -1) {
+//				fos.write(buf, 0, numread);
+//			}
+//
+//			fos.close();
+//
+//			if(isComplate(context,apkFile.getAbsolutePath(),updateInfo)) {
+//				callback.procedure(Uri.fromFile(apkFile));
+//			}else{
+//				apkFile.delete();
+//			}
+//
+//		} catch (Throwable e) {
+////			e.printStackTrace();
+//			try {
+//				apkFile.delete();
+//			}catch (Throwable e2) {}
+//		}
 
 		return null;
 	}

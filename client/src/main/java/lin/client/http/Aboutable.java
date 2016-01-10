@@ -3,6 +3,6 @@ package lin.client.http;
 /**
  * Created by lin on 9/24/15.
  */
-interface Aboutable {
+public interface Aboutable {
     void abort();
 }

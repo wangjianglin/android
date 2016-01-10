@@ -3,7 +3,9 @@ package lin.client.http;
 import java.util.HashMap;
 import java.util.Map;
 
+import lin.client.http.annotation.HttpPackageMethod;
 import lin.client.http.annotation.HttpPackageUrl;
+import lin.client.http.annotation.HttpParamName;
 
 /**
  * 
@@ -11,17 +13,19 @@ import lin.client.http.annotation.HttpPackageUrl;
  * @date Mar 8, 2015 10:24:08 PM
  *
  */
+@HttpPackageMethod(HttpMethod.GET)
 @HttpPackageUrl("/core/comm/test.action")
-public class TestPackage extends lin.client.http.HttpPackage{
+public class TestPackage extends HttpPackage{
 
 	
-	 @Override
-	public Map<String, Object> getParams() {
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("data", data);
-		return map;
-	}
+//	 @Override
+//	public Map<String, Object> getParams() {
+//		Map<String,Object> map = new HashMap<String, Object>();
+//		map.put("data", data);
+//		return map;
+//	}
 
+	@HttpParamName
 	private String data;// { get; set; }
 //     public override IDictionary<string, object> GetParams()
 //     {

@@ -94,14 +94,18 @@ public class StandardJsonHttpRequestHandle extends AbstractHttpRequestHandle{
 //			obj  = lin.util.json.JSONUtil.deserialize(resp);
 //			ResultData resultData = (ResultData) lin.util.json.JSONUtil.deserialize(obj,ResultData.class);
 			@SuppressWarnings("rawtypes")
-			ResultData resultData = (ResultData)lin.util.JsonUtil.deserialize(resp, new JsonUtil.GeneralType(ResultData.class, pack.getRespType()));
+			ResultData resultData = JsonUtil.deserialize(resp, new JsonUtil.GeneralType(ResultData.class, pack.getRespType()));
 			///ResultData resltData = (ResultData) ad.util.json.JSONUtil.deserialize(resp, ResultData.class);
 			if(resultData.code <0){
-				error = new Error();
-				error.setCode(resultData.code);
-				error.setCause(resultData.cause);
-				error.setMessage(resultData.message);
-				error.setStackTrace(resultData.stackTrace);
+//				error = new Error();
+//				error.setCode(resultData.code);
+//				error.setCause(resultData.cause);
+//				error.setMessage(resultData.message);
+//				error.setStackTrace(resultData.stackTrace);
+				error = new Error(resultData.code,
+						resultData.getMessage(),
+						resultData.getCause(),
+						resultData.getStackTrace());
 				PropertyOperator.copy(resultData, error);
 			}else{
 //				Map<String,Object> map = (Map<String, Object>) obj;
@@ -112,8 +116,8 @@ public class StandardJsonHttpRequestHandle extends AbstractHttpRequestHandle{
 			}
 		}catch(Throwable e){
 			e.printStackTrace();
-			error = new Error();
-			error.setCode(-1);
+			error = new Error(-1,null,null,null);
+//			error.setCode(-1);
 			//return;
 		}
 		if(error != null){

@@ -29,7 +29,7 @@ import lin.util.Procedure;
  * @date Aug 21, 2015 3:46:07 PM
  *
  */
-public class UpdateService  extends Service {  
+public class UpdateService extends Service {
   
 	public static final int UPDATE = 1;
 	public static final int DOWNLOAD_COMPLETE = 2;
@@ -65,7 +65,7 @@ public class UpdateService  extends Service {
 	private Messenger cMessenger = null;//It's the messenger of client
 
 	/** 安卓系统下载类 **/  
-    DownloadManager manager;
+//    DownloadManager manager;
     /** 接收下载完的广播 **/  
 //    DownloadCompleteReceiver receiver;  
   
@@ -119,7 +119,7 @@ public class UpdateService  extends Service {
 		procedureUri.flag = updateInfo.getFlag();
 		procedureUri.message = updateInfo.getMessage();
 
-		DownloadResult result = UpdateManager.downloadApk(this, apkDownloadUrl, apkName, updateInfo.getVersion(), procedureUri);
+		DownloadResult result = UpdateManager.downloadApk(this, apkDownloadUrl, apkName, updateInfo, procedureUri);
 //		DownloadResult result = UpdateManager.downloadApkWithDownloadManager(this,apkDownloadUrl, apkName, updateInfo.getVersion(), procedureUri);
 
     	

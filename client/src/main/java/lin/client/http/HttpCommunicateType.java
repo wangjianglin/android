@@ -8,5 +8,6 @@ package lin.client.http;
  */
 public enum HttpCommunicateType {
 
-	GET,POST,DELETE,PUT,HEADER
+//	GET,POST,DELETE,PUT,HEADER
+	HttpURLConnection,HttpClient
 }

@@ -11,7 +11,7 @@ public class FileInfo {
     private String fileName;
     private long lastModified;
 
-    FileInfo(File file,String fileName,long lastModified){
+    public FileInfo(File file,String fileName,long lastModified){
         this.file = file;
         this.fileName = fileName;
         this.lastModified = lastModified;

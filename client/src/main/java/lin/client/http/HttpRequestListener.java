@@ -2,6 +2,7 @@ package lin.client.http;
 
 import java.util.List;
 
+
 /**
  * 监听所有http通信
  * @author 王江林
@@ -14,16 +15,16 @@ public interface HttpRequestListener {
     /// 开始请求
     /// </summary>
     //public static event System.Action<HttpCommunicateType, object> HttpRequest;
-	public void request(HttpCommunicateImpl impl,HttpPackage pack);
+	 void request(HttpCommunicateImpl impl, HttpPackage pack);
     /// <summary>
     /// 请求完成
     /// </summary>
     //public static event System.Action<HttpCommunicateType, object, object, IList<Error>> HttpRequestComplete;
-	public void requestComplete(HttpCommunicateImpl impl,HttpPackage pack,Object obj, List<Error> warning);
+	void requestComplete(HttpCommunicateImpl impl, HttpPackage pack, Object obj, List<Error> warning);
 
     /// <summary>
     /// 请求错误
     /// </summary>
     //public static event System.Action<HttpCommunicateType, object, Error> HttpRequestFault;
-	public void requestFault(HttpCommunicateImpl impl,HttpPackage pack,Error error);
+	void requestFault(HttpCommunicateImpl impl, HttpPackage pack, Error error);
 }
