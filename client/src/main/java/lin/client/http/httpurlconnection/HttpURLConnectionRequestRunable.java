@@ -39,8 +39,8 @@ class HttpURLConnectionRequestRunable implements Runnable {
     public void run() {
 
         try {
-            URL url = new URL(HttpUtils.uri(impl, pack));
-            runImpl(url, false, null);
+//            URL url = new URL(HttpUtils.uri(impl, pack));
+            runImpl(HttpUtils.uri(impl, pack), false, null);
         } catch (Throwable e) {
             lin.client.http.Error error = new Error(-2,
                     "未知错误",
@@ -57,7 +57,7 @@ class HttpURLConnectionRequestRunable implements Runnable {
         pack.getRequestHandle().response(pack, buffer, listener);
     }
 
-    private void runImpl(URL url, boolean redirect, List<String> urls) throws Throwable {
+    private void runImpl(String urlString, boolean redirect, List<String> urls) throws Throwable {
 
 //                URL url = new URL(HttpUtils.uri(impl,pack));
 //                URL url = HttpUtils.u
@@ -66,10 +66,10 @@ class HttpURLConnectionRequestRunable implements Runnable {
         }
 
         if (pack.getMethod() == HttpMethod.GET) {
-            String paramsString = generPostParams(pack.getParams());
-            url = addGetParams(url, paramsString);
+            String paramsString = generParams(pack.getParams());
+            urlString = addGetParams(urlString, paramsString);
         }
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        HttpURLConnection conn = (HttpURLConnection) new URL(urlString).openConnection();
 
         conn.setRequestProperty("accept", "*/*");
         conn.setRequestProperty("connection", "Keep-Alive");
@@ -135,12 +135,12 @@ class HttpURLConnectionRequestRunable implements Runnable {
             if (urls == null) {
                 urls = new ArrayList<String>();
             }
-            urls.add(url.toString());
-            url = new URL(conn.getHeaderField("Location"));
-            if (urls.contains(url.toString())) {
+            urls.add(urlString);
+            urlString = conn.getHeaderField("Location");
+            if (urls.contains(urlString)) {
                 throw new RuntimeException();
             }
-            runImpl(url, true, urls);
+            runImpl(urlString, true, urls);
             return;
         }
 
@@ -169,7 +169,7 @@ class HttpURLConnectionRequestRunable implements Runnable {
     private void setPostParams(HttpURLConnection conn, Map<String, Object> params) throws Throwable {
         conn.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
 
-        String paramsString = generPostParams(params);
+        String paramsString = generParams(params);
         conn.setRequestProperty("Content-Length", String
                 .valueOf(paramsString.length()));
         // 发送POST请求必须设置如下两行
@@ -187,17 +187,16 @@ class HttpURLConnectionRequestRunable implements Runnable {
 //
 //            }
 
-    private URL addGetParams(URL url, String params) throws Throwable {
-        String urlString = url.toString();
+    private String addGetParams(String urlString, String params) throws Throwable {
         if (urlString.indexOf('?') == -1) {
             urlString += "?" + params;
         } else {
             urlString += "&" + params;
         }
-        return new URL(urlString);
+        return urlString;
     }
 
-    private String generPostParams(Map<String, Object> params) throws Throwable {
+    private String generParams(Map<String, Object> params) throws Throwable {
 
         if (params == null) {
             return "";
