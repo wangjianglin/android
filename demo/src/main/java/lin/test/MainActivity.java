@@ -187,6 +187,22 @@ public class MainActivity extends Activity {
                     }
                 }).waitForEnd();
 
+                SessionIdPackage sessionPackage = new SessionIdPackage();
+
+                for (int n=0;n<10;n++){
+                    HttpCommunicate.request(sessionPackage, new ResultListener() {
+                        @Override
+                        public void result(Object obj, List<Error> warning) {
+                            System.out.println("session id:"+obj);
+                        }
+
+                        @Override
+                        public void fault(Error error) {
+                            System.out.println("error:"+error);
+                        }
+                    }).waitForEnd();
+                }
+
 //                Assert.assertEquals("返回null值失败！",testCommResult,pack.getData());
             }
         });

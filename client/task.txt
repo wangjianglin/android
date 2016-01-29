@@ -12,4 +12,8 @@ DownlaodFile：
 可以适配，HttpClient、HttpURLConnection两种通信方式
 
 
+HttpURLConnection:
+1、改进cookies存储
+
+
 TCP实现异步响应

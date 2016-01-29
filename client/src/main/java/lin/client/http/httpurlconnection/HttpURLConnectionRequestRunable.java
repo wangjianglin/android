@@ -162,7 +162,7 @@ class HttpURLConnectionRequestRunable implements Runnable {
         }
 
         String cookie = conn.getHeaderField("set-cookie");
-        System.out.println("cookies:"+cookie);
+
         if(cookie != null && !"".equals(cookie)) {
             sessionInfo.cookie = cookie;
         }

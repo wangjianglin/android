@@ -20,7 +20,7 @@ public class TestApplication extends Application {
 
         HttpCommunicate.init(this);
 
-        HttpCommunicate.setType(HttpCommunicateType.HttpClient);
+        HttpCommunicate.setType(HttpCommunicateType.HttpURLConnection);
 
         try {
             HttpCommunicate.setCommUrl(new URL("http://192.168.1.66:8080"));
