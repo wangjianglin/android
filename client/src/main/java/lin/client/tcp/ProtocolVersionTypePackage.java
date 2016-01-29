@@ -5,7 +5,7 @@ package lin.client.tcp;
 //
 //namespace Lin.Comm.Tcp
 //{
-//    public class ProtocolVersionTypePackage : Package
+//    public class ProtocolVersionTypePackage : TcpPackage
 //    {
 //
 //        public ProtocolVersionTypePackage()

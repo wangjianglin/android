@@ -17,7 +17,7 @@ public class HttpURLConnectionRequest {
     private URL url;
 
     private String cookie;
-//    private lin.client.http.Package pack;
+//    private lin.client.http.TcpPackage pack;
 
     public void request(){
 

@@ -261,7 +261,7 @@ public class HttpCommunicate {
 //	}
 
 //	public static HttpCommunicateResult request(
-//			lin.client.http.packages.Package pack, final ResultListener listener) {
+//			lin.client.http.packages.TcpPackage pack, final ResultListener listener) {
 //		return global.request(pack, listener);
 //	}
 
@@ -276,11 +276,11 @@ public class HttpCommunicate {
 		return global().request(pack,listener,params);
 	}
 	
-//	public static HttpCommunicateResult request(lin.client.http.Package pack,ResultFunction result){
+//	public static HttpCommunicateResult request(lin.client.http.TcpPackage pack,ResultFunction result){
 //		return global.request(pack,result,null);
 //	}
 //	
-//	public HttpCommunicateResult request(lin.client.http.Package pack,final ResultFunction result,final FaultFunction fault){
+//	public HttpCommunicateResult request(lin.client.http.TcpPackage pack,final ResultFunction result,final FaultFunction fault){
 //		return global.request(pack,result,fault);
 //	}
 

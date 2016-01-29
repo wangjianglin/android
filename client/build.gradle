@@ -28,6 +28,9 @@ android {
         }
     }
 
+    lintOptions {
+        abortOnError false
+    }
 //    sourceSets{
 //        main {
 //            Manifest.srcFile 'AndroidManifest.xml'

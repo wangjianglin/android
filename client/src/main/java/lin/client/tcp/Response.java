@@ -2,5 +2,5 @@ package lin.client.tcp;
 
 //@FunctionalInterface
 public interface Response {
-	void response(Package pack);
+	void response(ResponseTcpPackage pack);
 }

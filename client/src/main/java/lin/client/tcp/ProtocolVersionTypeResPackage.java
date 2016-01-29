@@ -5,7 +5,7 @@ package lin.client.tcp;
 //
 //namespace Lin.Comm.Tcp
 //{
-//    public class ProtocolVersionTypeResPackage : Package
+//    public class ProtocolVersionTypeResPackage : TcpPackage
 //    {
 //        //[CompilerGenerated]
 //        //private byte[] <AllSustainVersionNumber>k__BackingField;

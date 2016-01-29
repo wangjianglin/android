@@ -214,14 +214,14 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 //        cookieStore = new BasicCookieStore();
 //    }
 
-//	public HttpCommunicateResult request(lin.client.http.Package pack,ResultListener listener){
+//	public HttpCommunicateResult request(lin.client.http.TcpPackage pack,ResultListener listener){
 //		if(listener != null){
 //			return request(pack,listener::result,listener::fault);
 //		}
 //		return request(pack,null,null);
 //	}
 
-//	public HttpCommunicateResult request(lin.client.http.Package pack,ResultFunction result){
+//	public HttpCommunicateResult request(lin.client.http.TcpPackage pack,ResultFunction result){
 //		return request(pack,result,null);
 //	}
 
@@ -251,7 +251,7 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
 
     @Override
-    //	public HttpCommunicateResult request(lin.client.http.Package pack,final ResultFunction result,final FaultFunction fault){
+    //	public HttpCommunicateResult request(lin.client.http.TcpPackage pack,final ResultFunction result,final FaultFunction fault){
     public HttpCommunicateResult request(final lin.client.http.HttpPackage pack, final ResultListener listener, HttpCommunicate.Params params){
 
         if (params == null){
@@ -425,6 +425,8 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
                 }
                 return true;
             }
+        }else{
+            httpResult.getAutoResetEvent().set();
         }
         return true;
     }
@@ -455,6 +457,8 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
                     httpResult.getAutoResetEvent().set();
                 }
             }
+        }else{
+            httpResult.getAutoResetEvent().set();
         }
     }
     private void fireProgress(final HttpCommunicateResult httpResult,final ProgressResultListener listener,final long progress,final long total){
@@ -551,9 +555,9 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
                         try {
                             fireRequestResultListener(null, obj, warning);
                         }finally {
-                            if(isDeleteFile && obj instanceof File){
-                                ((File)obj).delete();
-                            }
+//                            if(isDeleteFile && obj instanceof File){
+//                                ((File)obj).delete();
+//                            }
                         }
 
                     }

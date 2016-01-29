@@ -28,12 +28,13 @@ class HttpURLConnectionRequestRunable implements Runnable {
     private HttpPackage pack;
     private ResultListener listener;
     private HttpCommunicateImpl impl;
-    private String cookie;
+    private SessionInfo sessionInfo;
 
-    HttpURLConnectionRequestRunable(HttpPackage pack,ResultListener listener,HttpCommunicateImpl impl){
+    HttpURLConnectionRequestRunable(SessionInfo sessionInfo, HttpPackage pack,ResultListener listener,HttpCommunicateImpl impl){
         this.pack = pack;
         this.listener = listener;
         this.impl = impl;
+        this.sessionInfo = sessionInfo;
     }
     @Override
     public void run() {
@@ -100,8 +101,8 @@ class HttpURLConnectionRequestRunable implements Runnable {
 //                conn.setRequestMethod("POST");
 
 
-        if (cookie != null && cookie.length() > 0) {
-            conn.setRequestProperty("Cookie", cookie);
+        if (sessionInfo.cookie != null && sessionInfo.cookie.length() > 0) {
+            conn.setRequestProperty("Cookie", sessionInfo.cookie);
         }
 
         // 设置是否向httpUrlConnection输出，因为这个是post请求，参数要放在
@@ -160,7 +161,11 @@ class HttpURLConnectionRequestRunable implements Runnable {
             _out.write(buffer, 0, count);
         }
 
-        cookie = conn.getHeaderField("set-cookie");
+        String cookie = conn.getHeaderField("set-cookie");
+        System.out.println("cookies:"+cookie);
+        if(cookie != null && !"".equals(cookie)) {
+            sessionInfo.cookie = cookie;
+        }
 
         buffer = _out.toByteArray();
         _in.close();

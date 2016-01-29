@@ -18,6 +18,7 @@ public class HttpURLConnectionCommunicateImpl extends AbstractHttpCommunicateImp
 		super(name, c);
 	}
 
+	private SessionInfo sessionInfo = new SessionInfo();
 //	private Context context;
 //	public void init(Context context){
 //		this.context = context;
@@ -42,7 +43,7 @@ public class HttpURLConnectionCommunicateImpl extends AbstractHttpCommunicateImp
 
 	@Override
 	protected HttpCommunicateRequest getRequest() {
-		return new HttpURLConnectionRequest();
+		return new HttpURLConnectionRequest(sessionInfo);
 	}
 
 	@Override
@@ -184,14 +185,14 @@ public class HttpURLConnectionCommunicateImpl extends AbstractHttpCommunicateImp
 //		 cookieStore = new BasicCookieStore();
 //	 }
 
-//	public HttpCommunicateResult request(lin.client.http.Package pack,ResultListener listener){
+//	public HttpCommunicateResult request(lin.client.http.TcpPackage pack,ResultListener listener){
 //		if(listener != null){
 //			return request(pack,listener::result,listener::fault);
 //		}
 //		return request(pack,null,null);
 //	}
 	
-//	public HttpCommunicateResult request(lin.client.http.Package pack,ResultFunction result){
+//	public HttpCommunicateResult request(lin.client.http.TcpPackage pack,ResultFunction result){
 //		return request(pack,result,null);
 //	}
 	
@@ -220,7 +221,7 @@ private CloseableHttpClient http;// = HttpClients.custom().useSystemProperties()
 //	public HttpCommunicateResult request(final lin.client.http.HttpPackage pack,final ResultListener listener){
 //		return request(pack,listener,defaultParams);
 //	}
-//	public HttpCommunicateResult request(lin.client.http.Package pack,final ResultFunction result,final FaultFunction fault){
+//	public HttpCommunicateResult request(lin.client.http.TcpPackage pack,final ResultFunction result,final FaultFunction fault){
 //	public HttpCommunicateResult request(final lin.client.http.HttpPackage pack,final ResultListener listener,HttpCommunicate.Params params){
 //
 //		if (params == null){

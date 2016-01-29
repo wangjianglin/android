@@ -87,7 +87,7 @@ public class VersionInfoHC4 {
      */
     protected VersionInfoHC4(final String pckg, final String module,
                           final String release, final String time, final String clsldr) {
-        Args.notNull(pckg, "Package identifier");
+        Args.notNull(pckg, "TcpPackage identifier");
         infoPackage     = pckg;
         infoModule      = (module  != null) ? module  : UNAVAILABLE;
         infoRelease     = (release != null) ? release : UNAVAILABLE;
@@ -195,7 +195,7 @@ public class VersionInfoHC4 {
      */
     public static VersionInfo[] loadVersionInfo(final String[] pckgs,
                                                       final ClassLoader clsldr) {
-        Args.notNull(pckgs, "Package identifier array");
+        Args.notNull(pckgs, "TcpPackage identifier array");
         final List<VersionInfoHC4> vil = new ArrayList<VersionInfoHC4>(pckgs.length);
         for (final String pckg : pckgs) {
             final VersionInfoHC4 vi = loadVersionInfo(pckg, clsldr);
@@ -222,7 +222,7 @@ public class VersionInfoHC4 {
      */
     public static VersionInfoHC4 loadVersionInfo(final String pckg,
                                               final ClassLoader clsldr) {
-        Args.notNull(pckg, "Package identifier");
+        Args.notNull(pckg, "TcpPackage identifier");
         final ClassLoader cl = clsldr != null ? clsldr : Thread.currentThread().getContextClassLoader();
 
         Properties vip = null; // version info properties, if available
@@ -265,7 +265,7 @@ public class VersionInfoHC4 {
      */
     protected static VersionInfoHC4 fromMap(final String pckg, final Map<?, ?> info,
                                                final ClassLoader clsldr) {
-        Args.notNull(pckg, "Package identifier");
+        Args.notNull(pckg, "TcpPackage identifier");
         String module = null;
         String release = null;
         String timestamp = null;

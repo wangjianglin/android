@@ -25,12 +25,14 @@ public class HttpURLConnectionRequest implements HttpCommunicateRequest {
     private ResultListener listener;
     private HttpCommunicateImpl impl;
     private HttpCommunicate.Params params;
+    private SessionInfo sessionInfo;
 
     private static ThreadPoolExecutor executor = new ThreadPoolExecutor(20, 50, 10,
             TimeUnit.MINUTES, new ArrayBlockingQueue<Runnable>(3000),
             new ThreadPoolExecutor.CallerRunsPolicy());
 
-    HttpURLConnectionRequest(){
+    HttpURLConnectionRequest(SessionInfo sessionInfo){
+        this.sessionInfo = sessionInfo;
 //        this.impl = impl;
 //        this.pack = pack;
 //        this.listener = listener;
@@ -53,7 +55,7 @@ public class HttpURLConnectionRequest implements HttpCommunicateRequest {
 
     public void request(){
 
-        Runnable task = new HttpURLConnectionRequestRunable(pack,listener,impl);
+        Runnable task = new HttpURLConnectionRequestRunable(sessionInfo,pack,listener,impl);
         //HttpURLConnection connection = HttpURLConnection
         executor.execute(task);
     }

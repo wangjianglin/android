@@ -10,3 +10,6 @@ DownlaodFile：
 
 
 可以适配，HttpClient、HttpURLConnection两种通信方式
+
+
+TCP实现异步响应

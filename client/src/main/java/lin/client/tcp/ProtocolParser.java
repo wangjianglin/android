@@ -1,9 +1,13 @@
 package lin.client.tcp;
 
 public interface ProtocolParser {
-	Package getPackage();
+	TcpPackage getPackage();
 
 	void put(byte... bs);
+
+	void setState(PackageState state);
+
+	PackageState getState();
 
 	void clear();
 }

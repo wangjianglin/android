@@ -7,7 +7,7 @@ package lin.util;
  * @date Jul 17, 2015 10:20:26 AM
  *
  */
-public interface Function<T,K> {
+public interface Function<R,T> {
 
-	K function(T obj);
+	R function(T obj);
 }

@@ -175,14 +175,14 @@ public class HttpCommunicateImpl{// implements HttpCommunicate{
 		 cookieStore = new BasicCookieStore();
 	 }
 
-//	public HttpCommunicateResult request(lin.client.http.Package pack,ResultListener listener){
+//	public HttpCommunicateResult request(lin.client.http.TcpPackage pack,ResultListener listener){
 //		if(listener != null){
 //			return request(pack,listener::result,listener::fault);
 //		}
 //		return request(pack,null,null);
 //	}
 
-//	public HttpCommunicateResult request(lin.client.http.Package pack,ResultFunction result){
+//	public HttpCommunicateResult request(lin.client.http.TcpPackage pack,ResultFunction result){
 //		return request(pack,result,null);
 //	}
 
@@ -202,7 +202,7 @@ private CloseableHttpClient http;// = HttpClients.custom().useSystemProperties()
 
 //	private AndroidHTTPClient c = AndroidHttpClient.newInstance("");
 
-//	public HttpCommunicateResult request(lin.client.http.Package pack,final ResultFunction result,final FaultFunction fault){
+//	public HttpCommunicateResult request(lin.client.http.TcpPackage pack,final ResultFunction result,final FaultFunction fault){
 	public lin.client.http1.HttpCommunicateResult request(final lin.client.http1.HttpPackage pack,final ResultListener listener){
 
 		this.fireRequestListener(pack);

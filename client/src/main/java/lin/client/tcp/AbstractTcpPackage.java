@@ -1,17 +1,15 @@
 package lin.client.tcp;
 
-public abstract class Package {
+public abstract class AbstractTcpPackage implements TcpPackage {
 	
 
-	public long sequeue;// { get; internal set; }
-	public PackageState state;// { get;internal set; }
+	private long sequeue;
+	private PackageState state;
 
-	public Package() {
-		this.state = PackageState.NONE;
+	public AbstractTcpPackage() {
+		this.state = PackageState.REQUEST;
 		this.sequeue = 0;
 	}
-
-	// public abstract byte Type { get; }
 
 	public abstract byte getType();
 

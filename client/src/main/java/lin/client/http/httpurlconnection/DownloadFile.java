@@ -1,8 +1,5 @@
 package lin.client.http.httpurlconnection;
 
-import android.content.Context;
-import android.os.Environment;
-
 //import org.apache.http.HttpEntity;
 //import org.apache.http.HttpResponse;
 //import org.apache.http.HttpStatus;
@@ -47,7 +44,7 @@ class DownloadFile implements HttpCommunicateDownloadFile {
             new ThreadPoolExecutor.CallerRunsPolicy());
 
     private ProgressResultListener listener;
-    private Context context;
+
     private HttpCommunicateImpl impl;
     private HttpCommunicate.Params params;
 
@@ -119,15 +116,16 @@ class DownloadFile implements HttpCommunicateDownloadFile {
 
                 String md5s = lin.util.MD5.digest(url.toString());
 
-                File path = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS + "/cache");
-
-                if (path == null) {
-                    path = new File(context.getCacheDir() + "/" + Environment.DIRECTORY_DOWNLOADS + "/cache");
-                }
+//                File path = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS + "/cache");
+//
+//                if (path == null) {
+//                    path = new File(context.getCacheDir() + "/" + Environment.DIRECTORY_DOWNLOADS + "/cache");
+//                }
 
                 //conn.getLastModified()
-                String fileName = path.getAbsoluteFile() + "/" + md5s;// + (new Date()).getTime();// + "-" + conn.getLastModified();
-                File file = new File(fileName + ".cache");
+//                String fileName = path.getAbsoluteFile() + "/" + md5s;// + (new Date()).getTime();// + "-" + conn.getLastModified();
+//                File file = new File(fileName + ".cache");
+                File file = File.createTempFile(md5s,"cache");
 
 
                 if(file.exists()){
@@ -139,7 +137,9 @@ class DownloadFile implements HttpCommunicateDownloadFile {
                 }
 
 
-                File dFile = new File(fileName + ".download");
+                //File dFile = new File(fileName + ".download");
+                File dFile = File.createTempFile(md5s,"download");
+
 
 
                 byte[] buffer = new byte[1024 * 4];

@@ -2,19 +2,29 @@ package lin.client.tcp;
 
 import lin.util.thread.AutoResetEvent;
 
-//class PackageResponse
-public class PackageResponse {
-	private AutoResetEvent set;
 
-	PackageResponse(AutoResetEvent set) {
-		this.set = set;
+public class PackageResponse {
+	private AutoResetEvent set = new AutoResetEvent();
+
+	PackageResponse() {
 	}
 
-	private volatile Package pack;
+	private volatile ErrorTcpPackage error;
+	private volatile ResponseTcpPackage pack;
 
-	void response(Package pack) {
+	void response(ResponseTcpPackage pack) {
 		this.pack = pack;
 		set.set();
+	}
+
+	void setError(ErrorTcpPackage error){
+		this.error = error;
+		set.set();
+	}
+
+	public ResponseTcpPackage getResponse(){
+		waitForEnd();
+		return this.pack;
 	}
 
 	// / <summary>
@@ -22,12 +32,12 @@ public class PackageResponse {
 	// / </summary>
 	// / <param name="timeout">超时，以毫秒为单位，默认120秒</param>
 	// / <returns></returns>
-	public Package waitForEnd() {
+	public PackageResponse waitForEnd() {
 		return waitForEnd(120000);
 	}
 
-	public Package waitForEnd(int timeout) {
+	public PackageResponse waitForEnd(int timeout) {
 		set.waitOne();
-		return this.pack;
+		return this;
 	}
 }
