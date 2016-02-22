@@ -32,7 +32,7 @@ public class HttpClientCommunicateImpl extends AbstractHttpCommunicateImpl{
 
     @Override
     protected HttpCommunicateDownloadFile downloadRequest() {
-        return new DownloadFile(http);
+        return new DownloadFile(http,context);
     }
 
     @Override

@@ -10,11 +10,13 @@ public class FileInfo {
     private File file;
     private String fileName;
     private long lastModified;
+    private String url;
 
-    public FileInfo(File file,String fileName,long lastModified){
+    public FileInfo(String url,File file,String fileName,long lastModified){
         this.file = file;
         this.fileName = fileName;
         this.lastModified = lastModified;
+        this.url = url;
     }
 
     public File getFile() {
@@ -27,5 +29,9 @@ public class FileInfo {
 
     public long getLastModified() {
         return lastModified;
+    }
+
+    public String getUrl() {
+        return url;
     }
 }

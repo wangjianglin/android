@@ -16,6 +16,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import lin.util.Action;
 
@@ -28,7 +33,7 @@ import lin.util.Action;
  */
 public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl{
 
-    private Context context;
+    protected Context context;
     private int timeout = 10000;
     private String name;
     private Map<String,String> defaultHeaders = new HashMap<String,String>();
@@ -41,6 +46,7 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
     private HttpCommunicate.Params defaultParams = new HttpCommunicate.Params();
 
+    private static long cacheSize = 200 * 1024 * 1024;
 
     private boolean mainThread = false;
 
@@ -64,6 +70,7 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
     @Override
     public void init(Context context){
         this.context = context;
+        CacheDownloadFile.init(context);
     }
 
     @Override
@@ -79,6 +86,15 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 //	}
 
 
+    @Override
+    public long getCacheSize() {
+        return cacheSize;
+    }
+
+    @Override
+    public void setCacheSize(long cacheSize) {
+        this.cacheSize = cacheSize;
+    }
 
     public Map<String,String> defaultHeaders(){
         return this.defaultHeaders;
@@ -408,7 +424,6 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
                         try{
                             listener.result(obj, warning);
                         }finally{
-//								httpResult.set.set();
                             httpResult.getAutoResetEvent().set();
 //								if(obj instanceof File){
 //									((File) obj).delete();
@@ -420,7 +435,6 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
                 try{
                     listener.result(obj, warning);
                 }finally{
-//						httpResult.set.set();
                     httpResult.getAutoResetEvent().set();
                 }
                 return true;
@@ -445,7 +459,6 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
                         try{
                             listener.fault(error);
                         }finally{
-                            //httpResult.set.set();
                             httpResult.getAutoResetEvent().set();
                         }
                     }});
@@ -453,7 +466,6 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
                 try{
                     listener.fault(error);
                 }finally{
-                    //httpResult.set.set();
                     httpResult.getAutoResetEvent().set();
                 }
             }
@@ -512,8 +524,13 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
     }
 
     protected abstract HttpCommunicateDownloadFile downloadRequest();
+
+
+    private static ThreadPoolExecutor downloadExecutor = new ThreadPoolExecutor(2, 5, 10,
+            TimeUnit.MINUTES, new ArrayBlockingQueue<Runnable>(3000),
+            new ThreadPoolExecutor.CallerRunsPolicy());
     @Override
-    public HttpCommunicateResult download(URL file, final ResultListener listener, HttpCommunicate.Params params){
+    public HttpCommunicateResult download(final URL file, final ResultListener listener, HttpCommunicate.Params params){
         if (params == null){
             params = defaultParams;
         }
@@ -529,37 +546,36 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
         final ProgressResultListener finalPListener = pListener;
         fireRequestListener(null);
 
-        HttpCommunicateDownloadFile request = this.downloadRequest();
+        final HttpCommunicateDownloadFile request = this.downloadRequest();
 
-        ProgressResultListener listenerImpl = new ProgressResultListener(){
-            private boolean isDeleteFile = false;
+        final ProgressResultListener listenerImpl = new ProgressResultListener(){
+//            private boolean isDeleteFile = false;
             @Override
             public void result(final Object obj,final List<Error> warning) {
                 lin.util.thread.ActionExecute.execute(new Action() {
                     @Override
                     public void action() {
-                        httpHesult.setResult(true,obj);
-                        isDeleteFile = fireResult(httpHesult,listener, obj, warning);
+                        popDownload(file.toString());
                     }
-//				}, new Action() {//fireResult中已经set了
+                },new Action() {
+                    @Override
+                    public void action() {
+                        if(obj instanceof FileInfo) {
+                            CacheDownloadFile.save((FileInfo)obj);
+                        }
+                    }
+				}, new Action() {
 
-//					@Override
-//					public void action() {
-//
-//						httpHesult.getAutoResetEvent().set();
-//					}
+					@Override
+					public void action() {
+                        httpHesult.setResult(true,obj);
+                        fireResult(httpHesult,listener, obj, warning);
+					}
                 },new Action(){
 
                     @Override
                     public void action() {
-                        try {
-                            fireRequestResultListener(null, obj, warning);
-                        }finally {
-//                            if(isDeleteFile && obj instanceof File){
-//                                ((File)obj).delete();
-//                            }
-                        }
-
+                        fireRequestResultListener(null, obj, warning);
                     }
 
                 });
@@ -597,18 +613,77 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
         };//);
 
 //        request.setPackage(pack);
+
+
         request.setImpl(this);
         request.setListener(listenerImpl);
         request.setParams(params);
 
         httpHesult.request = request;
 
-        request.download(file);
+        Runnable task = new Runnable() {
+            @Override
+            public void run() {
+                HttpCommunicateDownloadFile.HttpFileInfo info = request.getFileInfo(file);
+
+                FileInfo cacheFile = CacheDownloadFile.getFileInfo(file.toString());
+
+                if(cacheFile != null && info != null){
+                    if(cacheFile.getFile().exists()){
+                        if((info.getFileSize() <=0 || cacheFile.getFile().length() == info.getFileSize())
+                                && cacheFile.getLastModified() == info.getLastModified()
+                                ){
+
+                            listenerImpl.result(cacheFile,null);
+                            return;
+                        }
+                    }
+                }
+
+                request.download(file);
+            }
+        };
+
+
+
 //        downloadFile.context = context;
 ////		downloadFile.http = this.http;
 //        downloadFile.download(file);
+        pushDownloadTask(file.toString(),task);
 
         return httpHesult;
+    }
+
+    private final static Map<String,Boolean> downloadUrls = new HashMap<String,Boolean>();
+    private final static Map<String,Runnable> notDownloadUrls = new HashMap<String,Runnable>();
+    private final static Lock lock = new ReentrantLock();
+
+    private void pushDownloadTask(String url,Runnable task){
+
+        lock.lock();
+        try {
+            if (downloadUrls.containsKey(url)) {
+                notDownloadUrls.put(url, task);
+            } else {
+                downloadUrls.put(url, true);
+                downloadExecutor.execute(task);
+            }
+        }finally {
+            lock.unlock();
+        }
+    }
+
+    private void popDownload(String url){
+        lock.lock();
+        try{
+
+            if(notDownloadUrls.containsKey(url)){
+                downloadExecutor.execute(notDownloadUrls.remove(url));
+            }
+            downloadUrls.remove(url);
+        }finally {
+            lock.unlock();
+        }
     }
 
 

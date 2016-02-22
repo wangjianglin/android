@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
+
 import java.util.List;
 
 import lin.client.http.*;
@@ -122,7 +124,7 @@ public class MainActivity extends Activity {
 
 
         Button httpButton = (Button) this.findViewById(R.id.httpId);
-        httpButton.setOnClickListener(new View.OnClickListener(){
+        httpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                HttpCommunicate.download(url, new ResultListener() {
@@ -136,79 +138,101 @@ public class MainActivity extends Activity {
 //                        System.out.println("ok.");
 //                    }
 //                });
-                TestPackage pack = new TestPackage();
+//                TestPackage pack = new TestPackage();
+//
+//                pack.setData("test!");
+//
+//
+//                HttpCommunicate.request(pack, new ResultListener() {
+//                    @Override
+//                    public void result(Object obj, List<Error> warning) {
+//                        System.out.println("obj:"+obj);
+//                    }
+//
+//                    @Override
+//                    public void fault(Error error) {
+//                        System.out.println("error:"+error);
+//                    }
+//                }).waitForEnd();
+//
+//
+////                Assert.assertEquals("通信测试失败！",testCommResult,pack.getData());
+//
+//                pack.setData("测试中文数据！");
+//
+//                HttpCommunicate.request(pack, new ResultListener() {
+//                    @Override
+//                    public void result(Object obj, List<Error> warning) {
+//                        System.out.println("obj:"+obj);
+//                    }
+//
+//                    @Override
+//                    public void fault(Error error) {
+//                        System.out.println("error:"+error);
+//                    }
+//                }).waitForEnd();
+//
+//
+////                Assert.assertEquals("通信传递中文失败！",testCommResult,pack.getData());
+//
+//                pack.setData(null);
+//
+//                HttpCommunicate.request(pack, new ResultListener() {
+//                    @Override
+//                    public void result(Object obj, List<Error> warning) {
+//                        System.out.println("obj:"+obj);
+//                    }
+//
+//                    @Override
+//                    public void fault(Error error) {
+//                        System.out.println("error:"+error);
+//                    }
+//                }).waitForEnd();
+//
+//                SessionIdPackage sessionPackage = new SessionIdPackage();
+//
+//                for (int n=0;n<10;n++){
+//                    HttpCommunicate.request(sessionPackage, new ResultListener() {
+//                        @Override
+//                        public void result(Object obj, List<Error> warning) {
+//                            System.out.println("session id:"+obj);
+//                        }
+//
+//                        @Override
+//                        public void fault(Error error) {
+//                            System.out.println("error:"+error);
+//                        }
+//                    }).waitForEnd();
+//                }
 
-                pack.setData("test!");
-
-
-                HttpCommunicate.request(pack, new ResultListener() {
+                HttpCommunicate.download("https://www.feicuibaba.com/proxy/proxy-channel.apk.php?channel=own", new ResultListener() {
                     @Override
                     public void result(Object obj, List<Error> warning) {
-                        System.out.println("obj:"+obj);
+                        System.out.println(obj);
                     }
 
                     @Override
                     public void fault(Error error) {
-                        System.out.println("error:"+error);
+                        System.out.println(error);
                     }
-                }).waitForEnd();
-
-
-//                Assert.assertEquals("通信测试失败！",testCommResult,pack.getData());
-
-                pack.setData("测试中文数据！");
-
-                HttpCommunicate.request(pack, new ResultListener() {
-                    @Override
-                    public void result(Object obj, List<Error> warning) {
-                        System.out.println("obj:"+obj);
-                    }
-
-                    @Override
-                    public void fault(Error error) {
-                        System.out.println("error:"+error);
-                    }
-                }).waitForEnd();
-
-
-//                Assert.assertEquals("通信传递中文失败！",testCommResult,pack.getData());
-
-                pack.setData(null);
-
-                HttpCommunicate.request(pack, new ResultListener() {
-                    @Override
-                    public void result(Object obj, List<Error> warning) {
-                        System.out.println("obj:"+obj);
-                    }
-
-                    @Override
-                    public void fault(Error error) {
-                        System.out.println("error:"+error);
-                    }
-                }).waitForEnd();
-
-                SessionIdPackage sessionPackage = new SessionIdPackage();
-
-                for (int n=0;n<10;n++){
-                    HttpCommunicate.request(sessionPackage, new ResultListener() {
-                        @Override
-                        public void result(Object obj, List<Error> warning) {
-                            System.out.println("session id:"+obj);
-                        }
-
-                        @Override
-                        public void fault(Error error) {
-                            System.out.println("error:"+error);
-                        }
-                    }).waitForEnd();
-                }
+                });
 
 //                Assert.assertEquals("返回null值失败！",testCommResult,pack.getData());
             }
         });
 
 
+        HttpCommunicate.download("https://www.feicuibaba.com/proxy/proxy-channel2.apk.php?channel=own", new ResultListener() {
+            @Override
+            public void result(Object obj, List<Error> warning) {
+                System.out.println(obj);
+            }
 
+            @Override
+            public void fault(Error error) {
+                System.out.println(error);
+            }
+        });
     }
 
     @Override

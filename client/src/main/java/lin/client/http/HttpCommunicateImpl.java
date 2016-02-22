@@ -11,6 +11,10 @@ import java.util.Map;
 public interface HttpCommunicateImpl{
     void init(Context context);
 
+    long getCacheSize();
+
+    void setCacheSize(long cacheSize);
+
     int getTimeout();
 
     void setTimeout(int timeout);

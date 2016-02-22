@@ -21,8 +21,8 @@ import lin.client.http.httpurlconnection.HttpURLConnectionCommunicateImpl;
 public class HttpCommunicate {
 
 	public static class Params{
-		private boolean mainThread;
-		private boolean debug;
+		private boolean mainThread = true;
+		private boolean debug = false;
 
 		public boolean isDebug() {
 			return debug;
@@ -39,6 +39,8 @@ public class HttpCommunicate {
 		public void setMainThread(boolean mainThread) {
 			this.mainThread = mainThread;
 		}
+
+
 	}
 
 
@@ -208,13 +210,22 @@ public class HttpCommunicate {
 		global().setDebug(debug);
 	}
 
-	public int getTimeout() {
+	public static int getTimeout() {
 		return global().getTimeout();
 	}
 
-	public void setTimeout(int timeout) {
+	public static void setTimeout(int timeout) {
 		global().setTimeout(timeout);
 	}
+
+	public static long getCacheSize() {
+		return global().getCacheSize();
+	}
+
+	public static void setCacheSize(long cacheSize) {
+		global().setCacheSize(cacheSize);
+	}
+
 //	/**
 //	 * 设置代理
 //	 *

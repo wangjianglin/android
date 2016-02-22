@@ -1,6 +1,7 @@
 /gradle
 /gradlew
 /client/build
+/set.properties
 .gradle
 /.idea
 /local.properties

@@ -48,7 +48,7 @@ public class HttpURLConnectionCommunicateImpl extends AbstractHttpCommunicateImp
 
 	@Override
 	protected HttpCommunicateDownloadFile downloadRequest() {
-		return new DownloadFile();
+		return new DownloadFile(context);
 	}
 
 //	private int timeout = 10000;

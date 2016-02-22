@@ -34,7 +34,7 @@ public class UpdateService extends Service {
 	public static final int UPDATE = 1;
 	public static final int DOWNLOAD_COMPLETE = 2;
 	
-	private static final int UPDATE_TIME = 10 * 60 * 100;
+	private static final int UPDATE_TIME = 10 * 60 * 1000;
 	
 	@SuppressLint("HandlerLeak")
 	private Handler serverHandler = new Handler(){
@@ -79,7 +79,9 @@ public class UpdateService extends Service {
 				while(true && !isDestroy){
 					try{
 						updateServiceImpl();
-					}catch(Throwable e){}
+					}catch(Throwable e){
+						e.printStackTrace();
+					}
 					
 					try {
 						Thread.sleep(UPDATE_TIME);
