@@ -11,6 +11,7 @@ import lin.client.http1.annotation.HttpPackageUrl;
  * @date Mar 8, 2015 10:24:08 PM
  *
  */
+@Deprecated
 @HttpPackageUrl("/core/comm/test.action")
 public class TestPackage extends lin.client.http.HttpPackage{
 

@@ -26,10 +26,15 @@
     <preference name="PageLength" value="0" />
     <preference name="PaginationBreakingMode" value="page" />
     <preference name="PaginationMode" value="unpaginated" /> -->
-    
+
     <plugin name="app">
         <param name="android-package" value="lin.web.plugin.LinAppPlugin" />
     </plugin>
+
+    <plugin name="httpDns">
+        <param name="android-package" value="lin.web.plugin.HttpDNSPlugin" />
+    </plugin>
+
     <plugin name="device">
         <param name="android-package" value="lin.web.plugin.LinDevicePlugin" />
     </plugin>

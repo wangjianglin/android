@@ -53,7 +53,7 @@ public class LinXWalkClient extends XWalkResourceClient{
 
 	@Override
 	public WebResourceResponse shouldInterceptLoadRequest(XWalkView view,
-			String url) {
+														  String url) {
 		InputStream in = WebCache.cache(this.activity, url);
 		WebResourceResponse response = null;
 		if(in == null){
@@ -62,8 +62,21 @@ public class LinXWalkClient extends XWalkResourceClient{
 			response = new WebResourceResponse("images/*","utf-8",in);
 		}
 		return response;
-//		return super.shouldInterceptLoadRequest(view, url);
 	}
+
+//	@Override
+//	public XWalkWebResourceResponse shouldInterceptLoadRequest(XWalkView view, XWalkWebResourceRequest request) {
+//		InputStream in = WebCache.cache(this.activity, request.getUrl().toString());
+//		XWalkWebResourceResponse response = null;
+//		if(in == null){
+//			response = super.shouldInterceptLoadRequest(view, request);
+//		}else{
+//			response = this.createXWalkWebResourceResponse("images/*","utf-8",in);
+//		}
+//		return response;
+//	}
+
+
 
 	@SuppressLint("DefaultLocale")
 	@Override
@@ -84,5 +97,6 @@ public class LinXWalkClient extends XWalkResourceClient{
 		}
 		return super.shouldOverrideUrlLoading(view, url);
 	}
+
 
 }

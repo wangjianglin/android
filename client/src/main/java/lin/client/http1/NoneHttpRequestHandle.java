@@ -11,6 +11,7 @@ import org.apache.http.message.AbstractHttpMessage;
  * @date 2013-7-16 下午12:03:17
  *
  */
+@Deprecated
 public class NoneHttpRequestHandle implements HttpRequestHandle {
 
 	@Override

@@ -17,6 +17,7 @@ import lin.util.reflect.PropertyOperator;
  * @date 2013-7-16 下午12:03:13
  *
  */
+@Deprecated
 public class EncryptJsonHttpRequestHandle implements HttpRequestHandle {
 
 	public static class ResultData<T>{

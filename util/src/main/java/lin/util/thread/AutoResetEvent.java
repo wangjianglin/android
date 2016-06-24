@@ -1,5 +1,6 @@
 package lin.util.thread;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -34,10 +35,14 @@ public class AutoResetEvent {
 	}
 	
 	public void waitOne(){
+		waitOne(0);
+	}
+
+	public void waitOne(long timeout){
 		lock.lock();
 		while(!isSet){
 			try {
-				condition.await();
+				condition.await(timeout, TimeUnit.MILLISECONDS);
 			} catch (InterruptedException e) {
 				break;
 			}

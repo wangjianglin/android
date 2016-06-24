@@ -18,7 +18,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:2.1.2'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -49,19 +49,26 @@ buildscript {
 //}
 
 
+
+
 allprojects {
 
     apply plugin: 'maven'
 //    apply plugin: 'com.android.library'
 
+
     configurations.all {
         resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
     }
-    repositories {
-        maven {url prop.getProperty('maven.url')}
-//        jcenter()
-    }
 
+    repositories {
+//        flatDir{
+//            dirs '../web_xwalk/libs' //this way we can find the .aar file in libs folder
+////            dirs(('../' + project.name + '/libs'))
+//        }
+        maven {url prop.getProperty('maven.url')}
+        jcenter()
+    }
 
 
 //    uploadArchives {
@@ -78,6 +85,19 @@ subprojects {
     }else {
         apply plugin: 'com.android.library'
     }
+//    print('\n=================\n')
+//    print(project.projectDir.absolutePath)
+//
+//    project.getRepositories().flatDir{
+//        dirs project.projectDir.absolutePath + '/libs'
+//    }
+//    repositories {
+//        flatDir{
+//            dirs project.projectDir.absolutePath + '/libs' //this way we can find the .aar file in libs folder
+//        }
+//        maven {url prop.getProperty('maven.url')}
+//        jcenter()
+//    }
 //    apply plugin: 'java'
 
 //    android {

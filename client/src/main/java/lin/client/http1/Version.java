@@ -6,6 +6,7 @@ package lin.client.http1;
  * @date 2013-7-16 下午12:03:42
  *
  */
+@Deprecated
 public class Version {
 
 	/**

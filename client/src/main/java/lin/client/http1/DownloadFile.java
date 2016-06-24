@@ -23,6 +23,7 @@ import lin.util.Utils;
 /**
  * Created by lin on 9/24/15.
  */
+@Deprecated
 class DownloadFile implements lin.client.http1.Aboutable {
 
     private static final int DOWNLOAD_SIZE = 400*1024;

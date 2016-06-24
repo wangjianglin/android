@@ -9,6 +9,7 @@ import java.util.List;
  * @date 2013-7-16 上午11:28:01
  *
  */
+@Deprecated
 public interface ResultListener {
 	 void result(Object obj, List<Error> warning);
 	 void fault(Error error);

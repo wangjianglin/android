@@ -18,9 +18,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
 
@@ -30,7 +27,6 @@ import lin.client.http.HttpCommunicate;
 import lin.client.http.HttpCommunicateDownloadFile;
 import lin.client.http.HttpCommunicateImpl;
 import lin.client.http.ProgressResultListener;
-import lin.util.Utils;
 
 /**
  * Created by lin on 9/24/15.
@@ -70,7 +66,8 @@ class DownloadFile implements HttpCommunicateDownloadFile {
             if (urls != null && urls.containsKey(url.toString())) {
                 return null;
             }
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            HttpURLConnection conn = Utils.open(url.toString(),this.impl.getHttpDNS());
 
             conn.connect();
 
@@ -125,7 +122,7 @@ class DownloadFile implements HttpCommunicateDownloadFile {
             e.printStackTrace();
 //                    lin.client.http.Error error = new Error();
 //                    error.setStackTrace(Utils.printStackTrace(e));
-            Error error = new Error(-2,"","",Utils.printStackTrace(e));
+            Error error = new Error(-2,"","",lin.util.Utils.printStackTrace(e));
             listener.fault(error);
             return;
         }
@@ -226,7 +223,8 @@ class DownloadFile implements HttpCommunicateDownloadFile {
 
 
     private URL downFile(URL url,File dFile,byte[] buffer)throws Throwable {
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        HttpURLConnection conn = Utils.open(url.toString(),this.impl.getHttpDNS());
         conn.setRequestMethod("GET");
         //先禁gzip测试
     //                conn.setDoOutput(true);// 是否输入参数

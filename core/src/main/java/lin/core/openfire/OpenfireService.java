@@ -155,10 +155,10 @@ public class OpenfireService extends Service {
 //        }
 
 		//自定义通知栏RemoteViews
-		RemoteViews remoteviews = new RemoteViews(this.getPackageName(), R.layout.notification_remote_view);
-		remoteviews.setImageViewResource(R.id.notification_image, R.drawable.ic_launcher);
-		remoteviews.setTextViewText(R.id.notification_title, title);
-		remoteviews.setTextViewText(R.id.notification_text, message);
+		RemoteViews remoteviews = new RemoteViews(this.getPackageName(), R.layout.lin_core_notification_remote_view);
+		remoteviews.setImageViewResource(R.id.openfire_notification_image, R.drawable.ic_launcher);
+		remoteviews.setTextViewText(R.id.openfire_notification_title, title);
+		remoteviews.setTextViewText(R.id.openfire_notification_text, message);
 		notif.contentView = remoteviews;
 
 //				startActivity(intent);

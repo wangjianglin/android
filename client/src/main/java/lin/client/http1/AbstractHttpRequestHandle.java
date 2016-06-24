@@ -13,6 +13,7 @@ import org.apache.http.message.AbstractHttpMessage;
  * @date Jun 26, 2015 11:25:34 AM
  *
  */
+@Deprecated
 public abstract class AbstractHttpRequestHandle implements HttpRequestHandle {
 	@SuppressWarnings("unchecked")
 	@Override

@@ -9,6 +9,7 @@ import java.util.List;
  * @date 2013-7-16 上午11:33:44
  *
  */
+@Deprecated
 public interface HttpRequestListener {
 
 	 /// <summary>

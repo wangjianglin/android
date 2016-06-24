@@ -6,6 +6,7 @@ package lin.client.http1;
  * @date 2013-7-29 下午4:38:02
  *
  */
+@Deprecated
 public class LoadBalancer {
 
 	//Strategy策略

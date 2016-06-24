@@ -9,6 +9,7 @@ import lin.util.thread.AutoResetEvent;
  * @date 2013-7-16 下午12:02:52
  *
  */
+@Deprecated
 public class HttpCommunicateResult {
 	public static final long ABORT_CODE = 0x2001000;
     //private AutoResetEvent are;

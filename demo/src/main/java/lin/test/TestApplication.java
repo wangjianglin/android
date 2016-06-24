@@ -6,9 +6,12 @@ import android.widget.Toast;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 
 import lin.client.http.HttpCommunicate;
 import lin.client.http.HttpCommunicateType;
+import lin.client.httpdns.AliHttpDNS;
+import lin.client.httpdns.HttpDNS;
 import lin.core.Images;
 import lin.core.log.Log;
 
@@ -20,10 +23,21 @@ public class TestApplication extends Application {
 
         HttpCommunicate.init(this);
 
-        HttpCommunicate.setType(HttpCommunicateType.HttpURLConnection);
+//        HttpCommunicate.setType(HttpCommunicateType.HttpClient);
+        HttpCommunicate.setHttpDNS(new AliHttpDNS("172280"));
+        HttpCommunicate.getHttpDNS().setDegradationFilter(new HttpDNS.DegradationFilter() {
+            @Override
+            public boolean shouldDegradeHttpDNS(String hostName) {
+                return hostName == null || !hostName.endsWith(".feicuibaba.com");
+            }
+        });
+
+        HttpCommunicate.getHttpDNS().setPreResolveHosts(Arrays.asList("s.feicuibaba.com"));
 
         try {
-            HttpCommunicate.setCommUrl(new URL("http://192.168.1.66:8080"));
+//            HttpCommunicate.setCommUrl(new URL("http://192.168.1.66:8080"));
+            HttpCommunicate.setCommUrl(new URL("http://s.feicuibaba.com"));
+//            HttpCommunicate.setCommUrl(new URL("http://120.25.147.21"));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

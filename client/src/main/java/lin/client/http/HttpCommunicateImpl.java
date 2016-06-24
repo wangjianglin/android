@@ -5,11 +5,16 @@ import android.content.Context;
 import java.net.URL;
 import java.util.Map;
 
+import lin.client.httpdns.HttpDNS;
+
 /**
  * Created by lin on 1/9/16.
  */
 public interface HttpCommunicateImpl{
     void init(Context context);
+
+    void setHttpDNS(HttpDNS httpDNS);
+    HttpDNS getHttpDNS();
 
     long getCacheSize();
 
@@ -37,18 +42,21 @@ public interface HttpCommunicateImpl{
 
     void removeHttpRequestListener(HttpRequestListener listener);
 
-    HttpCommunicateResult request(HttpPackage pack, ResultListener listener);
+    HttpCommunicateResult<Object> request(HttpPackage pack, ResultListener listener);
+    HttpCommunicateResult<Object> request(HttpPackage pack);
 
     //	public HttpCommunicateResult request(lin.client.http.TcpPackage pack,final ResultFunction result,final FaultFunction fault){
-    HttpCommunicateResult request(HttpPackage pack, ResultListener listener, HttpCommunicate.Params params);
+    HttpCommunicateResult<Object> request(HttpPackage pack, ResultListener listener, HttpCommunicate.Params params);
 
-    HttpCommunicateResult download(String file, ResultListener listener);
+    HttpCommunicateResult<FileInfo> download(String file);
+    HttpCommunicateResult<FileInfo> download(String file, ResultListener listener);
 
-    HttpCommunicateResult download(String file, ResultListener listener, HttpCommunicate.Params params);
+    HttpCommunicateResult<FileInfo> download(String file, ResultListener listener, HttpCommunicate.Params params);
 
-    HttpCommunicateResult download(URL file, ResultListener listener);
+    HttpCommunicateResult<FileInfo> download(URL file);
+    HttpCommunicateResult<FileInfo> download(URL file, ResultListener listener);
 
-    HttpCommunicateResult download(URL file, ResultListener listener, HttpCommunicate.Params params);
+    HttpCommunicateResult<FileInfo> download(URL file, ResultListener listener, HttpCommunicate.Params params);
 
     boolean isMainThread();
 

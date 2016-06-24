@@ -33,6 +33,7 @@ import org.apache.http.protocol.HTTP;
  * @date 2013-7-16 下午12:03:00
  *
  */
+@Deprecated
 public class HttpRequest implements Aboutable{
 
 	private HttpPackage pack;

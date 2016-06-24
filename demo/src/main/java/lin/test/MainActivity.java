@@ -3,6 +3,7 @@ package lin.test;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -13,6 +14,10 @@ import android.widget.Button;
 
 import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 
 import lin.client.http.*;
@@ -24,8 +29,74 @@ import lin.util.Procedure;
 
 public class MainActivity extends Activity {
 
+
+//    public static HttpURLConnection getHttpURLConnection(String urlString)
+//            throws Throwable {
+//        URL url = new URL(urlString);
+//        String originHost = url.getHost();
+//        HttpURLConnection conn;
+//
+////        String dstIp = httpdnsService.getIpByHost(url.getHost());
+//        String dstIp = "119.84.111.126";
+////        String dstIp = "120.25.147.21";
+////        if (dstIp != null) {
+////            Log.d("HttpDNS Demo", "Get IP from HttpDNS, " + url.getHost() + ": " + dstIp);
+//        urlString = urlString.replaceFirst(url.getHost(), dstIp);
+//        url = new URL(urlString);
+//        conn = (HttpURLConnection) url.openConnection();
+//        // 设置HTTP请求头Host域
+//        conn.setRequestProperty("Host", originHost);
+//        System.out.println("host:"+conn.getRequestProperty("Host"));
+//        return conn;
+////        } else {
+//////            Log.d("HttpDNS Demo", "Degrade to local DNS.");
+////            return (HttpURLConnection) url.openConnection();
+////        }
+//    }
+
+//    private void test()throws Throwable{
+//
+////        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+////                .detectDiskReads()
+////                .detectDiskWrites()
+////                .detectNetwork()
+////                .penaltyLog()
+////                .build());
+//        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+//                .detectDiskReads()
+//                .detectDiskWrites()
+//                .detectNetwork()   // or .detectAll() for all detectable problems
+//                .penaltyLog()
+//                .build());
+//        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+//                .detectLeakedSqlLiteObjects()
+//                .detectLeakedClosableObjects()
+//                .penaltyLog()
+//                .penaltyDeath()
+//                .build());
+//
+//        HttpURLConnection conn = getHttpURLConnection("http://7xi5xd.com1.z0.glb.clouddn.com/help.html");
+////        HttpURLConnection conn = getHttpURLConnection("http://s.feicuibaba.com");
+//
+////		java.io.InputStreamReader in = new InputStreamReader(conn.getInputStream());
+//
+//        conn.connect();
+//
+//        java.io.BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+//
+//        String line = null;
+//        while((line = in.readLine()) != null){
+//            System.out.println(line);
+//        }
+//    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+//        try{
+//            test();
+//        }catch (Throwable e){
+//            e.printStackTrace();
+//        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -138,22 +209,22 @@ public class MainActivity extends Activity {
 //                        System.out.println("ok.");
 //                    }
 //                });
-//                TestPackage pack = new TestPackage();
-//
-//                pack.setData("test!");
-//
-//
-//                HttpCommunicate.request(pack, new ResultListener() {
-//                    @Override
-//                    public void result(Object obj, List<Error> warning) {
-//                        System.out.println("obj:"+obj);
-//                    }
-//
-//                    @Override
-//                    public void fault(Error error) {
-//                        System.out.println("error:"+error);
-//                    }
-//                }).waitForEnd();
+                TestPackage pack = new TestPackage();
+
+                pack.setData("test!");
+
+
+                HttpCommunicate.request(pack, new ResultListener() {
+                    @Override
+                    public void result(Object obj, List<Error> warning) {
+                        System.out.println("obj:"+obj);
+                    }
+
+                    @Override
+                    public void fault(Error error) {
+                        System.out.println("error:"+error);
+                    }
+                }).waitForEnd();
 //
 //
 ////                Assert.assertEquals("通信测试失败！",testCommResult,pack.getData());
@@ -205,34 +276,50 @@ public class MainActivity extends Activity {
 //                    }).waitForEnd();
 //                }
 
-                HttpCommunicate.download("https://www.feicuibaba.com/proxy/proxy-channel.apk.php?channel=own", new ResultListener() {
-                    @Override
-                    public void result(Object obj, List<Error> warning) {
-                        System.out.println(obj);
-                    }
-
-                    @Override
-                    public void fault(Error error) {
-                        System.out.println(error);
-                    }
-                });
+//                HttpCommunicate.download("https://www.feicuibaba.com/proxy/proxy-channel.apk.php?channel=own", new ResultListener() {
+//                    @Override
+//                    public void result(Object obj, List<Error> warning) {
+//                        System.out.println(obj);
+//                    }
+//
+//                    @Override
+//                    public void fault(Error error) {
+//                        System.out.println(error);
+//                    }
+//                });
 
 //                Assert.assertEquals("返回null值失败！",testCommResult,pack.getData());
             }
         });
 
 
-        HttpCommunicate.download("https://www.feicuibaba.com/proxy/proxy-channel2.apk.php?channel=own", new ResultListener() {
-            @Override
-            public void result(Object obj, List<Error> warning) {
-                System.out.println(obj);
-            }
+//        HttpCommunicate.download("https://www.feicuibaba.com/proxy/proxy-channel2.apk.php?channel=own", new ResultListener() {
+//            @Override
+//            public void result(Object obj, List<Error> warning) {
+//                System.out.println(obj);
+//            }
+//
+//            @Override
+//            public void fault(Error error) {
+//                System.out.println(error);
+//            }
+//        });
 
-            @Override
-            public void fault(Error error) {
-                System.out.println(error);
-            }
-        });
+//        HttpDataPackage dataPackage = new HttpDataPackage("http://dwz.cn/create.php",HttpMethod.POST);
+//        dataPackage.add("url","https://www.feicuibaba.com/proxy.php");
+//        dataPackage.setRespType(Dwz.class);
+//
+//        HttpCommunicate.request(dataPackage, new ResultListener() {
+//            @Override
+//            public void result(Object obj, List<Error> warning) {
+//                System.out.println(obj);
+//            }
+//
+//            @Override
+//            public void fault(Error error) {
+//                System.out.println(error);
+//            }
+//        });
     }
 
     @Override

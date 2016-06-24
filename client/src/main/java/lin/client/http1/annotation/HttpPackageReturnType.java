@@ -13,6 +13,7 @@ import java.lang.annotation.Target;
  */
 @Target(value={ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
+@Deprecated
 public @interface HttpPackageReturnType {
 
 	Class<?> value();

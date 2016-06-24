@@ -73,7 +73,7 @@ public class JavaScriptObject {
 				String r = JsonUtil.serialize(actions(action));
 				return r;
 			}
-			LinWebPlugin plugin = pluginObject(pluginName);
+			LinWebPlugin plugin = pluginObject(pluginName.toLowerCase());
 			Method method = null;
 			try {
 				method = plugin.getClass().getDeclaredMethod(action,Map.class);

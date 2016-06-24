@@ -48,6 +48,18 @@ public class Config {
     private Config(Activity activity) {
     	this.activity = activity;
         if (activity != null) {
+
+            String[] names = new String[]{"app","device","video","httpdns"};
+
+            Class<?>[] classes = new Class<?>[]{lin.web.plugin.LinAppPlugin.class,
+                    lin.web.plugin.LinDevicePlugin.class,
+                    lin.web.plugin.VideoPlugin.class,
+                    lin.web.plugin.HttpDNSPlugin.class};
+
+            for(int n=0;n<names.length;n++){
+                plugins.put(names[n],classes[n]);
+            }
+
             this.loadConfig();
             this.loadPlugins();
         }
@@ -227,7 +239,7 @@ public class Config {
     
     private void addPlugin(String plugin,String pluginClass,boolean onload){
     	try {
-			plugins.put(plugin,Class.forName(pluginClass, false, Config.class.getClassLoader()));
+			plugins.put(plugin.toLowerCase(),Class.forName(pluginClass, false, Config.class.getClassLoader()));
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}

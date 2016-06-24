@@ -1,1 +1,7 @@
 WebCache 缓存文件增加淘汰策略
+
+http请求加，默认http头
+
+HTTP_COMM_PROTOCOL、HTTP_COMM_PROTOCOL_DEBUG  通过 默认http头设置
+
+图片缓存采用，uriconnection直接下载

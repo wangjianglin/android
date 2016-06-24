@@ -26,6 +26,7 @@ import lin.client.http1.annotation.HttpParamName;
  * @date 2013-7-16 上午11:58:23
  *
  */
+@Deprecated
 public abstract class HttpPackage {
 	public static final HttpRequestHandle JSON = new EncryptJsonHttpRequestHandle();
 	public static final HttpRequestHandle STANDARD_JSON = new StandardJsonHttpRequestHandle();

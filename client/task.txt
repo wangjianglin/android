@@ -9,6 +9,8 @@ DownlaodFile：
 5、文件名
 
 
+
+
 可以适配，HttpClient、HttpURLConnection两种通信方式
 
 
@@ -17,3 +19,16 @@ HttpURLConnection:
 
 
 TCP实现异步响应
+
+Http Listener中加入 http response 头获取方法
+
+HttpPackage 加入请求与响应编码注解
+
+
+6、下载失败时，waitForEnd不返回
+
+7、加入httpdns支持
+
+8、改进下载api，支持设置http头，建HttpDownloadPackage类
+
+https://www.feicuibaba.com/proxy/proxy-channel.apk.php?channel=own  不能用httpdns

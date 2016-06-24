@@ -213,7 +213,7 @@ public class UpdateManager {
 			if (packageName.equals(context.getPackageName()) && version.equals(updateInfo.version)) {
 				result = true;
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			result = false;
 			//Log.e(TAG,*****  解析未安装的 apk 出现异常 *****+e.getMessage,e);
 		}
@@ -242,9 +242,10 @@ public class UpdateManager {
 
 		HttpCommunicate.init(context);
 
-		File downloadFile = (File)HttpCommunicate.download(apkDownloadUrl,null).getResult();
+		FileInfo downloadFileInfo = (FileInfo)HttpCommunicate.download(apkDownloadUrl,null).getResult();
 
-		if (downloadFile != null){
+		if (downloadFileInfo != null && downloadFileInfo.getFile() != null){
+			File downloadFile = downloadFileInfo.getFile();
 			downloadFile.renameTo(apkFile);
 			if(isComplate(context,apkFile.getAbsolutePath(),updateInfo)) {
 				callback.procedure(Uri.fromFile(apkFile));

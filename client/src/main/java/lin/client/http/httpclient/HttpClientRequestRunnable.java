@@ -90,22 +90,34 @@ public class HttpClientRequestRunnable implements Runnable{
         pack.getRequestHandle().response(pack, _out.toByteArray(), listener);
     }
 
+    private void addHeaders(HttpPackage pack,HttpRequestBase request){
+        for (Map.Entry<String,String> item : impl.defaultHeaders().entrySet()){
+            request.addHeader(item.getKey(),item.getValue());
+        }
+        for (Map.Entry<String,String> item : pack.getHeaders().entrySet()){
+            request.removeHeaders(item.getKey());
+            request.addHeader(item.getKey(),item.getValue());
+        }
+    }
     private HttpRequestBase get() throws Throwable {
         String url = HttpUtils.uri(impl, pack);
         url = addGetParams(url,generParams(pack.getParams()));
         HttpGet get = new HttpGet(url);
 
+        addHeaders(this.pack,get);
+
         return get;
     }
     private HttpRequestBase post(){
         HttpPost post = new HttpPost(HttpUtils.uri(impl, pack));
-        for (Map.Entry<String,String> item : impl.defaultHeaders().entrySet()){
-            post.addHeader(item.getKey(),item.getValue());
-        }
-        post.addHeader(Constants.HTTP_COMM_PROTOCOL, "");
-        if(impl.isDebug()){
-            post.addHeader(Constants.HTTP_COMM_PROTOCOL_DEBUG, "");
-        }
+//        for (Map.Entry<String,String> item : impl.defaultHeaders().entrySet()){
+//            post.addHeader(item.getKey(),item.getValue());
+//        }
+        addHeaders(this.pack,post);
+//        post.addHeader(Constants.HTTP_COMM_PROTOCOL, "");
+//        if(impl.isDebug()){
+//            post.addHeader(Constants.HTTP_COMM_PROTOCOL_DEBUG, "");
+//        }
         Map<String,Object> postParams = pack.getRequestHandle().getParams(pack,new HttpClientMessage(post));
         if(postParams != null){
             if(pack.isMultipart()){

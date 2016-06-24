@@ -13,6 +13,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value={ElementType.FIELD})
+@Deprecated
 public @interface HttpParamName {
 	String value() default "";
 }

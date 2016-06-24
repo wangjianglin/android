@@ -5,6 +5,7 @@ import java.io.File;
 /**
  * Created by lin on 1/5/16.
  */
+@Deprecated
 public class FileInfo {
 
     private File file;

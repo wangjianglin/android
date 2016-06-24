@@ -1,5 +1,6 @@
 package lin.client.http1;
 
+@Deprecated
 public enum HttpMethod {
 	GET,POST,PUT,HEAD,DELETE;
 

@@ -1,7 +1,5 @@
 package lin.client.http;
 
-import org.apache.http.entity.ContentType;
-
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -11,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import lin.client.http.annotation.HttpFileInfo;
+import lin.client.http.annotation.HttpHeaderName;
 import lin.client.http.annotation.HttpPackageMethod;
 import lin.client.http.annotation.HttpPackageReturnType;
 import lin.client.http.annotation.HttpPackageUrl;
@@ -25,15 +24,12 @@ import lin.client.http.annotation.HttpParamName;
 public abstract class HttpPackage {
 	public static final HttpRequestHandle JSON = new EncryptJsonHttpRequestHandle();
 	public static final HttpRequestHandle STANDARD_JSON = new StandardJsonHttpRequestHandle();
-    public static final HttpRequestHandle NONE = new NoneHttpRequestHandle();
-//    private UrlType urlType = UrlType.RELATIVE;// { get; protected set; }
-    
-    //private static final Class<?> _DefautlRespType = String.class;
+	public static final HttpRequestHandle NONE = new NoneHttpRequestHandle();
+	public static final HttpRequestHandle NORMAL = new NormalHttpRequestHandle();
+
 
     static
     {
-        
-        //如果没有配置主版，则默认为无版本信息
 
     }
 
@@ -47,6 +43,8 @@ public abstract class HttpPackage {
 
 	private HttpMethod method = HttpMethod.POST;
 	private Type respType  = String.class;//{ get;protected set; }
+
+	private Map<String,String> headers = new HashMap<String, String>();
     
     public HttpPackage(){
     	this.init();
@@ -135,6 +133,7 @@ public abstract class HttpPackage {
     protected void setRequestHandle(HttpRequestHandle handle) {
 		this.requestHandle = handle;
 	}
+
 
     public Map<String, Object> getParams()
     {
@@ -253,6 +252,41 @@ public abstract class HttpPackage {
 
 	public boolean isMultipart(){
 		return multipart;
+	}
+
+	private Map<String,String> getAnonHeaders(){
+		Class<?> cls = this.getClass();
+		Field[] fs = cls.getDeclaredFields();
+		HttpHeaderName item;
+		String paramName;
+
+		Map<String,String> headers = new HashMap<String,String>();
+		for(Field f : fs) {
+			item = f.getAnnotation(HttpHeaderName.class);
+			if (item == null) {
+				continue;
+			}
+			paramName = item.value();
+			if(paramName == null || "".equals(paramName.trim())){
+				paramName = f.getName();
+			}
+			try {
+				headers.put(paramName, (String) f.get(this));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return headers;
+	}
+	public void addHeader(String name,String value){
+		headers.put(name,value);
+	}
+	public Map<String,String> getHeaders(){
+		Map<String,String> r = new HashMap<String,String>();
+		Map<String,String> h = getAnonHeaders();
+		r.putAll(headers);
+		r.putAll(h);
+		return r;
 	}
 }
 

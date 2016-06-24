@@ -3,7 +3,6 @@ apply plugin: 'com.android.library'
 group = 'lin'
 version = '0.0.1-SNAPSHOT'
 
-
 android {
     compileSdkVersion 22
     buildToolsVersion "23.0.1"
@@ -29,12 +28,34 @@ android {
     }
 }
 
+//        flatDir{
+//            dirs 'libs' //this way we can find the .aar file in libs folder
+//        }
+//repositories {
+//        flatDir{
+//            dirs 'libs' //this way we can find the .aar file in libs folder
+//        }
+//
+//    maven { url 'http://maven.feicuibaba.com/content/groups/public/' }
+////    jcenter()
+//}
+//repositories.flatDir {
+//    dir '../web_xwalk/libs'
+//}
+//repositories.flatDir {
+//    dir 'libs'
+//}
+//getRepositories().flatDir{
+//    dir 'libs'
+//}
+
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     //    testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:22+'
     compile project(':xwalk_lib')
+//    compile (name:'crosswalk-18.48.477.13',ext:'aar')
     compile project(':web_plugin')
 }
 

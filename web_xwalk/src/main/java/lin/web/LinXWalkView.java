@@ -37,6 +37,15 @@ public class LinXWalkView extends XWalkView{
         if ((appInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0) {
         	XWalkPreferences.setValue(XWalkPreferences.REMOTE_DEBUGGING, true);
         }
+        XWalkPreferences.setValue("enable-javascript", true);
+        XWalkPreferences.setValue("javascript-can-open-window", true);
+        XWalkPreferences.setValue("allow-universal-access-from-file", true);
+        XWalkPreferences.setValue("support-multiple-windows", true);
+
+
+
+
+
 //        this.setVerticalScrollBarEnabled(false);
 //        if (shouldRequestFocusOnInit()) {
             this.setFocusableInTouchMode(true);
@@ -186,15 +195,11 @@ public class LinXWalkView extends XWalkView{
         }
         return false;
     }
-    
-    static{
-      XWalkPreferences.setValue("enable-javascript", true);
-      // XWalkPreferencesInternal.JAVASCRIPT_CAN_OPEN_WINDOW
-      XWalkPreferences.setValue("javascript-can-open-window", true);
-      // XWalkPreferencesInternal.ALLOW_UNIVERSAL_ACCESS_FROM_FILE
-      XWalkPreferences.setValue("allow-universal-access-from-file", true);
-      // XWalkPreferencesInternal.SUPPORT_MULTIPLE_WINDOWS
-      XWalkPreferences.setValue("support-multiple-windows", true);
-//      XWalkPreferences.setValue(XWalkPreferences.REMOTE_DEBUGGING, true);
-	}
+
+    static {
+        XWalkPreferences.setValue("enable-javascript", true);
+        XWalkPreferences.setValue("javascript-can-open-window", true);
+        XWalkPreferences.setValue("allow-universal-access-from-file", true);
+        XWalkPreferences.setValue("support-multiple-windows", true);
+    }
 }

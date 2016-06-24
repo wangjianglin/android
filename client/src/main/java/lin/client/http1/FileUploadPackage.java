@@ -20,6 +20,7 @@ import org.apache.http.entity.mime.content.InputStreamBody;
  * add*方法都为protected，如果为public,虽然更方便了，但增加了出错的可能，同时也减轻了调时的难度
  *
  */
+@Deprecated
 public class FileUploadPackage extends HttpPackage {
 
 	@Override

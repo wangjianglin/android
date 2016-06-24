@@ -26,6 +26,7 @@ import lin.util.Action;
  * @date 2013-7-29 下午9:13:22
  *
  */
+@Deprecated
 public class HttpCommunicateImpl{// implements HttpCommunicate{
 
 	private Context context;

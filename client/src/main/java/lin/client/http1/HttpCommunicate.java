@@ -19,6 +19,7 @@ import org.apache.http.client.CookieStore;
  * @date 2013-7-16 下午12:02:48
  * 
  */
+@Deprecated
 public class HttpCommunicate {
 
 	private HttpCommunicate(){}

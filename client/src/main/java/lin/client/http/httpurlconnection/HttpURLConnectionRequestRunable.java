@@ -70,7 +70,8 @@ class HttpURLConnectionRequestRunable implements Runnable {
             String paramsString = generParams(pack.getParams());
             urlString = addGetParams(urlString, paramsString);
         }
-        HttpURLConnection conn = (HttpURLConnection) new URL(urlString).openConnection();
+//        HttpURLConnection conn = (HttpURLConnection) new URL(urlString).openConnection();
+        HttpURLConnection conn = Utils.open(urlString,this.impl.getHttpDNS());
 
         conn.setRequestProperty("accept", "*/*");
         conn.setRequestProperty("connection", "Keep-Alive");
@@ -85,9 +86,12 @@ class HttpURLConnectionRequestRunable implements Runnable {
         for (Map.Entry<String, String> item : impl.defaultHeaders().entrySet()) {
             conn.setRequestProperty(item.getKey(), item.getValue());
         }
-        conn.setRequestProperty(Constants.HTTP_COMM_PROTOCOL, "");
-        if (impl.isDebug()) {
-            conn.setRequestProperty(Constants.HTTP_COMM_PROTOCOL_DEBUG, "");
+//        conn.setRequestProperty(Constants.HTTP_COMM_PROTOCOL, "");
+//        if (impl.isDebug()) {
+//            conn.setRequestProperty(Constants.HTTP_COMM_PROTOCOL_DEBUG, "");
+//        }
+        for (Map.Entry<String, String> item : pack.getHeaders().entrySet()){
+            conn.setRequestProperty(item.getKey(), item.getValue());
         }
 
         // Post 请求不能使用缓存

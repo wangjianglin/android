@@ -13,6 +13,7 @@ import java.lang.annotation.Target;
  */
 @Target(value={ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
+@Deprecated
 public @interface HttpFileInfo {
 	String name();
 	String mimeType();

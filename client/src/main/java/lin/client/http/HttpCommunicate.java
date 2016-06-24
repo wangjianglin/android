@@ -11,6 +11,7 @@ import java.util.Map;
 
 import lin.client.http.httpclient.HttpClientCommunicateImpl;
 import lin.client.http.httpurlconnection.HttpURLConnectionCommunicateImpl;
+import lin.client.httpdns.HttpDNS;
 
 /**
  * 
@@ -41,6 +42,14 @@ public class HttpCommunicate {
 		}
 
 
+	}
+
+	public static void setHttpDNS(HttpDNS httpDNS){
+		global().setHttpDNS(httpDNS);
+	}
+
+	public static HttpDNS getHttpDNS(){
+		return global().getHttpDNS();
 	}
 
 
@@ -131,7 +140,9 @@ public class HttpCommunicate {
 				}
 				impl = new SoftReference<HttpCommunicateImpl>(himpl);
 				himpl.addHttpRequestListener(globalListner);
-				himpl.init(context);
+				if(context != null) {
+					himpl.init(context);
+				}
 				impls.put(name, impl);
 			}
 			return impl.get();
@@ -276,14 +287,21 @@ public class HttpCommunicate {
 //		return global.request(pack, listener);
 //	}
 
-	public static HttpCommunicateResult request(lin.client.http.HttpPackage pack,ResultListener listener){
+	public static HttpCommunicateResult<Object> request(lin.client.http.HttpPackage pack){
+//		if(listener != null){
+//			return global.request(pack,listener::result,listener::fault);
+//		}
+		return global().request(pack,null);
+	}
+
+	public static HttpCommunicateResult<Object> request(lin.client.http.HttpPackage pack,ResultListener listener){
 //		if(listener != null){
 //			return global.request(pack,listener::result,listener::fault);
 //		}
 		return global().request(pack,listener);
 	}
 
-	public static HttpCommunicateResult request(lin.client.http.HttpPackage pack,ResultListener listener,Params params){
+	public static HttpCommunicateResult<Object> request(lin.client.http.HttpPackage pack,ResultListener listener,Params params){
 		return global().request(pack,listener,params);
 	}
 	
@@ -301,25 +319,41 @@ public class HttpCommunicate {
 //	}
 
 
-	public static HttpCommunicateResult download(String file,
-												 ResultListener listener) {
+	public static HttpCommunicateResult<FileInfo> download(String file) {
+		return global().download(file,null);
+	}
+	public static HttpCommunicateResult<FileInfo> download(String file,
+														   ResultListener listener) {
 		return global().download(file,listener);
 	}
 
-	public static HttpCommunicateResult download(String file,
+	public static HttpCommunicateResult<FileInfo> download(String file,
 												 ResultListener listener,Params params) {
 		return global().download(file,listener,params);
 	}
 
-	public static HttpCommunicateResult download(URL file,
-												 ResultListener listener) {
+	public static HttpCommunicateResult<FileInfo> download(URL file) {
+		return global().download(file, null);
+		//return HttpCommunicateImpl.downloadImpl(file,listener);
+	}
+
+	public static HttpCommunicateResult<FileInfo> download(URL file,
+														   ResultListener listener) {
 		return global().download(file, listener);
 		//return HttpCommunicateImpl.downloadImpl(file,listener);
 	}
-	public static HttpCommunicateResult download(URL file,
+	public static HttpCommunicateResult<FileInfo> download(URL file,
 												  ResultListener listener,Params params) {
 		return global().download(file, listener);
 		//return HttpCommunicateImpl.downloadImpl(file,listener);
+	}
+
+	public static void addHeader(String name, String value){
+		global().addHeader(name,value);
+	}
+
+	public static void removeHeader(String name){
+		global().removeHeader(name);
 	}
 
 	private static Context context;

@@ -12,6 +12,7 @@ import java.util.List;
  * @date 2013-7-16 下午12:02:38
  *
  */
+@Deprecated
 class HttpUtils {
 
 

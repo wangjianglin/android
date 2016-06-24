@@ -13,6 +13,7 @@ import lin.util.reflect.PropertyOperator;
  *
  *
  */
+@Deprecated
 public class StandardJsonHttpRequestHandle extends AbstractHttpRequestHandle{
 
 	public static class ResultData<T>{

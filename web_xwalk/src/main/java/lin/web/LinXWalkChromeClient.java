@@ -50,26 +50,26 @@ public class LinXWalkChromeClient extends XWalkUIClient{
 		super.onJavascriptCloseWindow(view);
 	}
 
-	@Override
-	public boolean onJavascriptModalDialog(XWalkView view,
-			JavascriptMessageType type, String url, String message,
-			String defaultValue, XWalkJavascriptResult result) {
-		 switch(type) {
-         case JAVASCRIPT_ALERT:
-             return onJsAlert(view, url, message, result);
-         case JAVASCRIPT_CONFIRM:
-             return onJsConfirm(view, url, message, result);
-//         case JAVASCRIPT_PROMPT:
-//             return onJsPrompt(view, url, message, defaultValue, result);
-         case JAVASCRIPT_BEFOREUNLOAD:
-             // Reuse onJsConfirm to show the dialog.
-             return onJsConfirm(view, url, message, result);
-         default:
-             break;
-     }
-//     assert(false);
-     return false;
-	}
+//	@Override
+//	public boolean onJavascriptModalDialog(XWalkView view,
+//			JavascriptMessageType type, String url, String message,
+//			String defaultValue, XWalkJavascriptResult result) {
+//		 switch(type) {
+//         case JAVASCRIPT_ALERT:
+//             return onJsAlert(view, url, message, result);
+//         case JAVASCRIPT_CONFIRM:
+//             return onJsConfirm(view, url, message, result);
+////         case JAVASCRIPT_PROMPT:
+////             return onJsPrompt(view, url, message, defaultValue, result);
+//         case JAVASCRIPT_BEFOREUNLOAD:
+//             // Reuse onJsConfirm to show the dialog.
+//             return onJsConfirm(view, url, message, result);
+//         default:
+//             break;
+//     }
+////     assert(false);
+//     return false;
+//	}
 	
 	 /**
      * Tell the client to display a javascript alert dialog.
@@ -80,40 +80,40 @@ public class LinXWalkChromeClient extends XWalkUIClient{
      * @param result
      * @see Other implementation in the Dialogs plugin.
      */
-    private boolean onJsAlert(XWalkView view, String url, String message,
-            final XWalkJavascriptResult result) {
-        AlertDialog.Builder dlg = new AlertDialog.Builder(this.activity);
-        dlg.setMessage(message);
-        dlg.setTitle("提示");
-        //Don't let alerts break the back button
-        dlg.setCancelable(true);
-        dlg.setPositiveButton(android.R.string.ok,
-                new AlertDialog.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        result.confirm();
-                    }
-                });
-        dlg.setOnCancelListener(
-                new DialogInterface.OnCancelListener() {
-                    public void onCancel(DialogInterface dialog) {
-                        result.cancel();
-                    }
-                });
-        dlg.setOnKeyListener(new DialogInterface.OnKeyListener() {
-            //DO NOTHING
-            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK)
-                {
-                    result.confirm();
-                    return false;
-                }
-                else
-                    return true;
-            }
-        });
-        dlg.show();
-        return true;
-    }
+//    private boolean onJsAlert(XWalkView view, String url, String message,
+//            final XWalkJavascriptResult result) {
+//        AlertDialog.Builder dlg = new AlertDialog.Builder(this.activity);
+//        dlg.setMessage(message);
+//        dlg.setTitle("提示");
+//        //Don't let alerts break the back button
+//        dlg.setCancelable(true);
+//        dlg.setPositiveButton(android.R.string.ok,
+//                new AlertDialog.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        result.confirm();
+//                    }
+//                });
+//        dlg.setOnCancelListener(
+//                new DialogInterface.OnCancelListener() {
+//                    public void onCancel(DialogInterface dialog) {
+//                        result.cancel();
+//                    }
+//                });
+//        dlg.setOnKeyListener(new DialogInterface.OnKeyListener() {
+//            //DO NOTHING
+//            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+//                if (keyCode == KeyEvent.KEYCODE_BACK)
+//                {
+//                    result.confirm();
+//                    return false;
+//                }
+//                else
+//                    return true;
+//            }
+//        });
+//        dlg.show();
+//        return true;
+//    }
 
     /**
      * Tell the client to display a confirm dialog to the user.
@@ -124,45 +124,45 @@ public class LinXWalkChromeClient extends XWalkUIClient{
      * @param result
      * @see Other implementation in the Dialogs plugin.
      */
-    private boolean onJsConfirm(XWalkView view, String url, String message,
-            final XWalkJavascriptResult result) {
-        AlertDialog.Builder dlg = new AlertDialog.Builder(this.activity);
-        dlg.setMessage("\n"+message+"\n");
-        dlg.setTitle("");
-        dlg.setCancelable(true);
-        dlg.setPositiveButton(android.R.string.cancel,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        result.cancel();
-                    }
-                });
-        dlg.setNegativeButton(android.R.string.ok,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        result.confirm();
-                    }
-                });
-        dlg.setOnCancelListener(
-                new DialogInterface.OnCancelListener() {
-                    public void onCancel(DialogInterface dialog) {
-                        result.cancel();
-                    }
-                });
-        dlg.setOnKeyListener(new DialogInterface.OnKeyListener() {
-            //DO NOTHING
-            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK)
-                {
-                    result.cancel();
-                    return false;
-                }
-                else
-                    return true;
-            }
-        });
-        dlg.show();
-        return true;
-    }
+//    private boolean onJsConfirm(XWalkView view, String url, String message,
+//            final XWalkJavascriptResult result) {
+//        AlertDialog.Builder dlg = new AlertDialog.Builder(this.activity);
+//        dlg.setMessage("\n"+message+"\n");
+//        dlg.setTitle("");
+//        dlg.setCancelable(true);
+//        dlg.setPositiveButton(android.R.string.cancel,
+//                new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        result.cancel();
+//                    }
+//                });
+//        dlg.setNegativeButton(android.R.string.ok,
+//                new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        result.confirm();
+//                    }
+//                });
+//        dlg.setOnCancelListener(
+//                new DialogInterface.OnCancelListener() {
+//                    public void onCancel(DialogInterface dialog) {
+//                        result.cancel();
+//                    }
+//                });
+//        dlg.setOnKeyListener(new DialogInterface.OnKeyListener() {
+//            //DO NOTHING
+//            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+//                if (keyCode == KeyEvent.KEYCODE_BACK)
+//                {
+//                    result.cancel();
+//                    return false;
+//                }
+//                else
+//                    return true;
+//            }
+//        });
+//        dlg.show();
+//        return true;
+//    }
 
     /**
      * Tell the client to display a prompt dialog to the user.

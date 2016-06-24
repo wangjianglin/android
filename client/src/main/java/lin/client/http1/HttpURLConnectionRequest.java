@@ -10,6 +10,7 @@ import java.net.URL;
  * Created by lin on 9/24/15.
  * 改用 HttpURLConnection 实现HTTP请求
  */
+@Deprecated
 public class HttpURLConnectionRequest {
 
     //HttpURLConnection
