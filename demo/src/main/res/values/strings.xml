@@ -20,4 +20,5 @@
     <string name="title_activity_images">ImagesActivity</string>
     <string name="title_activity_controls">ControlsActivity</string>
     <string name="title_activity_group_list">GroupListActivity</string>
+    <string name="title_activity_binding">BindingActivity</string>
 </resources>

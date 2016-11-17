@@ -1,7 +1,6 @@
 package lin.core.annotation;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import android.view.View;
@@ -28,7 +27,7 @@ public class LongClickProcessor extends AbstractMethodProcessor{
 	@Override
 //	public void process(View view,Method method, Annotation annotation,
 //			Class<?> idClass) {
-	protected void processFieldItem(View view, Method method, View itemView){
+	protected void processFieldItem(Object target, Method method, View itemView){
 
 //		LongClick item = (LongClick)annotation;
 //		if(item == null){
@@ -65,14 +64,14 @@ public class LongClickProcessor extends AbstractMethodProcessor{
 			return;
 		}
 //		itemView.setOnClickListener(new ViewOnClickListener(view,method));
-		itemView.setOnLongClickListener(new ViewOnLongClickListener(view,method));
+		itemView.setOnLongClickListener(new ViewOnLongClickListener(target,method));
 	}
 
 	private class ViewOnLongClickListener implements OnLongClickListener{
 
-		private View view;
+		private Object view;
 		private Method method;
-		ViewOnLongClickListener(View view,Method method){
+		ViewOnLongClickListener(Object view,Method method){
 			this.view = view;
 			this.method = method;
 		}

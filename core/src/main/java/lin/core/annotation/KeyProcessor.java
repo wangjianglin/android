@@ -1,7 +1,6 @@
 package lin.core.annotation;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,7 @@ public class KeyProcessor extends AbstractMethodProcessor{
 	@Override
 //	public void process(View view,Method method, Annotation annotation,
 //			Class<?> idClass) {
-	protected void processFieldItem(View view, Method method, View itemView){
+	protected void processFieldItem(Object target, Method method, View itemView){
 
 //		Key item = (Key)annotation;
 //
@@ -91,15 +90,15 @@ public class KeyProcessor extends AbstractMethodProcessor{
 			return;
 		}
 //			itemView.setOnClickListener(new ViewOnClickListener(itemView,method,view));
-		itemView.setOnKeyListener(new ViewOnKeyListener(view,method,clcikMethodParams));
+		itemView.setOnKeyListener(new ViewOnKeyListener(target,method,clcikMethodParams));
 	}
 
 	private class ViewOnKeyListener implements OnKeyListener{
 
-		private View view;
+		private Object view;
 		private Class<?>[] clcikMethodParams;
 		private Method method;
-		ViewOnKeyListener(View view,Method method,Class<?>[] clcikMethodParams){
+		ViewOnKeyListener(Object view,Method method,Class<?>[] clcikMethodParams){
 			this.view = view;
 			this.clcikMethodParams = clcikMethodParams;
 			this.method = method;

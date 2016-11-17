@@ -1,7 +1,6 @@
 package lin.core.annotation;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.List;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
 
 /**
  * 
@@ -32,7 +30,7 @@ public class ListItemClickProcessor extends AbstractMethodProcessor{
 	@Override
 //	public void process(View view,Method method, Annotation annotation,
 //			Class<?> idClass) {
-	protected void processFieldItem(View view, Method method, View itemView){
+	protected void processFieldItem(Object target, Method method, View itemView){
 
 //		ListItemClick item = (ListItemClick)annotation;
 //
@@ -102,7 +100,13 @@ public class ListItemClickProcessor extends AbstractMethodProcessor{
 //				return;
 //			}
 
-		AdapterView<?> listView = (AdapterView<?>) itemView;
+		AdapterView<?> listView = null;
+		if(itemView instanceof AdapterView<?>){
+			listView = (AdapterView<?>) itemView;
+		}else{
+			return;
+		}
+
 		if(!(viewClass == null || viewClass.isAssignableFrom(listView.getClass()))){
 			return;
 		}
@@ -110,15 +114,15 @@ public class ListItemClickProcessor extends AbstractMethodProcessor{
 //			itemView.setOnKeyListener(new ViewOnKeyListener(view,method,clcikMethodParams));
 //			CheckBox b;
 		//button.setOnCheckedChangeListener(new ViewOnCheckedChangeListener(view,method,clcikMethodParams));
-		listView.setOnItemClickListener(new ViewOnItemClickListener(view,method,clcikMethodParams));
+		listView.setOnItemClickListener(new ViewOnItemClickListener(target,method,clcikMethodParams));
 	}
 
 	private class ViewOnItemClickListener implements OnItemClickListener{
 
-		private View view;
+		private Object view;
 		private Class<?>[] clcikMethodParams;
 		private Method method;
-		ViewOnItemClickListener(View view,Method method,Class<?>[] clcikMethodParams){
+		ViewOnItemClickListener(Object view,Method method,Class<?>[] clcikMethodParams){
 			this.view = view;
 			this.clcikMethodParams = clcikMethodParams;
 			this.method = method;

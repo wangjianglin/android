@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
-group = 'lin'
-version = '0.0.1-SNAPSHOT'
+//group = 'lin'
+//version = '0.0.1-SNAPSHOT'
 
 
 android {
@@ -23,6 +23,10 @@ android {
 
     lintOptions {
         abortOnError false
+    }
+
+    dataBinding{
+        enabled = true
     }
 
 
@@ -50,6 +54,7 @@ dependencies {
     compile project(':util')
     compile project(':client')
     compile project(':pulltorefresh')
+//    compile 'com.android.databinding:library:1.1'
 }
 
 

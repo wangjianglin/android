@@ -15,8 +15,8 @@ import android.view.View;
 public class ResourceIdProcessor implements FieldProcessor{
 
 	@Override
-	public void process(View view,Field field, Annotation annotation,
-			Class<?> idClass) {
+	public void process(Object target, View view, Field field, Annotation annotation,
+						Package pack) {
 		ResourceId item = (ResourceId)annotation;
 		field.setAccessible(true);
 		
@@ -25,32 +25,34 @@ public class ResourceIdProcessor implements FieldProcessor{
 			 itemId = item.value();
 		 }
 		 else if(!"".equals(item.id())){
-			 try{
-				 Field f = idClass.getDeclaredField(item.id());
-				 itemId = f.getInt(null);
-			 }catch(Throwable e){}
+//			 try{
+//				 Field f = idClass.getDeclaredField(item.id());
+//				 itemId = f.getInt(null);
+//			 }catch(Throwable e){}
+			 itemId = Utils.getId(pack,item.id());
 		 }else{
-			 try{
-				 Field f = idClass.getDeclaredField(field.getName());
-				 itemId = f.getInt(null);
-			 }catch(Throwable e){}
+//			 try{
+//				 Field f = idClass.getDeclaredField(field.getName());
+//				 itemId = f.getInt(null);
+//			 }catch(Throwable e){}
+			 itemId = Utils.getId(pack,field.getName());
 		 }
 		 
-		 if(itemId != 0){
+		 if(itemId != -1){
 			 try{
 				 Class<?> type = field.getType();
 				 if(type == null){
 					 return;
 				 }
 				 if(type.isAssignableFrom(Drawable.class)){
-					 field.set(view, view.getResources().getDrawable(itemId));
+					 field.set(target, view.getResources().getDrawable(itemId));
 				 }else if(type.isAssignableFrom(int.class)){
 					 try{
-						 field.set(view, view.getResources().getColor(itemId));
+						 field.set(target, view.getResources().getColor(itemId));
 					 }catch(Throwable e){}
-					 field.set(view, view.getResources().getInteger(itemId));
+					 field.set(target, view.getResources().getInteger(itemId));
 				 }else if(type.isAssignableFrom(String.class)){
-					 field.set(view, view.getResources().getString(itemId));
+					 field.set(target, view.getResources().getString(itemId));
 				 }
 			 }catch(Throwable e){}
 		 }

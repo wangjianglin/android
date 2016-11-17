@@ -1,7 +1,6 @@
 package lin.core.annotation;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,7 @@ public class FocusChangeProcessor extends AbstractMethodProcessor{
 	@Override
 //	public void process(View view,Method method, Annotation annotation,
 //			Class<?> idClass) {
-	protected void processFieldItem(View view, Method method, View itemView){
+	protected void processFieldItem(Object target, Method method, View itemView){
 
 //		FocusChange item = (FocusChange)annotation;
 //
@@ -86,15 +85,15 @@ public class FocusChangeProcessor extends AbstractMethodProcessor{
 			return;
 		}
 //			itemView.setOnClickListener(new ViewOnClickListener(itemView,method,view));
-		itemView.setOnFocusChangeListener(new ViewOnFocusChangeListener(view,method,clcikMethodParams));
+		itemView.setOnFocusChangeListener(new ViewOnFocusChangeListener(target,method,clcikMethodParams));
 	}
 
 	private class ViewOnFocusChangeListener implements OnFocusChangeListener{
 
-		private View view;
+		private Object view;
 		private Class<?>[] clcikMethodParams;
 		private Method method;
-		ViewOnFocusChangeListener(View view,Method method,Class<?>[] clcikMethodParams){
+		ViewOnFocusChangeListener(Object view,Method method,Class<?>[] clcikMethodParams){
 			this.view = view;
 			this.clcikMethodParams = clcikMethodParams;
 			this.method = method;

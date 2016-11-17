@@ -1,7 +1,6 @@
 package lin.core.annotation;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,7 @@ public class TouchProcessor extends AbstractMethodProcessor{
 	@Override
 //	public void process(View view,Method method, Annotation annotation,
 //			Class<?> idClass) {
-	protected void processFieldItem(View view, Method method, View itemView){
+	protected void processFieldItem(Object target, Method method, View itemView){
 
 //		Touch item = (Touch)annotation;
 //
@@ -85,15 +84,15 @@ public class TouchProcessor extends AbstractMethodProcessor{
 			return;
 		}
 //			itemView.setOnClickListener(new ViewOnClickListener(itemView,method,view));
-		itemView.setOnTouchListener(new ViewOnTouchListener(view,method,clcikMethodParams));
+		itemView.setOnTouchListener(new ViewOnTouchListener(target,method,clcikMethodParams));
 	}
 
 	private class ViewOnTouchListener implements OnTouchListener{
 
-		private View view;
+		private Object view;
 		private Class<?>[] clcikMethodParams;
 		private Method method;
-		ViewOnTouchListener(View view,Method method,Class<?>[] clcikMethodParams){
+		ViewOnTouchListener(Object view,Method method,Class<?>[] clcikMethodParams){
 			this.view = view;
 			this.clcikMethodParams = clcikMethodParams;
 			this.method = method;

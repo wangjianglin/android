@@ -11,6 +11,8 @@ import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import lin.core.annotation.Opportunity;
+
 /**
  * 
  * @author lin
@@ -48,7 +50,15 @@ public class ViewActivity extends Activity{
 	
 	@Override
 	public void setContentView(int layoutResID) {
-		super.setContentView(layoutResID);
+//		super.setContentView(layoutResID);
+
+		View view = Views.loadView(this.getApplicationContext(),layoutResID);
+
+		if(view != null){
+			super.setContentView(view);
+			Views.processAnnotation(view,this);
+			Views.processAnnotation(view,this, Opportunity.OnAttached);
+		}
 		
 		fireActivieyLifeCycle(new lin.util.Procedure<ActivieyLifeCycle>(){
 
@@ -59,11 +69,15 @@ public class ViewActivity extends Activity{
 	}
 
 
+	private void processAnnon(){
 
+	}
 	@Override
 	public void setContentView(View view) {
 		super.setContentView(view);
-		
+
+		Views.processAnnotation(view,this);
+
 		fireActivieyLifeCycle(new lin.util.Procedure<ActivieyLifeCycle>(){
 
 			@Override

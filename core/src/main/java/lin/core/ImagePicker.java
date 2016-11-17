@@ -99,23 +99,23 @@ public class ImagePicker extends ResourceView{
 		}
 	}
 	
-	@Override
-	protected void onInited() {
-		this.setOnTouchListener(new OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				touch();
-				return true;
-			}
-		});
-		HttpCommunicate.init(this.getContext());
-
-		setDotLayout();
-//		this.vedio = true;
-//		this.vedioUrl = "http://i.feicuibaba.com/test/2/33A26FEA-DCB8-4D0D-AC82-149CBDEFCF91.mp4";
-//		this.vedioImage = "http://i.feicuibaba.com/test/2/38984ED7-67E9-4B67-A06D-B87BD475E2BB.jpg_middle.jpg";
-	}
+//	@Override
+//	protected void onInited() {
+//		this.setOnTouchListener(new OnTouchListener() {
+//
+//			@Override
+//			public boolean onTouch(View v, MotionEvent event) {
+//				touch();
+//				return true;
+//			}
+//		});
+//		HttpCommunicate.init(this.getContext());
+//
+//		setDotLayout();
+////		this.vedio = true;
+////		this.vedioUrl = "http://i.feicuibaba.com/test/2/33A26FEA-DCB8-4D0D-AC82-149CBDEFCF91.mp4";
+////		this.vedioImage = "http://i.feicuibaba.com/test/2/38984ED7-67E9-4B67-A06D-B87BD475E2BB.jpg_middle.jpg";
+//	}
 
 	/**
 	 *
@@ -179,7 +179,7 @@ public class ImagePicker extends ResourceView{
 		attrArray.recycle();
 	}
 //		
-//		ViewPager pager = (ViewPager) rootView.findViewById(R.id.public_image_picker_pager);
+//		ViewPager pager = (ViewPager) mRootView.findViewById(R.id.public_image_picker_pager);
 //		pager.setOnClickListener(new OnClickListener(){
 //
 //			@Override
@@ -211,7 +211,19 @@ public class ImagePicker extends ResourceView{
 	private ViewPager pager;
 	private PagerAdapter pagerAdapter = null;
 	@Override
-	protected void onFirstAttachedToWindow() {
+	protected void onInited() {
+
+		this.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				touch();
+				return true;
+			}
+		});
+		HttpCommunicate.init(this.getContext());
+
+		setDotLayout();
 
 		pagerAdapter = new PagerAdapter() {
 			

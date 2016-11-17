@@ -1,9 +1,9 @@
 package lin.core.annotation;
 
+import android.view.View;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-
-import android.view.View;
 
 /**
  * 
@@ -30,8 +30,8 @@ public class ViewByIdProcessor implements FieldProcessor{
 //	}
 
 	@Override
-	public void process(View view,Field field, Annotation annotation,
-			Class<?> idClass) {
+	public void process(Object target, View view, Field field, Annotation annotation,
+						Package pack) {
 		ViewById item = (ViewById)annotation;
 		field.setAccessible(true);
 
@@ -40,21 +40,25 @@ public class ViewByIdProcessor implements FieldProcessor{
 			viewId = item.value();
 		 }
 		 else if(!"".equals(item.id())){
-			 try{
-				 Field f = idClass.getDeclaredField(item.id());
-				 viewId = f.getInt(null);
-			 }catch(Throwable e){}
+//			 try{
+//				 Field f = idClass.getDeclaredField(item.id());
+//				 viewId = f.getInt(null);
+//			 }catch(Throwable e){}
+			 viewId = Utils.getId(pack,item.id());
 		 }else{
-			 try{
-				 Field f = idClass.getDeclaredField(field.getName());
-				 viewId = f.getInt(null);
-			 }catch(Throwable e){}
+//			 try{
+//				 Field f = idClass.getDeclaredField(field.getName());
+//				 viewId = f.getInt(null);
+//			 }catch(Throwable e){}
+			 viewId = Utils.getId(pack,field.getName());
 		 }
 
-		 if(viewId != 0){
+		 if(viewId != -1){
 			 try{
-				 field.set(view, view.findViewById(viewId));
-			 }catch(Throwable e){}
+				 field.set(target, view.findViewById(viewId));
+			 }catch(Throwable e){
+				 e.printStackTrace();
+			 }
 		 }
 
 	}

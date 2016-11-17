@@ -1,7 +1,5 @@
 package lin.core;
 
-import lin.core.Images;
-import lin.core.ResourceView;
 import lin.core.annotation.ResourceClass;
 import lin.core.annotation.ResourceId;
 import lin.core.annotation.ViewById;
@@ -50,7 +48,7 @@ public class ImagePickerItem extends ResourceView{
 	protected void onInited() {
 		
 //		imageView = (ImageView) this.findViewById(R.id.publish_imagepicker_item_image_id);
-		rootView.setOnClickListener(new OnClickListener(){
+		mRootView.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {

@@ -84,16 +84,16 @@
         </activity>
         <activity
             android:name=".PullToRefresh"
-            android:label="@string/title_activity_pull_to_refresh"></activity>
+            android:label="@string/title_activity_pull_to_refresh" />
         <activity
             android:name=".MergeActivity"
-            android:label="@string/title_activity_merge"></activity>
+            android:label="@string/title_activity_merge" />
         <activity
             android:name=".MainActivity2Activity"
-            android:label="@string/title_activity_main_activity2"></activity>
+            android:label="@string/title_activity_main_activity2" />
         <activity
             android:name=".TabbarActivity"
-            android:label="@string/title_activity_tabbar"></activity>
+            android:label="@string/title_activity_tabbar" />
 
         <service
             android:name="lin.core.log.LogService"
@@ -102,23 +102,27 @@
 
         <activity
             android:name=".TichTextAciivity"
-            android:label="@string/title_activity_tich_text_aciivity"></activity>
+            android:label="@string/title_activity_tich_text_aciivity" />
         <activity
             android:name=".FitChartActivity"
-            android:label="@string/title_activity_fit_chart"></activity>
+            android:label="@string/title_activity_fit_chart" />
         <activity
             android:name=".ImagesActivity"
             android:label="@string/title_activity_images"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ControlsActivity"
             android:label="@string/title_activity_controls"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".GroupListActivity"
             android:label="@string/title_activity_group_list"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".WebViewActivity" />
+        <activity
+            android:name=".BindingActivity"
+            android:label="@string/title_activity_binding"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".WebViewActivity"></activity>
     </application>
 
 </manifest>

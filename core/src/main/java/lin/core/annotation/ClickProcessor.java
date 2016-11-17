@@ -1,7 +1,6 @@
 package lin.core.annotation;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import android.view.View;
@@ -28,7 +27,7 @@ public class ClickProcessor extends AbstractMethodProcessor{
 	@Override
 //	public void process(View view,Method method, Annotation annotation,
 //			Class<?> idClass) {
-	protected void processFieldItem(View view, Method method, View itemView){
+	protected void processFieldItem(Object target, Method method, View itemView){
 //	Click item = (Click)annotation;
 //		if(item == null){
 //			return;
@@ -63,7 +62,7 @@ public class ClickProcessor extends AbstractMethodProcessor{
 		if(!(clcikMethodParams.length == 0 || (clcikMethodParams.length == 1 && clcikMethodParams[0].isAssignableFrom(itemView.getClass())))){
 			return;
 		}
-		itemView.setOnClickListener(new ViewOnClickListener(view,method));
+		itemView.setOnClickListener(new ViewOnClickListener(target,method));
 		
 	}
 
@@ -71,9 +70,9 @@ public class ClickProcessor extends AbstractMethodProcessor{
 
 	private class ViewOnClickListener implements OnClickListener{
 
-		private View view;
+		private Object view;
 		private Method method;
-		ViewOnClickListener(View view,Method method){
+		ViewOnClickListener(Object view,Method method){
 			this.view = view;
 			this.method = method;
 		}

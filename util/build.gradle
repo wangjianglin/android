@@ -3,8 +3,8 @@ apply plugin: 'com.android.library'
 
 //com.android.build.gradle.LibraryPlugin
 
-group = 'lin'
-version = '0.0.1-SNAPSHOT'
+//group = 'lin'
+//version = '0.0.1-SNAPSHOT'
 
 android {
     compileSdkVersion 22

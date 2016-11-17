@@ -105,38 +105,40 @@ public class Navigation extends ResourceView {
 	private View titleView;
 	
 //	private int titleHeight = -1;
+//	@Override
+//	protected void onInited() {
+//		isShow = true;
+//		isNav = false;
+////		contentView = (ViewGroup) mRootView.findViewById(R.id.navigation_main_root_view);
+////		titleView = (TextView) this.findViewById(R.id.nav_title);
+////		leftButtonsView = (ViewGroup) this.findViewById(R.id.nav_left_buttons);
+////		rightButtonsView = (ViewGroup) this.findViewById(R.id.nav_right_buttons);
+//
+//
+////		if(this.getActivity() instanceof NavigationActivity){
+////			NavigationActivity activity = (NavigationActivity) this.getActivity();
+//////			return argsMap.get(activity.argsId());
+////			String argsId = activity.argsId();
+////
+////			this.preNav = navsMap.get(argsId);
+////			this.preResult = resultsMap.get(argsId);
+////			this.args = argsMap.get(argsId);
+////
+////
+////			navsMap.remove(argsId);
+////			resultsMap.remove(argsId);
+////			argsMap.remove(argsId);
+////			isNav = true;
+////
+////		}
+//		//navsMap
+//	}
+	
+	private int titleHeidht;
 	@Override
 	protected void onInited() {
 		isShow = true;
 		isNav = false;
-//		contentView = (ViewGroup) rootView.findViewById(R.id.navigation_main_root_view);
-//		titleView = (TextView) this.findViewById(R.id.nav_title);
-//		leftButtonsView = (ViewGroup) this.findViewById(R.id.nav_left_buttons);
-//		rightButtonsView = (ViewGroup) this.findViewById(R.id.nav_right_buttons);
-		
-		
-//		if(this.getActivity() instanceof NavigationActivity){
-//			NavigationActivity activity = (NavigationActivity) this.getActivity();
-////			return argsMap.get(activity.argsId());
-//			String argsId = activity.argsId();
-//			
-//			this.preNav = navsMap.get(argsId);
-//			this.preResult = resultsMap.get(argsId);
-//			this.args = argsMap.get(argsId);
-//			
-//			
-//			navsMap.remove(argsId);
-//			resultsMap.remove(argsId);
-//			argsMap.remove(argsId);
-//			isNav = true;
-//			
-//		}
-		//navsMap
-	}
-	
-	private int titleHeidht;
-	@Override
-	protected void onFirstAttachedToWindow() {
 //		titleHeight = titleView.getMinimumHeight();
 		if(titleView != null){
 			titleHeidht = titleView.getLayoutParams().height;

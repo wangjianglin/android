@@ -193,6 +193,15 @@ public class MainActivity extends Activity {
             }
         });
 
+        Button bindingButton = (Button) this.findViewById(R.id.binding);
+        bindingButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,BindingActivity.class);
+                MainActivity.this.startActivity(intent);
+            }
+        });
+
 
         Button httpButton = (Button) this.findViewById(R.id.httpId);
         httpButton.setOnClickListener(new View.OnClickListener() {

@@ -1,8 +1,8 @@
 apply plugin: 'com.android.library'
 
 
-group = 'lin'
-version = '0.0.1-SNAPSHOT'
+//group = 'lin'
+//version = '0.0.1-SNAPSHOT'
 
 
 android {

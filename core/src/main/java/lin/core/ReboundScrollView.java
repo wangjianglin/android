@@ -11,7 +11,7 @@ import android.util.AttributeSet;
  * @author lin
  * @date Mar 12, 2015 8:11:20 PM
  * ScrollView反弹效果的实现 
- * 破三军 转载请注明出处
+ *
  */
 
 public class ReboundScrollView extends PullToRefreshScrollView{

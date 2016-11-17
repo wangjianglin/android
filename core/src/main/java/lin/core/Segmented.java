@@ -15,8 +15,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.apache.http.impl.entity.StrictContentLengthStrategyHC4;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -101,7 +99,7 @@ public class Segmented extends ResourceView{
 		GradientDrawable drawable = null;
 
 		if(items.size() == 0){
-			viewItem = rootView = LayoutInflater.from(this.getContext()).inflate(R.layout.lin_core_segmented_item, layout, false);
+			viewItem = mRootView = LayoutInflater.from(this.getContext()).inflate(R.layout.lin_core_segmented_item, layout, false);
 			layout.addView(viewItem);
 
 			drawable = new GradientDrawable();//创建drawable
@@ -126,7 +124,7 @@ public class Segmented extends ResourceView{
 			drawable.setStroke(strokeWidth, strokeColor);
 
 			if(n == 0) {
-				viewItem = rootView = LayoutInflater.from(this.getContext()).inflate(R.layout.lin_core_segmented_item_left, layout, false);
+				viewItem = mRootView = LayoutInflater.from(this.getContext()).inflate(R.layout.lin_core_segmented_item_left, layout, false);
 				drawable.setCornerRadii(new float[]{roundRadius, roundRadius, 0, 0, 0, 0, roundRadius, roundRadius});
 
 				ld.setLayerInset(0, 0, 0, -(strokeWidth)/2,0);
@@ -135,13 +133,13 @@ public class Segmented extends ResourceView{
 //				drawable.setStroke(strokeWidth, strokeColor);
 //				drawable.se
 			}else if(n == items.size() - 1){
-				viewItem = rootView = LayoutInflater.from(this.getContext()).inflate(R.layout.lin_core_segmented_item_right, layout, false);
+				viewItem = mRootView = LayoutInflater.from(this.getContext()).inflate(R.layout.lin_core_segmented_item_right, layout, false);
 //				drawable.setCornerRadii(new float[]{roundRadius, roundRadius, 0, 0, 0, 0, roundRadius, roundRadius});
 				drawable.setCornerRadii(new float[]{0, 0, roundRadius, roundRadius, roundRadius, roundRadius, 0, 0});
 				ld.setLayerInset(0, -(strokeWidth+1) / 2,0, 0,0);
 
 			}else{
-				viewItem = rootView = LayoutInflater.from(this.getContext()).inflate(R.layout.lin_core_segmented_item_middle, layout, false);
+				viewItem = mRootView = LayoutInflater.from(this.getContext()).inflate(R.layout.lin_core_segmented_item_middle, layout, false);
 				ld.setLayerInset(0, -(strokeWidth+1) / 2,0, -(strokeWidth)/2,0);
 //				drawable.setStroke(0, strokeColor);
 //

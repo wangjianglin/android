@@ -1,7 +1,6 @@
 package lin.core.annotation;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +8,6 @@ import java.util.List;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-
-import org.apache.http.impl.entity.StrictContentLengthStrategyHC4;
 
 /**
  * 
@@ -56,7 +53,7 @@ public class CheckedChangeProcessor extends AbstractMethodProcessor{
 		return ((CheckedChange)annotation).id();
 	}
 	@Override
-	protected void processFieldItem(View view, Method method, View itemView) {
+	protected void processFieldItem(Object target, Method method, View itemView) {
 //	private void processStringItem(View view,Method method, String stringId,
 //							 Class<?> idClass){
 
@@ -136,15 +133,15 @@ public class CheckedChangeProcessor extends AbstractMethodProcessor{
 //			itemView.setOnClickListener(new ViewOnClickListener(itemView,method,view));
 //			itemView.setOnKeyListener(new ViewOnKeyListener(view,method,clcikMethodParams));
 //			CheckBox b;
-		button.setOnCheckedChangeListener(new ViewOnCheckedChangeListener(view,method,clcikMethodParams));
+		button.setOnCheckedChangeListener(new ViewOnCheckedChangeListener(target,method,clcikMethodParams));
 	}
 
 	private class ViewOnCheckedChangeListener implements OnCheckedChangeListener{
 
-		private View view;
+		private Object view;
 		private Class<?>[] clcikMethodParams;
 		private Method method;
-		ViewOnCheckedChangeListener(View view,Method method,Class<?>[] clcikMethodParams){
+		ViewOnCheckedChangeListener(Object view,Method method,Class<?>[] clcikMethodParams){
 			this.view = view;
 			this.clcikMethodParams = clcikMethodParams;
 			this.method = method;

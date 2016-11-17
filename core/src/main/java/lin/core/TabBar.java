@@ -85,6 +85,8 @@ public class TabBar extends ResourceView {
 		}
 
 		overlayDrawable = attrs.getDrawable(R.styleable.lin_tab_overlay);
+
+		setTab(tabIndex);
 //
 	}
 
@@ -121,10 +123,10 @@ public class TabBar extends ResourceView {
 
 
 
-	@Override
-	protected void onFirstAttachedToWindow() {
-		setTab(tabIndex);
-	}
+//	@Override
+//	protected void onFirstAttachedToWindow() {
+//		setTab(tabIndex);
+//	}
 
 	private int preIndex = -1;
 	private void setTab(int tabIndex){
@@ -236,8 +238,8 @@ public class TabBar extends ResourceView {
 //	@Override
 //	protected void onInited() {
 //
-////		this.pager = (ViewPager) rootView.findViewById(R.id.tabpager);
-////		this.barLayout = (LinearLayout) rootView.findViewById(R.id.tabbar_bar_layout);
+////		this.pager = (ViewPager) mRootView.findViewById(R.id.tabpager);
+////		this.barLayout = (LinearLayout) mRootView.findViewById(R.id.tabbar_bar_layout);
 ////		mTabImg = (ImageView) findViewById(R.id.img_tab_now);
 //		Attrs attrs = this.getAttrs();
 //

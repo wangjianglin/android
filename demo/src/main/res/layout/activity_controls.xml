@@ -13,4 +13,7 @@
         android:layout_height="40dp"></lin.core.Segmented>
 
 
+    <lin.test.CustomView
+        android:layout_width="match_parent"
+        android:layout_height="300dp"></lin.test.CustomView>
 </LinearLayout>

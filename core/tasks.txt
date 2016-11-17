@@ -8,3 +8,7 @@ TabBar 上设置
 
 
     UpdateService 下载 不采用 DownloadManager
+
+
+
+1、 ResourceView 支持 binding
