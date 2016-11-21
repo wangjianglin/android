@@ -171,6 +171,12 @@ subprojects {
                             password: prop.getProperty('maven.password'))//密码
                 }
 
+                repository(url: prop.getProperty('release.repo')) {//仓库地址
+                    authentication(userName: prop.getProperty('maven.username'),//用户名
+                            password: prop.getProperty('maven.password'))//密码
+                }
+
+
                 pom.project {
                     name project.name
                     packaging 'aar'

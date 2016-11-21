@@ -26,6 +26,9 @@ android {
             resources.srcDirs = ['src/main/resources','build/tmp/jarResources']
         }
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 //        flatDir{

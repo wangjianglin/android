@@ -14,6 +14,7 @@ android {
         targetSdkVersion 22
         versionCode 34
         versionName "3.0.1"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -56,6 +57,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     //    compile 'com.android.support:support-v4:22.2.0'
+    //compile 'com.google.android:multidex:0.1'
     compile project(':util')
     compile project(':pulltorefresh')
     compile project(':client')
