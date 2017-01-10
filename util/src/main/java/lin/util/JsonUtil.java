@@ -28,7 +28,6 @@ import lin.util.beans.PropertyDescriptor;
  */
 public class JsonUtil {
 	
-	
 	public static class GeneralType implements ParameterizedType{
 
 		private Type rawType;
@@ -55,7 +54,7 @@ public class JsonUtil {
 	}
 	
 	//日期类型数据序列化格式
-	final static String RFC3339_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	public final static String RFC3339_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     /**
      * 把一个Java对象序列化成JSON格式的字符串

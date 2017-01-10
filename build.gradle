@@ -18,7 +18,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:2.2.3'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -49,6 +49,35 @@ buildscript {
 //}
 
 
+//compileSdkVersion 25
+//buildToolsVersion "24.0.2"
+//defaultConfig {
+//    applicationId "lin.sample.tab"
+//    minSdkVersion 15
+//    targetSdkVersion 25
+//    versionCode 1
+//    versionName "1.0"
+//    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+//}
+
+ext {
+    // Sdk and tools
+    minSdkVersion = 15
+    targetSdkVersion = 25
+    compileSdkVersion = 25
+    buildToolsVersion = '24.0.2'
+
+    // App dependencies
+    supportLibraryVersion = '25+'
+    guavaVersion = '18.0'
+    junitVersion = '4.12'
+    mockitoVersion = '1.10.19'
+    powerMockito = '1.6.2'
+    hamcrestVersion = '1.3'
+    runnerVersion = '0.5'
+    rulesVersion = '0.5'
+    espressoVersion = '2.2.2'
+}
 
 
 allprojects {
@@ -71,9 +100,10 @@ allprojects {
     }
 
 
-//    uploadArchives {
+   //    uploadArchives {
 //
 //    }
+
 }
 
 def dateStr = new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss.SSS').format(new Date());
@@ -82,12 +112,34 @@ def dateStr = new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss.SSS').format(n
 subprojects {
 
     group = 'lin'
-    version = '0.0.2'
+    version = '0.1.0'
 
     if(project.name == 'demo'){
         apply plugin: 'com.android.application'
     }else {
         apply plugin: 'com.android.library'
+    }
+
+
+    android {
+
+        compileSdkVersion rootProject.ext.compileSdkVersion
+        buildToolsVersion rootProject.ext.buildToolsVersion
+
+        defaultConfig {
+            minSdkVersion 15
+            targetSdkVersion 22
+            versionCode 1
+            versionName "0.0.1-SNAPSHOT"
+
+        }
+
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_7
+            targetCompatibility JavaVersion.VERSION_1_7
+        }
+
+
     }
 //    print('\n=================\n')
 //    print(project.projectDir.absolutePath)
@@ -267,5 +319,14 @@ subprojects {
 //    archives javadocJar
         archives sourcesJar
     }
+
+
+    //androidTestCompile "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
+//    androidTestCompile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
+//    androidTestCompile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
+//    androidTestCompile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+//    androidTestCompile "com.android.support:design:$rootProject.supportLibraryVersion"
+
+
 
 }

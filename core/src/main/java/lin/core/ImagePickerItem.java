@@ -1,7 +1,7 @@
 package lin.core;
 
-import lin.core.annotation.ResourceClass;
-import lin.core.annotation.ResourceId;
+import lin.core.annotation.ResCls;
+import lin.core.annotation.ResId;
 import lin.core.annotation.ViewById;
 import android.content.Context;
 import android.content.Intent;
@@ -15,9 +15,9 @@ import android.widget.ImageView;
  * @date Mar 12, 2015 5:30:19 PM
  *
  */
-@ResourceClass(R.class)
-@ResourceId(id="lin_core_images_picker_item")
-public class ImagePickerItem extends ResourceView{
+@ResCls(R.class)
+@ResId(id="lin_core_images_picker_item")
+public class ImagePickerItem extends ResView {
 
 	public ImagePickerItem(Context context) {
 		super(context);
@@ -48,7 +48,7 @@ public class ImagePickerItem extends ResourceView{
 	protected void onInited() {
 		
 //		imageView = (ImageView) this.findViewById(R.id.publish_imagepicker_item_image_id);
-		mRootView.setOnClickListener(new OnClickListener(){
+		this.getNodeView().setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {

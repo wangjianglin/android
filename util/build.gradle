@@ -1,21 +1,9 @@
 apply plugin: 'com.android.library'
 
 
-//com.android.build.gradle.LibraryPlugin
-
-//group = 'lin'
-//version = '0.0.1-SNAPSHOT'
-
 android {
-    compileSdkVersion 22
-    buildToolsVersion "23.0.1"
 
-    defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 22
-        versionCode 1
-        versionName "0.0.1-SNAPSHOT"
-    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -29,6 +17,9 @@ android {
         }
     }
 
+    lintOptions {
+        abortOnError false
+    }
 //    sourceSets{
 //        main {
 //            Manifest.srcFile 'AndroidManifest.xml'
@@ -43,51 +34,6 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22+'
-//    compile 'com.android.support:support-v4:22.2.0'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile "com.alibaba:fastjson:1.2.21"
 }
-
-//task sourcesJar(type: Jar) {
-////    println 'project.name:'+project.name
-//
-////    println 'android.sourceSets.main.java.srcDirs:'+project.android
-//    from android.sourceSets.main.java.srcDirs
-//    classifier = 'sources'
-//}
-//
-////task build2 {
-////    println('===')
-////}
-//
-////println build.getClass()
-////println build2.getClass()
-////build2.dependsOn build
-////task javadoc(type: Javadoc) {
-////        source = android.sourceSets.main.java.srcDirs
-////        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-////}
-////
-////task javadocJar(type: Jar, dependsOn: javadoc) {
-////    classifier = 'javadoc'
-////    from javadoc.destinationDir
-////}
-//
-//artifacts {
-////    archives javadocJar
-//    archives sourcesJar
-//}
-
-//build.dependsOn(deleteManifest)
-//build.dependsOn(overrideManifest)
-
-//build << {
-//    println '******************************************'
-//    //doFirst{
-//        println '============================='
-//        //overrideManifest();
-//        File src = file('build/tmp/jar/MANIFEST.MF')
-//        File dst = file('META-INF/MANIFEST.MF')
-//        org.apache.commons.io.FileUtils.copyFile(src, dst)
-////    }
-//}

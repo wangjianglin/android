@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <!-- 导航相关id 开始 -->
-    <item type="id" name="nav_title_view" />
-    <item type="id" name="nav_title" />
-    <item type="id" name="nav_right_buttons" />
-    <item type="id" name="nav_left_buttons" />
-    <item type="id" name="navigation_main_root_view" />
-    
-    <!-- 导航相关id 结束 -->
+    <!-- nav 相关id 开始 -->
+    <item type="id" name="lin_core_nav_toolbar" />
+    <item type="id" name="lin_core_nav_content_frame" />
+    <item type="id" name="lin_core_nav_view" />
+
+    <!-- nav 相关id 结束 -->
     
     
     <!-- TabBar 相关id 开始 -->
@@ -20,6 +18,23 @@
     <item type="id" name="tabbar_tiem_bar_overlay_view_id" />
     
     <!-- TabBar 相关id 结束 -->
+
+    <!-- ptr view 相关id 开始 -->
+    <item type="id" name="lin_core_ptr_default_header_rotate_view_header_text" />
+    <item type="id" name="lin_core_ptr_default_header_rotate_view_header_title" />
+    <item type="id" name="lin_core_ptr_default_header_rotate_view_header_last_update" />
+    <item type="id" name="lin_core_ptr_default_header_rotate_view" />
+    <item type="id" name="lin_core_ptr_default_header_rotate_view_progressbar" />
+
+
+    <item type="id" name="lin_core_ptr_default_footer_rotate_view_header_text" />
+    <item type="id" name="lin_core_ptr_default_footer_rotate_view_header_title" />
+    <item type="id" name="lin_core_ptr_default_footer_rotate_view_header_last_update" />
+    <item type="id" name="lin_core_ptr_default_footer_rotate_view" />
+    <item type="id" name="lin_core_ptr_default_footer_rotate_view_progressbar" />
+
+    <!-- ptr view 相关id 结束 -->
+
 
 
     <item type="drawable" name="ic_launcher" />

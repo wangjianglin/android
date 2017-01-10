@@ -17,8 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import lin.core.ImagesSelectView.PhotoAibum;
 import lin.core.ImagesSelectView.PhotoItem;
-import lin.core.annotation.ResourceClass;
-import lin.core.annotation.ResourceId;
+import lin.core.annotation.ResCls;
+import lin.core.annotation.ResId;
 import lin.core.annotation.ViewById;
 
 /**
@@ -27,9 +27,9 @@ import lin.core.annotation.ViewById;
  * @date Aug 18, 2015 12:26:14 AM
  *
  */
-@ResourceClass(R.class)
-@ResourceId(id="lin_core_images_select_view_detail_activity")
-public class ImagesSelectPhotoAlbumView extends ResourceView{
+@ResCls(R.class)
+@ResId(id="lin_core_images_select_view_detail_activity")
+public class ImagesSelectPhotoAlbumView extends ResView {
 
 	public ImagesSelectPhotoAlbumView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
@@ -61,7 +61,7 @@ public class ImagesSelectPhotoAlbumView extends ResourceView{
 	
 	@Override
 	protected void onInited() {
-		aibum = (PhotoAibum) Navigation.getNavigation(this).getArgs()[0];
+		aibum = (PhotoAibum) Nav.getNav(this).getArgs()[0];
 		
 		progressBar.setVisibility(View.GONE);
 		gridView = (GridView) findViewById(R.id.myGrid);

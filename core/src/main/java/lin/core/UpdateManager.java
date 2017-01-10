@@ -541,7 +541,7 @@ public class UpdateManager {
 //		int[] r = new int[3];
 //		String[] vs = v.split("\\.");
 //		for(int n=0;n<vs.length && n<3;n++){
-//			r[n] = Integer.parseInt(vs[n]);
+//			r[n] = Int.parseInt(vs[n]);
 //		}
 //		return r;
 //	}
@@ -602,7 +602,7 @@ public class UpdateManager {
 ////		}
 ////		if (null != mHashMap)
 ////		{
-////			int serviceCode = Integer.valueOf(mHashMap.get("version"));
+////			int serviceCode = Int.valueOf(mHashMap.get("version"));
 ////			// 版本判断
 ////			if (serviceCode > versionCode)
 ////			{

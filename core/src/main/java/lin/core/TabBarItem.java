@@ -2,13 +2,15 @@ package lin.core;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import lin.core.annotation.ResourceClass;
+
+import lin.core.annotation.ResCls;
 import lin.core.annotation.ViewById;
 
 /**
@@ -17,32 +19,82 @@ import lin.core.annotation.ViewById;
  * @date Mar 9, 2015 5:03:21 PM
  *
  */
-@ResourceClass(R.class)
-public class TabBarItem extends ResourceView{
 
-//	public TabBarItem(Context context, AttributeSet attrs, int defStyle) {
-//		super(context, attrs, defStyle);
-//		
-//	}
-//
-//	public TabBarItem(Context context, AttributeSet attrs) {
-//		super(context, attrs);
-//	}
+//<attr name="tabbar_icon" format="reference"/>
+//		<attr name="tabbar_activate_icon" format="reference"/>
+//		<attr name="tabbar_background" format="reference|color"/>
+//		<attr name="tabbar_text_color" format="reference|color"/>
+//		<attr name="tabbar_text_activate_color" format="reference|color"/>
+//		<attr name="tabbar_activate_background" format="reference|color"/>
+//		<attr name="tabbar_name" format="reference|string"/>
+//		<!-- <attr name="tab_theme" format="reference|integer"/> -->
+//		<attr name="tabbar_item_theme" format="reference"/>
+//		<attr name="tabbar_overlay" format="reference|color"/>
+@ResCls(R.class)
+public class TabBarItem extends ResView {
+
+	private Drawable activateBackground = null;
+	private Drawable activateIcon = null;
+	private Drawable background = null;
+	private Drawable icon = null;
+	private Drawable overlayDrawable = null;
+
+	private int textColor = 0xffffff;
+	private int activateTextColor = 0;
+	private String title;
 
 	private TabBar tabBar;
 	public TabBarItem(TabBar tabBar,Context context) {
 		super(context);
 		this.tabBar = tabBar;
 	}
+
 	
 	private View contentView;
-	void setBarItemResourceId(int id,View contentView){
-		
-		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams (ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT, 1.0f);
-		this.setLayoutParams(layoutParams);
-		
+	void setBarItemResource(int id, View contentView, Attrs attrs){
+
 		this.contentView = contentView;
 		this.init(id);
+		this.initDefValue(attrs);
+	}
+
+
+	private void initDefValue(Attrs attrs){
+//		if(!(this.contentView.getLayoutParams() instanceof ContentView.LayoutParams)){
+//			return;
+//		}
+//		Attrs attrs = ((LayoutParams) this.contentView.getLayoutParams()).getAttrs();
+
+		if(attrs == null){
+			return;
+		}
+
+		title = attrs.getString(R.styleable.tabbar,R.styleable.tabbar_tabbar_name);
+
+		icon = attrs.getDrawable(R.styleable.tabbar,R.styleable.tabbar_tabbar_icon);
+		activateIcon = attrs.getDrawable(R.styleable.tabbar,R.styleable.tabbar_tabbar_activate_icon);
+		overlayDrawable = attrs.getDrawable(R.styleable.tabbar,R.styleable.tabbar_tabbar_overlay);
+
+		if(overlayDrawable == null){
+			overlayDrawable = tabBar.getOverlayDrawable();
+		}
+
+		background = attrs.getDrawable(R.styleable.tabbar,R.styleable.tabbar_tabbar_background);
+		if(background == null){
+			background = tabBar.getBackground();
+		}
+		if(background == null){
+			background = super.getBackground();
+		}
+		activateBackground = attrs.getDrawable(R.styleable.tabbar,R.styleable.tabbar_tabbar_activate_background);
+		if(activateBackground == null){
+			activateBackground = tabBar.getActivateBackground();
+		}
+
+		textColor = attrs.getColor(R.styleable.tabbar,R.styleable.tabbar_tabbar_text_color,tabBar.getTextColor());
+
+		activateTextColor = attrs.getColor(R.styleable.tabbar,R.styleable.tabbar_tabbar_text_activate_color,tabBar.getActivateTextColor());
+
 	}
 
 	@ViewById(id="tabbar_tiem_bar_text_id")
@@ -54,44 +106,16 @@ public class TabBarItem extends ResourceView{
 	@ViewById(id="tabbar_tiem_bar_img_id")
 	private ImageView image;// = (ImageView) barView.findViewById(R.id.tabbar_tiem_bar_img_id);
 	
-	private Drawable activateBackground = null;
-	private Drawable activateIcon = null;
-	private Drawable background = null;
-	private Drawable icon = null;
-	private Drawable overlayDrawable = null;
+
 
 	private boolean isInited = false;
 	@SuppressLint("NewApi")
 	@Override
 	protected void onInited() {
-		if(!(this.contentView instanceof LinView)){
-			return;
+
+		if(text != null) {
+			text.setText(title);
 		}
-		LinView rv = (LinView) contentView;
-		text.setText(rv.getAttrs().getString(R.styleable.lin_tab_name));
-		
-		Attrs attrs = rv.getAttrs();
-		
-		icon = attrs.getDrawable(R.styleable.lin_tab_icon);
-		activateIcon = attrs.getDrawable(R.styleable.lin_tab_activate_icon);
-		overlayDrawable = attrs.getDrawable(R.styleable.lin_tab_overlay);
-		
-		if(overlayDrawable == null){
-			overlayDrawable = tabBar.getOverlayDrawable();
-		}
-		
-		background = attrs.getDrawable(R.styleable.lin_tab_background);
-		if(background == null){
-			background = tabBar.getBackground();
-		}
-		if(background == null){
-			background = super.getBackground();
-		}
-		activateBackground = attrs.getDrawable(R.styleable.lin_tab_activate_background);
-		if(activateBackground == null){
-			activateBackground = tabBar.getActivateBackground();
-		}
-		
 		if(image != null){
 			if(icon != null){
 				image.setImageDrawable(icon);
@@ -100,10 +124,17 @@ public class TabBarItem extends ResourceView{
 			}
 		}
 		if(background != null){
-			this.setBackground(background);
+			//this.setBackground(background);
 		}
 		isInited = true;
-		this.setActivate(this.activate);
+		this.getHandler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				setActivate(activate);
+			}
+		},10);
+//		this.setActivate(this.activate);
+//		this.requestLayout();
 	}
 //	public Drawable getIcon() {
 //		return icon;
@@ -124,7 +155,7 @@ public class TabBarItem extends ResourceView{
 //		super.setBackgroundColor(color);
 //	}
 
-	private boolean activate;
+	private boolean activate = false;
 
 	public boolean isActivate() {
 		return activate;
@@ -147,6 +178,7 @@ public class TabBarItem extends ResourceView{
 			if(this.overlayView != null){
 				overlayView.setBackgroundDrawable(null);
 			}
+			text.setTextColor(activateTextColor);
 		}else{
 			//if(this.background != null){
 				super.setBackground(background);
@@ -157,6 +189,7 @@ public class TabBarItem extends ResourceView{
 			if(this.overlayView != null){
 				overlayView.setBackgroundDrawable(overlayDrawable);
 			}
+			text.setTextColor(textColor);
 		}
 	}
 

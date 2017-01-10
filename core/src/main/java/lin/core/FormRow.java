@@ -5,8 +5,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
-import lin.core.annotation.ResourceClass;
-import lin.core.annotation.ResourceId;
+import lin.core.annotation.ResCls;
+import lin.core.annotation.ResId;
 import lin.core.annotation.ViewById;
 
 /**
@@ -15,9 +15,9 @@ import lin.core.annotation.ViewById;
  * @date May 5, 2015 3:55:37 PM
  *
  */
-@ResourceClass(R.class)
-@ResourceId(id="lin_core_form_row")
-public class FormRow extends ResourceView{
+@ResCls(R.class)
+@ResId(id="lin_core_form_row")
+public class FormRow extends ResView {
 
 	public FormRow(Context context) {
 		super(context);

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+    <!--<import type="lin.test.list.Data"/>-->
+        <variable
+            name="data"
+            type="lin.demo.main.Data"/>
+    </data>
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:background="#d0428015"
+        android:layout_height="50dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/list_header_textview"
+            android:text="@{data.name}"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="8dp" />
+    </LinearLayout>
+</layout>

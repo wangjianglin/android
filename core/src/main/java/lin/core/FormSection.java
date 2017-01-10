@@ -9,8 +9,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import lin.core.annotation.ResourceClass;
-import lin.core.annotation.ResourceId;
+
+import lin.core.annotation.ResCls;
+import lin.core.annotation.ResId;
 import lin.core.annotation.ViewById;
 
 /**
@@ -19,9 +20,9 @@ import lin.core.annotation.ViewById;
  * @date May 5, 2015 3:55:43 PM
  *
  */
-@ResourceClass(R.class)
-@ResourceId(id="lin_core_form_section")
-public class FormSection extends ResourceView{
+@ResCls(R.class)
+@ResId(id="lin_core_form_section")
+public class FormSection extends ResView {
 
 	public FormSection(Context context) {
 		super(context);
@@ -61,7 +62,7 @@ public class FormSection extends ResourceView{
 	private List<View> rows = new ArrayList<View>();
 	@SuppressLint("NewApi")
 	@Override
-	protected void addViewItem(View item) {
+	protected void addViewItem(View item,int index,ViewGroup.LayoutParams params) {
 //		int h = item.getMeasuredHeight();
 //		System.out.println("h:"+h);
 //		item.setLayoutParams(new LinearLayout.LayoutParams(

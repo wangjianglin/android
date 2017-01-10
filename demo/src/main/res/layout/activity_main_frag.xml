@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+
+        <import type="android.view.View" />
+
+        <!--<variable-->
+        <!--name="tasks"-->
+        <!--type="com.example.android.architecture.blueprints.todoapp.tasks.TasksViewModel" />-->
+
+        <!--<variable-->
+        <!--name="actionHandler"-->
+        <!--type="com.example.android.architecture.blueprints.todoapp.tasks.TasksContract.Presenter" />-->
+    </data>
+    <!--<ListView-->
+        <!--android:orientation="vertical" android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:id="@+id/activity_list_frag_listview">-->
+
+    <!--</ListView>-->
+
+    <!--<lin.core.swiperefresh.DefaultSwipeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+    <android.support.v7.widget.RecyclerView
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
+        android:saveEnabled="false"
+        android:id="@+id/activity_list_frag_listview"/>
+
+    <!--</lin.core.swiperefresh.DefaultSwipeLayout>-->
+
+</layout>

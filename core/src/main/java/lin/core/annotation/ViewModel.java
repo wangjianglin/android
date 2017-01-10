@@ -8,10 +8,10 @@ import java.lang.annotation.Target;
 /**
  * Created by lin on 7/6/16.
  */
-@Target(value = {ElementType.FIELD, ElementType.TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-@ProcessorClass(ViewModelProcessor.class)
-@OpportunityAnnotation(Opportunity.OnAttached)
-public @interface ViewModel {
-    String value() default "";
-}
+//@Target(value = {ElementType.FIELD, ElementType.TYPE})
+//@Retention(RetentionPolicy.RUNTIME)
+//@ProcessorClass(ViewModelProcessor.class)
+//@OpportunityAnnotation(Opportunity.OnAttached)
+//public @interface ViewModel {
+//    String value() default "";
+//}

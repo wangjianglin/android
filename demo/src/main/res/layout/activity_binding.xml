@@ -6,8 +6,8 @@
         <!--<variable name="user" type="User"/>-->
     <!--</data>-->
     <data>
-        <import type="lin.test.binding.User" />
-        <import type="lin.test.binding.MyStringUtils" alias="StringUtils" />
+        <import type="lin.demo.binding.User" />
+        <import type="lin.demo.binding.MyStringUtils" alias="StringUtils" />
         <import type="android.view.View" />
 
         <variable name="user" type="User" />

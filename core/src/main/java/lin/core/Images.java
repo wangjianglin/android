@@ -294,8 +294,8 @@ public class Images {
 //		}
 //	}
 //	public static ImageOperation setImage(ImageView image,Object obj){
-//		if(obj instanceof Integer){
-//			return Images.setImage(image, (Integer)obj);
+//		if(obj instanceof Int){
+//			return Images.setImage(image, (Int)obj);
 //		}else if(obj instanceof String){
 //			return Images.setImage(image, (String)obj);
 //		}
@@ -314,7 +314,7 @@ public class Images {
 //		return imageOperation;
 //	}
 //	private static Files files = null;
-//	private volatile static Map<Integer,HttpBitmapRunnable> cancelMap = new java.util.concurrent.ConcurrentHashMap<Integer,HttpBitmapRunnable>();
+//	private volatile static Map<Int,HttpBitmapRunnable> cancelMap = new java.util.concurrent.ConcurrentHashMap<Int,HttpBitmapRunnable>();
 //	public static ImageOperation setImage(ImageView image,String url){
 //		url = imageUrl(getImageUrl(),url);
 //		if(image == null){
@@ -395,8 +395,8 @@ public class Images {
 //			try {
 //				Field field = ImageView.class.getDeclaredField(fieldName);
 //				field.setAccessible(true);
-//				int fieldValue = (Integer) field.get(object);
-//				if (fieldValue > 0 && fieldValue < Integer.MAX_VALUE) {
+//				int fieldValue = (Int) field.get(object);
+//				if (fieldValue > 0 && fieldValue < Int.MAX_VALUE) {
 //					value = fieldValue;
 //				}
 //			} catch (Exception e) {

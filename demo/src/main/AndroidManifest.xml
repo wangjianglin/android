@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="lin.test">
+    package="lin.demo">
 
     <uses-permission android:name="android.permission.WRITE_APN_SETTINGS" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -67,20 +67,23 @@
 
     <!-- 微客服所需权限  结束 -->
     <application
-        android:name=".TestApplication"
+        android:name=".DemoApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:label">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".PullToRefresh"
@@ -109,20 +112,42 @@
         <activity
             android:name=".ImagesActivity"
             android:label="@string/title_activity_images"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.OverlapSystemBar" />
         <activity
             android:name=".ControlsActivity"
             android:label="@string/title_activity_controls"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.OverlapSystemBar" />
         <activity
             android:name=".GroupListActivity"
             android:label="@string/title_activity_group_list"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.OverlapSystemBar" />
         <activity android:name=".WebViewActivity" />
         <activity
             android:name=".BindingActivity"
             android:label="@string/title_activity_binding"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.OverlapSystemBar" />
+        <activity
+            android:name=".main.MainActivity"
+            android:label="demo"
+            android:theme="@style/AppTheme.OverlapSystemBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".tabbar.TabbarActivity"
+            android:label="@string/title_activity_tabbar"
+            android:theme="@style/AppTheme.OverlapSystemBar" />
+        <activity android:name=".nav.NavActivity" />
+        <activity
+            android:name="lin.core.NavActivity"
+            android:theme="@style/AppTheme.OverlapSystemBar" />
+        <activity
+            android:name=".swiperefresh.SwiperefreshActivity"
+            android:label="@string/title_activity_swiperefresh"
+            android:theme="@style/AppTheme.OverlapSystemBar"></activity>
     </application>
 
 </manifest>

@@ -20,8 +20,9 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
-import lin.core.annotation.ResourceClass;
-import lin.core.annotation.ResourceId;
+
+import lin.core.annotation.ResCls;
+import lin.core.annotation.ResId;
 import lin.core.annotation.ViewById;
 
 /**
@@ -30,9 +31,9 @@ import lin.core.annotation.ViewById;
  * @date Aug 17, 2015 12:26:45 AM
  *
  */
-@ResourceClass(R.class)
-@ResourceId(id="lin_core_images_select_view_main")
-public class ImagesSelectView extends ResourceView{
+@ResCls(R.class)
+@ResId(id="lin_core_images_select_view_main")
+public class ImagesSelectView extends ResView {
 
 	public ImagesSelectView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
@@ -64,7 +65,7 @@ public class ImagesSelectView extends ResourceView{
 	@ViewById(id="images_select_view_grid_view")
 	private GridView gridView;
 	
-	private Navigation nav;
+	private Nav nav;
 	
 	// 设置获取图片的字段信息
 	private static final String[] STORE_IMAGES = { MediaStore.Images.Media.DISPLAY_NAME, // 显示的名称
@@ -83,30 +84,30 @@ public class ImagesSelectView extends ResourceView{
 		gridView.setAdapter(new GridViewAdapter());
 		
 		
-		nav = Navigation.getNavigation(this);
-		nav.setTitle("图片选择");
+		nav = Nav.getNav(this);
+		//nav.setTitle("图片选择");
 		
-		NavigationButton cancelButton = new NavigationButton();
+		NavButton cancelButton = new NavButton();
 		cancelButton.setTitle("取消");
 		cancelButton.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
-				nav.popView();
+				nav.pop();
 			}});
 		
-		nav.setLeftButton(cancelButton);
+//		nav.setLeftButton(cancelButton);
 		
-		NavigationButton doneButton = new NavigationButton();
+		NavButton doneButton = new NavButton();
 		doneButton.setTitle("完成");
 		doneButton.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
-				nav.popView();
+				nav.pop();
 			}});
 		
-		nav.setRightButton(doneButton);
+//		nav.setRightButton(doneButton);
 
 	}
 	
@@ -140,7 +141,7 @@ public class ImagesSelectView extends ResourceView{
 	OnItemClickListener aibumClickListener = new OnItemClickListener() {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			Navigation.getNavigation(ImagesSelectView.this).pushView(ImagesSelectPhotoAlbumView.class, null,aibumList.get(position));
+			Nav.getNav(ImagesSelectView.this).push(ImagesSelectPhotoAlbumView.class, null,aibumList.get(position));
 //			Intent intent = new Intent(PhotoAlbumActivity.this, AlbumActivity.class);
 //			intent.putExtra("aibum", aibumList.get(position));
 //			Bundle bundle = new Bundle();

@@ -1,19 +1,8 @@
 apply plugin: 'com.android.library'
 
-//group = 'lin'
-//version = '0.0.1-SNAPSHOT'
-
-
 android {
-    compileSdkVersion 22
-    buildToolsVersion "23.0.1"
 
-    defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 22
-        versionCode 1
-        versionName "0.0.1-SNAPSHOT"
-    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -49,34 +38,14 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22+'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+//    compile 'com.android.support:appcompat-v7:22+'
+    compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    compile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
+    compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
+
     compile project(':util')
     compile project(':client')
-    compile project(':pulltorefresh')
-//    compile 'com.android.databinding:library:1.1'
+    //compile project(':pulltorefresh')
 }
 
-
-//task sourcesJar(type: Jar) {
-////    println 'project.name:'+project.name
-//
-////    println 'android.sourceSets.main.java.srcDirs:'+project.android
-//    from android.sourceSets.main.java.srcDirs
-//    classifier = 'sources'
-//}
-//
-////task javadoc(type: Javadoc) {
-////        source = android.sourceSets.main.java.srcDirs
-////        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-////}
-////
-////task javadocJar(type: Jar, dependsOn: javadoc) {
-////    classifier = 'javadoc'
-////    from javadoc.destinationDir
-////}
-//
-//artifacts {
-////    archives javadocJar
-//    archives sourcesJar
-//}

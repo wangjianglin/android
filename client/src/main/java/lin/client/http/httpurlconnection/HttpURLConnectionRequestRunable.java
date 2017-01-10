@@ -74,7 +74,7 @@ class HttpURLConnectionRequestRunable implements Runnable {
         HttpURLConnection conn = Utils.open(urlString,this.impl.getHttpDNS());
 
         conn.setRequestProperty("accept", "*/*");
-        conn.setRequestProperty("connection", "Keep-Alive");
+        conn.setRequestProperty("Connection", "Keep-Alive");//conn.setRequestProperty("Connection", "close");
 
         Map<String, Object> params = pack.getRequestHandle().getParams(pack,new HttpURLConnectionMessage(conn));
 

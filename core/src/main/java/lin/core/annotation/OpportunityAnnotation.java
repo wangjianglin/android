@@ -8,8 +8,8 @@ import java.lang.annotation.Target;
 /**
  * Created by lin on 7/8/16.
  */
-@Target(ElementType.ANNOTATION_TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface OpportunityAnnotation {
-    Opportunity value() default Opportunity.OnCreate;
-}
+//@Target(ElementType.ANNOTATION_TYPE)
+//@Retention(RetentionPolicy.RUNTIME)
+//public @interface OpportunityAnnotation {
+//    Opportunity value() default Opportunity.OnCreate;
+//}

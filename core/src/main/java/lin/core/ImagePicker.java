@@ -11,17 +11,12 @@ import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
-import android.os.RemoteException;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -29,16 +24,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.MediaController;
 import android.widget.RelativeLayout;
-import android.widget.VideoView;
 
 import lin.client.http.*;
 import lin.client.http.Error;
-import lin.core.ResourceView;
 import lin.core.annotation.Click;
-import lin.core.annotation.ResourceClass;
-import lin.core.annotation.ResourceId;
+import lin.core.annotation.ResCls;
+import lin.core.annotation.ResId;
 import lin.core.annotation.Touch;
 import lin.core.annotation.ViewById;
 import lin.core.fitChart.FitChart;
@@ -61,9 +53,9 @@ import java.util.List;
  *
  */
 @SuppressLint({ "Recycle", "NewApi" })
-@ResourceClass(R.class)
-@ResourceId(id="lin_core_images_picker")
-public class ImagePicker extends ResourceView{
+@ResCls(R.class)
+@ResId(id="lin_core_images_picker")
+public class ImagePicker extends ResView {
 
 	public static enum DotFlag{
 		NONE,UP,DOWN,DOWN_LEFT,DOWN_RIGHT
@@ -485,9 +477,9 @@ public class ImagePicker extends ResourceView{
 		this.resetViews();
 	}
 	
-	@ResourceClass(R.class)
-	@ResourceId(id="lin_core_images_picker_vedio")
-	private class VideoItemView extends ResourceView implements SurfaceHolder.Callback,MediaPlayer.OnPreparedListener,MediaPlayer.OnCompletionListener {
+	@ResCls(R.class)
+	@ResId(id="lin_core_images_picker_vedio")
+	private class VideoItemView extends ResView implements SurfaceHolder.Callback,MediaPlayer.OnPreparedListener,MediaPlayer.OnCompletionListener {
 
 		public VideoItemView(Context context) {
 			super(context);
@@ -675,10 +667,10 @@ public class ImagePicker extends ResourceView{
 				}
 			});
 		}
-		@Override
-		public void onResume() {
-			resetVedio();
-		}
+//		@Override
+//		public void onResume() {
+//			resetVedio();
+//		}
 
 		public void onCompletion(MediaPlayer mp){
 			addView.setVisibility(View.VISIBLE);

@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 //import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
-
+import lin.util.JsonUtil;
 import lin.util.beans.BeanInfo;
 import lin.util.beans.Introspector;
 import lin.util.beans.PropertyDescriptor;
@@ -37,6 +37,7 @@ import lin.util.beans.PropertyDescriptor;
 public class JSONWriter {
 	//private static final Logger LOG = LoggerFactory.getLogger(JSONWriter.class);
 
+//    private final static String RFC3339_FORMAT = "yyyy-MM-dd HH:mm:ss";
     /**
      * By default, enums are serialzied as name=value pairs
      */
@@ -444,7 +445,7 @@ public class JSONWriter {
         if (method != null)
             json = method.getAnnotation(JSON.class);
         if (this.formatter == null)
-            this.formatter = new SimpleDateFormat(JSONUtil.RFC3339_FORMAT);
+            this.formatter = new SimpleDateFormat(JsonUtil.RFC3339_FORMAT);
 
         DateFormat formatter = (json != null) && (json.format().length() > 0) ? new SimpleDateFormat(json
                 .format()) : this.formatter;

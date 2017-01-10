@@ -1,7 +1,7 @@
 package lin.core;
 
-import lin.core.annotation.ResourceClass;
-import lin.core.annotation.ResourceId;
+import lin.core.annotation.ResCls;
+import lin.core.annotation.ResId;
 import lin.core.annotation.ViewById;
 
 import android.content.Context;
@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@ResourceClass(value=lin.core.R.class)
-@ResourceId(id="lin_core_segmented")
-public class Segmented extends ResourceView{
+@ResCls(value=lin.core.R.class)
+@ResId(id="lin_core_segmented")
+public class Segmented extends ResView {
 
 	public Segmented(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
@@ -99,7 +99,7 @@ public class Segmented extends ResourceView{
 		GradientDrawable drawable = null;
 
 		if(items.size() == 0){
-			viewItem = mRootView = LayoutInflater.from(this.getContext()).inflate(R.layout.lin_core_segmented_item, layout, false);
+			viewItem = LayoutInflater.from(this.getContext()).inflate(R.layout.lin_core_segmented_item, layout, false);
 			layout.addView(viewItem);
 
 			drawable = new GradientDrawable();//创建drawable
@@ -124,7 +124,7 @@ public class Segmented extends ResourceView{
 			drawable.setStroke(strokeWidth, strokeColor);
 
 			if(n == 0) {
-				viewItem = mRootView = LayoutInflater.from(this.getContext()).inflate(R.layout.lin_core_segmented_item_left, layout, false);
+				viewItem = LayoutInflater.from(this.getContext()).inflate(R.layout.lin_core_segmented_item_left, layout, false);
 				drawable.setCornerRadii(new float[]{roundRadius, roundRadius, 0, 0, 0, 0, roundRadius, roundRadius});
 
 				ld.setLayerInset(0, 0, 0, -(strokeWidth)/2,0);
@@ -133,13 +133,13 @@ public class Segmented extends ResourceView{
 //				drawable.setStroke(strokeWidth, strokeColor);
 //				drawable.se
 			}else if(n == items.size() - 1){
-				viewItem = mRootView = LayoutInflater.from(this.getContext()).inflate(R.layout.lin_core_segmented_item_right, layout, false);
+				viewItem = LayoutInflater.from(this.getContext()).inflate(R.layout.lin_core_segmented_item_right, layout, false);
 //				drawable.setCornerRadii(new float[]{roundRadius, roundRadius, 0, 0, 0, 0, roundRadius, roundRadius});
 				drawable.setCornerRadii(new float[]{0, 0, roundRadius, roundRadius, roundRadius, roundRadius, 0, 0});
 				ld.setLayerInset(0, -(strokeWidth+1) / 2,0, 0,0);
 
 			}else{
-				viewItem = mRootView = LayoutInflater.from(this.getContext()).inflate(R.layout.lin_core_segmented_item_middle, layout, false);
+				viewItem = LayoutInflater.from(this.getContext()).inflate(R.layout.lin_core_segmented_item_middle, layout, false);
 				ld.setLayerInset(0, -(strokeWidth+1) / 2,0, -(strokeWidth)/2,0);
 //				drawable.setStroke(0, strokeColor);
 //

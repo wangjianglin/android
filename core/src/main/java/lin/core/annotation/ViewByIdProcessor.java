@@ -12,22 +12,6 @@ import java.lang.reflect.Field;
  *
  */
 public class ViewByIdProcessor implements FieldProcessor{
-//	@Override
-//	protected void processFieldItem(View view, Field field,View itemView) {
-//		try{
-//			field.set(view,itemView);
-//		}catch (Throwable e){}
-//	}
-//
-//	@Override
-//	protected int[] getIds(Annotation annotation) {
-//		return ((ViewById)annotation).value();
-//	}
-//
-//	@Override
-//	protected String[] getStringIds(Annotation annotation) {
-//		return ((ViewById)annotation).id();
-//	}
 
 	@Override
 	public void process(Object target, View view, Field field, Annotation annotation,
@@ -40,16 +24,8 @@ public class ViewByIdProcessor implements FieldProcessor{
 			viewId = item.value();
 		 }
 		 else if(!"".equals(item.id())){
-//			 try{
-//				 Field f = idClass.getDeclaredField(item.id());
-//				 viewId = f.getInt(null);
-//			 }catch(Throwable e){}
 			 viewId = Utils.getId(pack,item.id());
 		 }else{
-//			 try{
-//				 Field f = idClass.getDeclaredField(field.getName());
-//				 viewId = f.getInt(null);
-//			 }catch(Throwable e){}
 			 viewId = Utils.getId(pack,field.getName());
 		 }
 
@@ -57,7 +33,6 @@ public class ViewByIdProcessor implements FieldProcessor{
 			 try{
 				 field.set(target, view.findViewById(viewId));
 			 }catch(Throwable e){
-				 e.printStackTrace();
 			 }
 		 }
 

@@ -17,12 +17,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import lin.core.Navigation;
+import lin.core.Nav;
 import lin.core.R;
-import lin.core.ResourceView;
+import lin.core.ResView;
 import lin.core.annotation.Click;
-import lin.core.annotation.ResourceClass;
-import lin.core.annotation.ResourceId;
+import lin.core.annotation.ResCls;
+import lin.core.annotation.ResId;
 import lin.core.annotation.ViewById;
 
 import java.io.File;
@@ -50,9 +50,9 @@ import com.yixia.videoeditor.adapter.UtilityAdapter;
  *
  */
 @SuppressLint({ "NewApi", "MissingSuperCall", "SimpleDateFormat", "SdCardPath", "HandlerLeak" })
-@ResourceClass(R.class)
-@ResourceId(id="lin_core_camera_fragment")
-public class CameraView extends ResourceView implements MediaRecorderBase.OnEncodeListener,OnErrorListener{
+@ResCls(R.class)
+@ResId(id="lin_core_camera_fragment")
+public class CameraView extends ResView implements MediaRecorderBase.OnEncodeListener,OnErrorListener{
 
 	/**
 	 * 视频录制错误
@@ -127,9 +127,11 @@ public class CameraView extends ResourceView implements MediaRecorderBase.OnEnco
 //    private static int VEDIO_WIDTH = 320;
 //    private static int VEDIO_HEIGHT = 240;
     @Override
-    public void onCreate(android.os.Bundle savedInstanceState) {
-    	Navigation nav = lin.core.Navigation.getNavigation(this);
-    	nav.showTitle(false);
+//    public void onCreate(android.os.Bundle savedInstanceState) {
+	protected void onInited(){
+    	Nav nav = lin.core.Nav.getNav(this);
+
+    	//nav.showTitle(false);
     	Object[] args = nav.getArgs();
     	if(args != null && args.length > 0 && args[0] instanceof Parameters){
     		params = (Parameters) args[0];
@@ -216,20 +218,20 @@ public class CameraView extends ResourceView implements MediaRecorderBase.OnEnco
         });
     }
     
-    @Override
-	public void onResume() {
-		super.onResume();
-		UtilityAdapter.freeFilterParser();
-		UtilityAdapter.initFilterParser();
-//
-		if (mMediaRecorder == null) {
-			initMediaRecorder();
-		} else {
-//			mRecordLed.setChecked(false);
-			mMediaRecorder.prepare();
-//			mProgressView.setData(mMediaObject);
-		}
-	}
+//    @Override
+//	public void onResume() {
+//		super.onResume();
+//		UtilityAdapter.freeFilterParser();
+//		UtilityAdapter.initFilterParser();
+////
+//		if (mMediaRecorder == null) {
+//			initMediaRecorder();
+//		} else {
+////			mRecordLed.setChecked(false);
+//			mMediaRecorder.prepare();
+////			mProgressView.setData(mMediaObject);
+//		}
+//	}
     
     @Override
     protected void onDetachedFromWindow() {
@@ -245,11 +247,11 @@ public class CameraView extends ResourceView implements MediaRecorderBase.OnEnco
 		}
 		mReleased = false;
     }
-    @Override
-	public void onPause() {
-		super.onPause();
-		releaseCamera();
-	}
+//    @Override
+//	public void onPause() {
+//		super.onPause();
+//		releaseCamera();
+//	}
 
     private MediaRecorderNative mMediaRecorder;
     private MediaObject mMediaObject;
@@ -457,7 +459,7 @@ public class CameraView extends ResourceView implements MediaRecorderBase.OnEnco
 		if (mProgressDialog != null) {
 			mProgressDialog.dismiss();
 		}
-		Navigation.getNavigation(this).popView(mMediaObject.getOutputVideoPath());
+		Nav.getNav(this).pop(mMediaObject.getOutputVideoPath());
 		//hideProgress();
 //		Intent intent = new Intent(this, MediaPreviewActivity.class);
 //		Bundle bundle = getIntent().getExtras();
@@ -476,7 +478,7 @@ public class CameraView extends ResourceView implements MediaRecorderBase.OnEnco
 				mProgressDialog.dismiss();
 			}
 		 new File(mMediaObject.getOutputVideoPath()).delete();
-		 Navigation.getNavigation(this).popView();
+		 Nav.getNav(this).pop();
 	 }
     
     

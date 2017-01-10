@@ -159,7 +159,7 @@ public class AlbumGridViewAdapter extends BaseAdapter {
 	// public void onClick(View view) {
 	// if (view instanceof ToggleButton) {
 	// ToggleButton toggleButton = (ToggleButton) view;
-	// int position = (Integer) toggleButton.getTag();
+	// int position = (Int) toggleButton.getTag();
 	// if (dataList != null && mOnItemClickListener != null && position <
 	// dataList.size()) {
 	// mOnItemClickListener.onItemClick(toggleButton, position,
