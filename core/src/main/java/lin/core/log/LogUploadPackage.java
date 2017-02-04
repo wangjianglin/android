@@ -2,10 +2,10 @@ package lin.core.log;
 
 import java.io.File;
 
-import lin.client.http.HttpMethod;
-import lin.client.http.HttpPackage;
-import lin.client.http.annotation.HttpPackageMethod;
-import lin.client.http.annotation.HttpParamName;
+import lin.comm.http.HttpMethod;
+import lin.comm.http.HttpPackage;
+import lin.comm.http.annotation.HttpPackageMethod;
+import lin.comm.http.annotation.HttpParamName;
 /**
  * 
  * @author lin

@@ -3,10 +3,10 @@ package lin.core.log;
 import java.util.HashMap;
 import java.util.Map;
 
-import lin.client.http.HttpMethod;
-import lin.client.http.HttpPackage;
-import lin.client.http.annotation.HttpPackageMethod;
-import lin.client.http.annotation.HttpPackageReturnType;
+import lin.comm.http.HttpMethod;
+import lin.comm.http.HttpPackage;
+import lin.comm.http.annotation.HttpPackageMethod;
+import lin.comm.http.annotation.HttpPackageReturnType;
 
 //@HttpPackageUrl("/exception/add.action")
 @HttpPackageMethod(HttpMethod.POST)

@@ -8,9 +8,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 
-import lin.client.http.HttpCommunicate;
-import lin.client.httpdns.AliHttpDNS;
-import lin.client.httpdns.HttpDNS;
+import lin.comm.http.HttpCommunicate;
+import lin.comm.httpdns.AliHttpDNS;
+import lin.comm.httpdns.HttpDNS;
 import lin.core.Images;
 
 public class DemoApplication extends Application {

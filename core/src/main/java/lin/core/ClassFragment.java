@@ -26,7 +26,6 @@ public class ClassFragment extends android.support.v4.app.Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		LayoutInflaterFactory.setFactory2(this.getContext());
 		return Views.genView(this.getContext(),cls,container);
 	}
 

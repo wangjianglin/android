@@ -1,7 +1,6 @@
 package lin.core.ptr.ui;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -200,7 +199,7 @@ public class PtrDefaultHeader extends FrameLayout implements PtrUIHandler {
         final int lastPos = ptrIndicator.getLastPosY();
 
         if (currentPos < mOffsetToRefresh && lastPos >= mOffsetToRefresh) {
-            if (isUnderTouch && status == PtrView.Status.PREPARE) {
+            if (isUnderTouch && status == PtrView.Status.Prepare) {
                 crossRotateLineFromBottomUnderTouch(ptr);
                 if (mRotateView != null) {
                     mRotateView.clearAnimation();
@@ -208,7 +207,7 @@ public class PtrDefaultHeader extends FrameLayout implements PtrUIHandler {
                 }
             }
         } else if (currentPos > mOffsetToRefresh && lastPos <= mOffsetToRefresh) {
-            if (isUnderTouch && status == PtrView.Status.PREPARE) {
+            if (isUnderTouch && status == PtrView.Status.Prepare) {
                 crossRotateLineFromTopUnderTouch(ptr);
                 if (mRotateView != null) {
                     mRotateView.clearAnimation();

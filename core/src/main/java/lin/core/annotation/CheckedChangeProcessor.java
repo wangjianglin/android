@@ -16,7 +16,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
  *
  */
 //public class CheckedChangeProcessor implements MethodProcessor{
-public class CheckedChangeProcessor extends AbstractMethodProcessor{
+public class CheckedChangeProcessor extends AbstractMethodProcessor<CheckedChange>{
 
 //	@Override
 //	public void process(View view,Method method, Annotation annotation,
@@ -44,51 +44,17 @@ public class CheckedChangeProcessor extends AbstractMethodProcessor{
 
 
 	@Override
-	protected int[] getIds(Annotation annotation) {
-		return ((CheckedChange)annotation).value();
+	protected int[] getIds(CheckedChange annot) {
+		return annot.value();
 	}
 
 	@Override
-	protected String[] getStringIds(Annotation annotation) {
-		return ((CheckedChange)annotation).id();
+	protected String[] getStringIds(CheckedChange annot) {
+		return annot.id();
 	}
 	@Override
-	protected void processFieldItem(Object target, Method method, View itemView) {
-//	private void processStringItem(View view,Method method, String stringId,
-//							 Class<?> idClass){
+	protected void processMethod(Object target, Method method, View itemView,CheckedChange annot) {
 
-//		int viewId = 0;
-//		if("".equals(stringId) || stringId == null){
-//		try{
-//				Field f = idClass.getDeclaredField(stringId);
-//				viewId = f.getInt(null);
-//			}catch(Throwable e){}
-//		}else {
-//			try {
-//				Field f = idClass.getDeclaredField(method.getName());
-//				viewId = f.getInt(null);
-//			} catch (Throwable e) {
-//			}
-//		}
-//		processItem(view, method, viewId, idClass);
-//	}
-//
-//	private void processItem(View view,Method method, int viewId,
-//								Class<?> idClass){
-//		int viewId = 0;
-//		if(item.value() != 0){
-//			viewId = item.value();
-//		}else if(!"".equals(item.id())){
-//			try{
-//				Field f = idClass.getDeclaredField(item.id());
-//				viewId = f.getInt(null);
-//			}catch(Throwable e){}
-//		}else{
-//			try{
-//				Field f = idClass.getDeclaredField(method.getName());
-//				viewId = f.getInt(null);
-//			}catch(Throwable e){}
-//		}
 		
 		Class<?> viewClass = null;
 		
@@ -116,10 +82,7 @@ public class CheckedChangeProcessor extends AbstractMethodProcessor{
 				}
 			}
 		}
-//		View itemView = view;
-//		if(viewId != 0){
-//			itemView = view.findViewById(viewId);
-//		}
+
 		CompoundButton button = null; 
 		if(itemView instanceof CompoundButton){
 			button = (CompoundButton)itemView;
@@ -130,9 +93,7 @@ public class CheckedChangeProcessor extends AbstractMethodProcessor{
 		if(!(viewClass == null || viewClass.isAssignableFrom(button.getClass()))){
 			return;
 		}
-//			itemView.setOnClickListener(new ViewOnClickListener(itemView,method,view));
-//			itemView.setOnKeyListener(new ViewOnKeyListener(view,method,clcikMethodParams));
-//			CheckBox b;
+
 		button.setOnCheckedChangeListener(new ViewOnCheckedChangeListener(target,method,clcikMethodParams));
 	}
 

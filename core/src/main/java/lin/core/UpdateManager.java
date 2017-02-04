@@ -2,12 +2,8 @@ package lin.core;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 
 
 import android.app.DownloadManager;
@@ -24,8 +20,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 
-import lin.client.http.*;
-import lin.client.http.Error;
+import lin.comm.http.*;
 import lin.util.Procedure;
 
 /**

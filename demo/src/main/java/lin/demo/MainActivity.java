@@ -10,8 +10,8 @@ import android.widget.Button;
 import java.net.URL;
 import java.util.List;
 
-import lin.client.http.*;
-import lin.client.http.Error;
+import lin.comm.http.*;
+import lin.comm.http.Error;
 
 
 public class MainActivity extends Activity {

@@ -98,7 +98,7 @@ public class TabBar extends ResView {
 	@Override
 	protected void onInited() {
 
-		barLayout.setBackground(this.background);
+		barLayout.setBackgroundDrawable(this.background);
 		setTab(tabIndex);
 
 	}

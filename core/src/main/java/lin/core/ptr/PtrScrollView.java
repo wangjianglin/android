@@ -25,10 +25,19 @@ public class PtrScrollView extends PtrViewBase<ScrollView> {
 
     @Override
     protected ScrollView genContentView() {
-        this.setMode(Mode.REFRESH);
         ScrollView scrollView = new ScrollView(this.getContext());
         scrollView.setOverScrollMode(ScrollView.OVER_SCROLL_NEVER);
         return scrollView;
+    }
+
+    @Override
+    public void setMode(Mode mode) {
+        if(mode == Mode.Both
+                || mode == Mode.Refresh){
+            super.setMode(Mode.Refresh);
+        }else{
+            super.setMode(Mode.Disable);
+        }
     }
 
     @Override

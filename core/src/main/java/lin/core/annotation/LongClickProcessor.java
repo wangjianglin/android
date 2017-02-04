@@ -12,22 +12,22 @@ import android.view.View.OnLongClickListener;
  * @date Jun 14, 2015 5:24:20 PM
  *
  */
-public class LongClickProcessor extends AbstractMethodProcessor{
+public class LongClickProcessor extends AbstractMethodProcessor<ListItemClick>{
 
 	@Override
-	protected int[] getIds(Annotation annotation) {
-		return ((ListItemClick)annotation).value();
+	protected int[] getIds(ListItemClick annot) {
+		return annot.value();
 	}
 
 	@Override
-	protected String[] getStringIds(Annotation annotation) {
-		return ((ListItemClick)annotation).id();
+	protected String[] getStringIds(ListItemClick annot) {
+		return annot.id();
 	}
 
 	@Override
 //	public void process(View view,Method method, Annotation annotation,
 //			Class<?> idClass) {
-	protected void processFieldItem(Object target, Method method, View itemView){
+	protected void processMethod(Object target, Method method, View itemView,ListItemClick annot){
 
 //		LongClick item = (LongClick)annotation;
 //		if(item == null){

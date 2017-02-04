@@ -74,8 +74,8 @@
 ////		mHandler.post(new Runnable() {
 ////			@Override
 ////			public void run() {
-//				if(mode == Mode.BOTH){
-//					setMode(com.handmark.pulltorefresh.library.PullToRefreshBase.Mode.BOTH);
+//				if(mode == Mode.Both){
+//					setMode(com.handmark.pulltorefresh.library.PullToRefreshBase.Mode.Both);
 //				}else if(mode == Mode.PULL_FROM_END){
 //					setMode(com.handmark.pulltorefresh.library.PullToRefreshBase.Mode.PULL_FROM_END);
 //				}else if(mode == Mode.PULL_FROM_START){
@@ -96,7 +96,7 @@
 ////			@Override
 ////			public void run() {
 //				if(pullLoadEnable && pullRefreshEnable){
-//					setMode(com.handmark.pulltorefresh.library.PullToRefreshBase.Mode.BOTH);
+//					setMode(com.handmark.pulltorefresh.library.PullToRefreshBase.Mode.Both);
 //				}else if(pullLoadEnable){
 //					setMode(PullToRefreshBase.Mode.PULL_FROM_END);
 //				}else if(pullRefreshEnable){
@@ -163,7 +163,7 @@
 //
 //	public static enum Mode {
 //
-//		DISABLED,PULL_FROM_START,PULL_FROM_END,BOTH
+//		DISABLED,PULL_FROM_START,PULL_FROM_END,Both
 //
 //
 //	}

@@ -112,7 +112,7 @@ def dateStr = new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss.SSS').format(n
 subprojects {
 
     group = 'lin'
-    version = '0.1.0'
+    version = '0.1.0-SNAPSHOT'
 
     if(project.name == 'demo'){
         apply plugin: 'com.android.application'
@@ -130,7 +130,7 @@ subprojects {
             minSdkVersion 15
             targetSdkVersion 22
             versionCode 1
-            versionName "0.0.1-SNAPSHOT"
+            versionName "0.1.0-SNAPSHOT"
 
         }
 
@@ -228,12 +228,11 @@ subprojects {
                             password: prop.getProperty('maven.password'))//密码
                 }
 
-
                 pom.project {
                     name project.name
                     packaging 'aar'
                     description project.description
-                    url prop.getProperty('snapshots.repo')//仓库地址
+                    url project.version.toString().endsWith("-SNAPSHOT") ? prop.getProperty('snapshots.repo'):prop.getProperty('release.repo')//仓库地址
                     groupId project.group
                     artifactId project.name //LibA
                     version project.version

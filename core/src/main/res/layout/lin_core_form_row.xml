@@ -20,28 +20,32 @@
     android:layout_marginLeft="12dp"
     android:layout_marginTop="0dp"
     android:layout_marginBottom="3dp"
-    android:id="@+id/form_row_title"
+    android:id="@+id/lin_core_form_row_title"
     android:layout_centerVertical="true"/>
 
 
 <TextView android:layout_width="wrap_content"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
     android:textColor="#ef434343"
-    android:id="@+id/form_row_text"
+    android:id="@+id/lin_core_form_row_text"
     android:textSize="16dp"
      android:layout_marginRight="28dp"
     android:layout_marginTop="0dp"
     android:layout_marginBottom="3dp"
     android:layout_centerInParent="true"
-    android:layout_alignParentRight="true"/>
+    android:layout_alignParentRight="true"
+    android:text="text" />
 
 <ImageView android:layout_width="wrap_content"
-    android:layout_height="20dp"
-    android:id="@+id/form_row_accessory"
- android:layout_marginRight="-3dp"
+    android:layout_height="wrap_content"
+    android:id="@+id/lin_core_form_row_accessory"
+ android:layout_marginRight="5dp"
     android:layout_marginTop="22dp"
     android:layout_marginBottom="3dp"
     android:layout_centerInParent="true"
     android:src="@drawable/lin_core_form_row_accessory"
-    android:layout_alignParentRight="true"/>
+    android:layout_alignParentRight="true"
+    android:scaleType="center"
+    android:scaleX="0.8"
+    android:scaleY="0.8" />
     </RelativeLayout>

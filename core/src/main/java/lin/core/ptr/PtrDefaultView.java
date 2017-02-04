@@ -25,18 +25,29 @@ public class PtrDefaultView extends PtrView {
 
     @Override
     protected void onFinishInflate(){
-        if(this.getHeaderView() == null) {
+        setDefHeaderAndFooter(this.getMode());
+        super.onFinishInflate();
+    }
+
+    private void setDefHeaderAndFooter(Mode mode){
+        if(this.getHeaderView() == null
+                &&(mode == Mode.Refresh || mode == Mode.Both)) {
             PtrDefaultHeader header = new PtrDefaultHeader(this.getContext());
             this.setHeaderView(header);
             this.addRefreshUIHandler(header);
         }
 
-        if(this.getFooterView() == null) {
+        if(this.getFooterView() == null
+                &&(mode == Mode.LoadMore || mode == Mode.Both)) {
             PtrDefaultFooter footer = new PtrDefaultFooter(this.getContext());
             this.setFooterView(footer);
             this.addLoadMoreUIHandler(footer);
         }
+    }
 
-        super.onFinishInflate();
+    @Override
+    public void setMode(Mode mode) {
+        setDefHeaderAndFooter(mode);
+        super.setMode(mode);
     }
 }

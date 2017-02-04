@@ -1,9 +1,22 @@
 package lin.core;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.view.ActionMode;
+import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -30,11 +43,28 @@ public class ViewActivity extends AppCompatActivity{
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.savedInstanceState = savedInstanceState;
-		LayoutInflaterFactory.setFactory2(this);
+//		LayoutInflaterFactory.setFactory2(this);
 	}
 
 	private static List<SoftReference<Activity>> activitys = new ArrayList<SoftReference<Activity>>();
 
+	/*
+	activityManager=(ActivityManager)super.getSystemService(Context.ACTIVITY_SERVICE);
+
+
+
+        listActivity();
+
+    }
+
+
+
+    public void listActivity(){
+
+    List<RunningTaskInfo> tasks=  activityManager.getRunningTasks(30);
+
+        Iterator<RunningTaskInfo> itInfo=tasks.iterator();
+	 */
 	public static Activity getActivity(View view){
 
 		for (SoftReference<Activity> item : activitys){
@@ -48,11 +78,16 @@ public class ViewActivity extends AppCompatActivity{
 		}
 		return null;
 	}
-	
+
 	@Override
 	public void setContentView(int layoutResID) {
+		View view = Views.loadView(this,layoutResID);
+		super.setContentView(view);
+	}
+
+	protected void setContentViewById(int layoutResID) {
 		super.setContentView(layoutResID);
-		Views.process(this,super.getWindow().getDecorView());
+		Views.process(this,this.getWindow().getDecorView());
 	}
 
 	@Override
@@ -73,114 +108,4 @@ public class ViewActivity extends AppCompatActivity{
 		super.addContentView(view, params);
 		Views.process(this, view);
 	}
-//
-//		fireActivieyLifeCycle(new lin.util.Procedure<ActivieyLifeCycle>(){
-//
-//			@Override
-//			public void procedure(ActivieyLifeCycle obj) {
-//				obj.onCreate(savedInstanceState);
-//			}});
-//	}
-//
-//	public void onConfigurationChanged(final Configuration newConfig) {
-//		super.onConfigurationChanged(newConfig);
-//
-//		fireActivieyLifeCycle(new lin.util.Procedure<ActivieyLifeCycle>(){
-//
-//			@Override
-//			public void procedure(ActivieyLifeCycle obj) {
-//				obj.onConfigurationChanged(newConfig);
-//			}
-//		});
-//
-//	}
-//
-//	@Override
-//	protected void onStart() {
-//		super.onStart();
-//		fireActivieyLifeCycle(new lin.util.Procedure<ActivieyLifeCycle>(){
-//
-//			@Override
-//			public void procedure(ActivieyLifeCycle obj) {
-//				obj.onStart();
-//			}});
-//	}
-//
-//	@Override
-//	protected void onResume() {
-//		super.onResume();
-//		fireActivieyLifeCycle(new lin.util.Procedure<ActivieyLifeCycle>(){
-//
-//			@Override
-//			public void procedure(ActivieyLifeCycle obj) {
-//				obj.onResume();
-//			}});
-//	}
-//
-//	@Override
-//	protected void onStop() {
-//		super.onStop();
-//		fireActivieyLifeCycle(new lin.util.Procedure<ActivieyLifeCycle>(){
-//
-//			@Override
-//			public void procedure(ActivieyLifeCycle obj) {
-//				obj.onStop();
-//			}});
-//	}
-//
-//	@Override
-//	protected void onPause() {
-//		super.onPause();
-//		fireActivieyLifeCycle(new lin.util.Procedure<ActivieyLifeCycle>(){
-//
-//			@Override
-//			public void procedure(ActivieyLifeCycle obj) {
-//				obj.onPause();
-//			}});
-//	}
-//
-//	@Override
-//	protected void onDestroy() {
-//		super.onDestroy();
-//		fireActivieyLifeCycle(new lin.util.Procedure<ActivieyLifeCycle>(){
-//
-//			@Override
-//			public void procedure(ActivieyLifeCycle obj) {
-//				obj.onDestroy();
-//			}});
-//	}
-//
-//	@Override
-//	protected void onSaveInstanceState(final Bundle outState){
-//		fireActivieyLifeCycle(new lin.util.Procedure<ActivieyLifeCycle>(){
-//
-//			@Override
-//			public void procedure(ActivieyLifeCycle obj) {
-//				obj.onSaveInstanceState(outState);
-//			}});
-//
-//		super.onSaveInstanceState(outState);
-//	}
-//
-//	private void fireActivieyLifeCycle(lin.util.Procedure<ActivieyLifeCycle> procedure){
-//		fireActivieyLifeCycleImpl(this.getWindow().getDecorView(),procedure);
-//	}
-//
-//	private void fireActivieyLifeCycleImpl(View v,lin.util.Procedure<ActivieyLifeCycle> procedure){
-//
-//		if(v == null){
-//			return;
-//		}
-//		if(v instanceof ActivieyLifeCycle){
-//			procedure.procedure((ActivieyLifeCycle) v);
-//		}
-//		if(!(v instanceof ViewGroup)){
-//			return;
-//		}
-//		ViewGroup contentView = (ViewGroup) v;//nav.getContentView();
-//		for(int n=0;n<contentView.getChildCount();n++){
-//			fireActivieyLifeCycleImpl(contentView.getChildAt(n),procedure);
-//		}
-//	}
-	
 }

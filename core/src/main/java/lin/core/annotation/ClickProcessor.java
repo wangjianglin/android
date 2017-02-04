@@ -12,22 +12,22 @@ import android.view.View.OnClickListener;
  * @date Jun 14, 2015 5:24:20 PM
  *
  */
-public class ClickProcessor extends AbstractMethodProcessor{
+public class ClickProcessor extends AbstractMethodProcessor<Click>{
 
 	@Override
-	protected int[] getIds(Annotation annotation) {
-		return ((Click)annotation).value();
+	protected int[] getIds(Click annot) {
+		return annot.value();
 	}
 
 	@Override
-	protected String[] getStringIds(Annotation annotation) {
-		return ((Click)annotation).id();
+	protected String[] getStringIds(Click annot) {
+		return annot.id();
 	}
 
 	@Override
 //	public void process(View view,Method method, Annotation annotation,
 //			Class<?> idClass) {
-	protected void processFieldItem(Object target, Method method, View itemView){
+	protected void processMethod(Object target, Method method, View itemView,Click annot){
 //	Click item = (Click)annotation;
 //		if(item == null){
 //			return;

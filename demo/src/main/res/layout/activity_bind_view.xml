@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+<data>
+
+    <variable
+        name="data"
+        type="lin.demo.binding.User"/>
+</data>
+    <lin.core.ReView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:textColor="#000"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@={data.firstName}"
+            />
+
+        <EditText
+            android:textColor="#000"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@={data.lastName}"
+            />
+        <TextView
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@{data.displayName}">
+
+    </TextView>
+
+    </lin.core.ReView>
+
+</layout>

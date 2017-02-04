@@ -26,8 +26,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import lin.client.http.*;
-import lin.client.http.Error;
+import lin.comm.http.*;
+import lin.comm.http.Error;
 import lin.core.annotation.Click;
 import lin.core.annotation.ResCls;
 import lin.core.annotation.ResId;

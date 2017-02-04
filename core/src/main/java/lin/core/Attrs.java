@@ -275,8 +275,11 @@ public class Attrs {
 		return (int)obj;
 	}
 
+	public boolean hasValue(int[] attrs,int id){
+		return hasValue(attrs[id]);
+	}
 	public boolean hasValue(int id){
-		return values.containsKey(id);
+		return values.containsKey(id+"");
 	}
 
 

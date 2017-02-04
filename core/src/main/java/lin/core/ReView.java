@@ -3,8 +3,14 @@ package lin.core;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
-import lin.core.ptr.PtrScrollView;
+import lin.core.annotation.ResCls;
+import lin.core.annotation.ResId;
+import lin.core.ptr.PtrView;
 
 /**
  * 
@@ -13,30 +19,52 @@ import lin.core.ptr.PtrScrollView;
  * ScrollView反弹效果的实现 
  *
  */
-
-public class ReView extends PtrScrollView{
+@ResCls(R.class)
+@ResId(id="lin_core_review")
+public class ReView extends ResView{
 
     public ReView(Context context) {
         super(context);
+        this.init();
     }
 
     public ReView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.init();
     }
 
     public ReView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        this.init();
+    }
+
+    private LinearLayout layout;
+    private void init(){
+        layout = new LinearLayout(this.getContext());
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        ScrollView.LayoutParams lp = new ScrollView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+
+        layout.setLayoutParams(lp);
+
+        ((PtrView)this.getNodeView()).addView(layout);
+    }
+
+    @Override
+    public void addView(View child, int index, ViewGroup.LayoutParams params) {
+        layout.addView(child, index, params);
     }
 }
 //public class ReboundScrollView extends PullToRefreshScrollView{
 //  public ReboundScrollView(Context context, AttributeSet attrs)
 //  {
-//      super(context,attrs, Mode.BOTH,NullLoadingLayout.class);
+//      super(context,attrs, Mode.Both,NullLoadingLayout.class);
 //
 //
 ////      this.setScrollbarFadingEnabled(false);
 //////      this.getContext()
-////      this.setMode(Mode.BOTH);
+////      this.setMode(Mode.Both);
 ////      this.setOverScrollMode(OVER_SCROLL_NEVER);
 ////      this.setPullToRefreshOverScrollEnabled(false);
 ////      this.getRefreshableView().setHorizontalFadingEdgeEnabled(false);

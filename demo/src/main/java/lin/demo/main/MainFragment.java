@@ -21,6 +21,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import lin.core.ptr.PtrRecyclerView;
 import lin.core.recyclerview.headers.StickyHeadersAdapter;
 import lin.core.recyclerview.headers.StickyHeadersDecoration;
 import lin.core.recyclerview.headers.StickyHeadersTouchListener;
@@ -50,9 +51,9 @@ public class MainFragment extends Fragment implements MainContract.View {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.activity_main_frag, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.activity_list_frag_listview);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        PtrRecyclerView ptrView = (PtrRecyclerView) root.findViewById(R.id.activity_list_frag_recyclerview);
+        RecyclerView recyclerView = ptrView.getContentView();
+                //recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerView.addItemDecoration(new DividerDecoration(this.getContext()));
 
         mAdapter = new SimpleRecyclerAdapter(this.getContext());
@@ -258,7 +259,17 @@ public class MainFragment extends Fragment implements MainContract.View {
 //    }
 
 
-
+    public void onPrepareOptionsMenu(Menu menu) {
+//        if (mIsEditStatus) {
+//            menu.findItem(R.id.action_share).setVisible(false);
+//            menu.findItem(R.id.action_edit).setVisible(true);
+//        } else {
+//            menu.findItem(R.id.action_share).setVisible(true);
+//            menu.findItem(R.id.action_edit).setVisible(false);
+//        }
+        //menu.findItem(R.id.menu_refresh).setShowAsAction(R.drawable.ic_filter_list);
+        super.onPrepareOptionsMenu(menu);
+    }
     @Override
     public void setPresenter(MainContract.Presenter presenter) {
         this.mPresenter = presenter;

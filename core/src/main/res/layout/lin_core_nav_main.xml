@@ -1,56 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:fitsSystemWindows="true"
 	android:orientation="vertical">
 
-	<view
-		class="lin.core.Nav$View"
-		android:id="@id/lin_core_nav_view"
-		android:layout_width="0dp"
-		android:layout_height="0dp"/>
 	<android.support.design.widget.AppBarLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
 
 		<android.support.v7.widget.Toolbar
-			android:id="@id/lin_core_nav_toolbar"
+			android:id="@+id/lin_core_nav_toolbar"
 			android:layout_width="match_parent"
 			android:layout_height="?attr/actionBarSize"
 			android:background="?attr/colorPrimary" />
 
 	</android.support.design.widget.AppBarLayout>
 
-	<!--<include layout="@layout/content_list" />-->
-
-	<!--<android.support.design.widget.FloatingActionButton-->
-	<!--android:id="@+id/fab"-->
-	<!--android:layout_width="wrap_content"-->
-	<!--android:layout_height="wrap_content"-->
-	<!--android:layout_gravity="bottom|end"-->
-	<!--android:layout_margin="@dimen/fab_margin"-->
-	<!--app:srcCompat="@android:drawable/ic_dialog_email" />-->
-
-	<android.support.design.widget.CoordinatorLayout
+	<view
+		class="lin.core.Nav$View"
+		android:id="@id/lin_core_nav_view"
+		android:layout_width="0dp"
+		android:layout_height="0dp"/>
+	<FrameLayout
+		android:id="@+id/lin_core_nav_content_frame"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+		android:layout_height="match_parent" />
 
-		<FrameLayout
-			android:id="@id/lin_core_nav_content_frame"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent" />
-
-		<!--<android.support.design.widget.FloatingActionButton-->
-		<!--android:id="@+id/fab_edit_task"-->
-		<!--android:layout_width="wrap_content"-->
-		<!--android:layout_height="wrap_content"-->
-		<!--android:layout_margin="@dimen/fab_margin"-->
-		<!--app:layout_anchor="@id/contentFrame"-->
-		<!--app:layout_anchorGravity="bottom|right|end" />-->
-
-	</android.support.design.widget.CoordinatorLayout>
 
 </LinearLayout>

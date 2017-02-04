@@ -20,7 +20,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.provider.Settings;
-import lin.client.http.HttpCommunicate;
+import lin.comm.http.HttpCommunicate;
 import lin.core.Device;
 import lin.core.LocalStorage;
 import lin.util.JsonUtil;

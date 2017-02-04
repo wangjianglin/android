@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:lin="http://schemas.android.com/apk/res-auto"
-    lin:nav_title="nav title"
+    lin:nav_title="nav layout id"
     >
 
 </LinearLayout>

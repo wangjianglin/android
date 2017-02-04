@@ -5,8 +5,19 @@ import android.content.Intent;
 import java.util.ArrayList;
 import java.util.List;
 
+import lin.demo.binding.BindViewActivity;
+import lin.demo.binding.BindViewHolderActivity;
+import lin.demo.controls.ReViewActivity;
+import lin.demo.controls.SwipeActivity;
+import lin.demo.controls.ViewPagerActivity;
+import lin.demo.core.ViewHolderActivity;
+import lin.demo.core.ViewInheritActivity;
+import lin.demo.form.FormActivity;
 import lin.demo.nav.NavActivity;
-import lin.demo.swiperefresh.SwiperefreshActivity;
+import lin.demo.ptr.PtrDefaultActivity;
+import lin.demo.ptr.PtrListActivity;
+import lin.demo.ptr.PtrRecyclerActivity;
+import lin.demo.ptr.PtrScrollActivity;
 import lin.demo.tabbar.TabbarActivity;
 
 /**
@@ -39,9 +50,29 @@ public class MainPresenter implements MainContract.Presenter{
         mDatas.clear();
 
         items = new Object[][]{
+                new Object[]{"core","view inherit",new Intent(mView.getContext(),ViewInheritActivity.class)},
+                new Object[]{"core","view holder",new Intent(mView.getContext(),ViewHolderActivity.class)},
+
                 new Object[]{"controls","tabbar",new Intent(mView.getContext(),TabbarActivity.class)},
                 new Object[]{"controls","nav",new Intent(mView.getContext(),NavActivity.class)},
-                new Object[]{"controls","swipe refresh",new Intent(mView.getContext(),SwiperefreshActivity.class)}
+                new Object[]{"controls","swipe",new Intent(mView.getContext(),SwipeActivity.class)},
+                new Object[]{"controls","review",new Intent(mView.getContext(),ReViewActivity.class)},
+                new Object[]{"controls","view pager",new Intent(mView.getContext(),ViewPagerActivity.class)},
+
+                //SwipeRefreshLayout 官方
+
+                new Object[]{"binding","bind view",new Intent(mView.getContext(),BindViewActivity.class)},
+                new Object[]{"binding","bind view holde",new Intent(mView.getContext(),BindViewHolderActivity.class)},
+
+
+                new Object[]{"pull to refresh","ptr default",new Intent(mView.getContext(),PtrDefaultActivity.class)},
+                new Object[]{"pull to refresh","ptr list",new Intent(mView.getContext(),PtrListActivity.class)},
+                new Object[]{"pull to refresh","ptr recycler",new Intent(mView.getContext(),PtrRecyclerActivity.class)},
+                new Object[]{"pull to refresh","ptr scroll",new Intent(mView.getContext(),PtrScrollActivity.class)},
+
+
+                new Object[]{"form","classic",new Intent(mView.getContext(),FormActivity.class)},
+                new Object[]{"event bus","classic",new Intent(mView.getContext(),FormActivity.class)}
         };
 
         Data data = null;

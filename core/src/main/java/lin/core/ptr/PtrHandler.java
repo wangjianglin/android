@@ -12,7 +12,7 @@ import android.widget.ScrollView;
  * Created by lin on 08/01/2017.
  */
 
-public class PtrHandler {
+class PtrHandler {
     private static boolean canChildScrollUp(View view) {
         if (android.os.Build.VERSION.SDK_INT < 14) {
             if (view instanceof AbsListView) {
@@ -111,7 +111,7 @@ public class PtrHandler {
             if (view != null) {
                 int diff = (view.getBottom() - (scrollView.getHeight() + scrollView
                         .getScrollY()));
-                if (diff == 0) {
+                if (diff <= 0) {
                     return true;
                 }
             }

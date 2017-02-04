@@ -5,12 +5,12 @@ import android.content.Context;
 import java.util.HashMap;
 import java.util.Map;
 
-import lin.client.Constants;
-import lin.client.http.HttpCommunicate;
-import lin.client.http.HttpCommunicateImpl;
-import lin.client.http.HttpCommunicateResult;
-import lin.client.http.HttpMethod;
-import lin.client.http.HttpPackage;
+import lin.comm.Constants;
+import lin.comm.http.HttpCommunicate;
+import lin.comm.http.HttpCommunicateImpl;
+import lin.comm.http.HttpCommunicateResult;
+import lin.comm.http.HttpMethod;
+import lin.comm.http.HttpPackage;
 
 /**
  * Created by lin on 5/1/16.
@@ -46,7 +46,7 @@ public class HttpDNSPlugin extends LinWebPlugin {
         if(headers == null){
             headers = new HashMap<String,String>();
         }
-        if(destIp != null && !"".equals(destIp) && !lin.client.Utils.detectIfProxyExist(this.getContext())){
+        if(destIp != null && !"".equals(destIp) && !lin.comm.Utils.detectIfProxyExist(this.getContext())){
             headers.put("Host",host);
             url = url.replaceFirst(host,destIp);
         }
@@ -70,7 +70,7 @@ public class HttpDNSPlugin extends LinWebPlugin {
         return result.getError();
     }
 
-    private class HttpRequestPackage extends lin.client.http.HttpPackage{
+    private class HttpRequestPackage extends lin.comm.http.HttpPackage{
 
         HttpRequestPackage(String url, HttpMethod method){
             super(url,method);

@@ -18,6 +18,8 @@ import android.widget.FrameLayout;
 
 import java.lang.reflect.Constructor;
 
+import lin.core.annotation.NavTag;
+import lin.core.annotation.NavTitle;
 import lin.core.annotation.ViewById;
 
 /**
@@ -55,11 +57,17 @@ public class NavActivity extends ViewActivity {
 		
 		nav = Nav.getNav(argsId);
 		nav.activity = this;
-		this.setContentView(R.layout.lin_core_nav_main);
-
-		this.setSupportActionBar(toolbar);
 
 		ActionBar actionBar = this.getSupportActionBar();
+		if(actionBar == null) {
+			this.setContentViewById(R.layout.lin_core_nav_main);
+			this.setSupportActionBar(toolbar);
+			actionBar = this.getSupportActionBar();
+		}else{
+			this.setContentViewById(R.layout.lin_core_nav_main_without_toolbar);
+		}
+
+
 
 		actionBar.setDisplayShowHomeEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(true);
@@ -69,26 +77,44 @@ public class NavActivity extends ViewActivity {
 
 			android.support.v4.app.Fragment fragment = Views.genFragment(this,className,this.parentView);
 
-			setInfoWithView(fragment.getView());
+			setInfoWithView(fragment,fragment.getView());
 			view = fragment;
 		}else{
 			view = genView(layoutId);
-			setInfoWithView((View) view);
+			setInfoWithView(view,(View) view);
 		}
 
 		addNavView(view);
-		
+
+		nav.init();
 	}
 
-	private void setInfoWithView(View view){
-		if(view != null
-				&& view.getLayoutParams() instanceof ContentView.LayoutParams){
-			ContentView.LayoutParams lp = (ContentView.LayoutParams) view.getLayoutParams();
+	private void setInfoWithView(Object navObj,View view){
+
+		if(view != null) {
+			if (view.getLayoutParams() instanceof ContentView.LayoutParams) {
+				ContentView.LayoutParams lp = (ContentView.LayoutParams) view.getLayoutParams();
+				if (nav.getTitle() == null) {
+					nav.setTitle(lp.getAttrs().getString(R.styleable.nav, R.styleable.nav_nav_title, nav.getTitle()));
+				}
+				if (nav.getTag() == null) {
+					nav.setTag(lp.getAttrs().getString(R.styleable.nav, R.styleable.nav_nav_tag, nav.getTag()));
+				}
+			}
+		}
+
+		if(navObj != null){
 			if(nav.getTitle() == null) {
-				nav.setTitle(lp.getAttrs().getString(R.styleable.nav, R.styleable.nav_nav_title, nav.getTitle()));
+				NavTitle navTitle = navObj.getClass().getAnnotation(NavTitle.class);
+				if (navTitle != null) {
+					nav.setTitle(navTitle.value());
+				}
 			}
 			if(nav.getTag() == null) {
-				nav.setTag(lp.getAttrs().getString(R.styleable.nav, R.styleable.nav_nav_tag, nav.getTag()));
+				NavTag navTag = navObj.getClass().getAnnotation(NavTag.class);
+				if (navTag != null) {
+					nav.setTag(navTag.value());
+				}
 			}
 		}
 	}

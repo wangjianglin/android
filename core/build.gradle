@@ -43,9 +43,10 @@ dependencies {
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
     compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
+    compile "com.android.support:design:$rootProject.supportLibraryVersion"
 
     compile project(':util')
-    compile project(':client')
+    compile project(':comm')
     //compile project(':pulltorefresh')
 }
 

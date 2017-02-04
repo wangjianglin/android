@@ -22,9 +22,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import lin.client.http.FileInfo;
-import lin.client.http.HttpCommunicate;
-import lin.client.httpdns.HttpDNS;
+import lin.comm.http.FileInfo;
+import lin.comm.http.HttpCommunicate;
+import lin.comm.httpdns.HttpDNS;
 import lin.util.ThreadPool;
 import lin.util.thread.AutoResetEvent;
 

@@ -22,12 +22,16 @@
     <!--<lin.core.swiperefresh.DefaultSwipeLayout-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent">-->
-    <android.support.v7.widget.RecyclerView
-        android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:overScrollMode="never"
-        android:saveEnabled="false"
-        android:id="@+id/activity_list_frag_listview"/>
+    <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:orientation="vertical" android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:overScrollMode="never"-->
+        <!--android:saveEnabled="false"-->
+        <!--android:id="@+id/activity_list_frag_listview"/>-->
+    <lin.core.ptr.PtrRecyclerView
+        android:layout_width="match_parent"
+        android:id="@+id/activity_list_frag_recyclerview"
+        android:layout_height="match_parent"></lin.core.ptr.PtrRecyclerView>
 
     <!--</lin.core.swiperefresh.DefaultSwipeLayout>-->
 

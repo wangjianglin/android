@@ -1,0 +1,86 @@
+
+
+Motion 注解
+
+
+Nav 的 attr 属性不生效
+继承已经继承 ResView 的类，基类的 ViewById,click 是否生效
+
+PtrScroll 内容不足时，向上不能滚动
+
+组件进行值绑定,attr都需要支持绑定
+
+用 on
+1、 ResView 支持 binding
+
+    ViewHolder 支持 binding
+
+2、ptr 加 styleable
+
+    app:ptr_mode="disable/refresh/load_more/both"
+    app:ptr_pull_to_refresh="true/false"
+    app:ptr_pull_to_load_more="true/false"
+    app:ptr_disable_horizontal_move="true/false"
+    app:ptr_pin_content="true/false"
+    app:ptr_auto_refresh="true/false"
+    app:ptr_auto_load_more="true/false"
+
+11、当list scroll recycler 内容为空时的页面显示内容
+
+     ptr:ptr_nodata="没有数据"  //默认对空数据不处理
+     ptr:ptr_nodata_layout="@layout/id"  优先
+
+     ptr.getNodataView();//
+
+3、ptr 加纯翠网那样 转圈的头
+
+    ptr 加入原生样式头
+
+4、ReView 用 extends ResView ,用 PtrScrollView 实现
+
+5、SwipeView 加指示器，加 attr
+
+    app:swipe_indicator="true/false"
+    app:swipe_indicator_pos="left/center/right"
+    app:swipe_auto_play="true/false"
+
+
+6、百分比布局
+
+7、ViewPager 支持 水平和垂直两个方向
+
+8、FormRow FormSection、Form表单
+
+    app:form_section_header="string"
+    app:form_section_footer="string"
+    app:form_row_title="string"
+
+    app:form_row_text="string"
+    app:form_row_text_title="string"
+    app:from_row_text_hint="string"
+
+    app:form_row_icon="drawable"
+    app:form_row_accessory="true/false"  //默认为 true
+
+    app:form_row_divider="color"
+    app:form_row_showDivider="true/false"  //默认为true
+    app:form_row_background="drawable"
+    app:form_row_text_color="color"
+    app:form_row_title_color="color:
+    app:form_row_color="color"
+
+    文本输入、复选、单选、新页面
+
+
+9、android ui 测试，以及 mock 测试 mvvm
+
+
+10、自定义 ToolBar
+
+
+
+
+12、折叠控件
+
+
+列表项 左右滑动

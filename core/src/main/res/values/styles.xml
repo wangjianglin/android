@@ -17,4 +17,14 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
+    <!--<style name="Theme.AppCompat" parent="Base.AppTheme" />-->
+    <!--<style name="AppCompat" parent="Base.AppTheme" />-->
+
+    <!--<style name="Base.AppTheme" parent="Theme.AppCompat.Light.NoActionBar">-->
+        <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+
+    <!--</style>-->
+
+    <style name="CoreAppTheme" parent="android:Theme.Light"/>
+
 </resources>

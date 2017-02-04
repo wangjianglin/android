@@ -16,5 +16,5 @@ import java.lang.annotation.Target;
 public @interface Key {
 	int[] value();
 	String[] id() default "";
-	
+	int action() default Integer.MIN_VALUE;
 }

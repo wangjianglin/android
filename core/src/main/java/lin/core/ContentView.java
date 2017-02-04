@@ -41,14 +41,13 @@ public abstract class ContentView extends ViewGroup implements AttrsView {
 		this.attrs.addAttr(this);
 		this.genAttrs();
 		this.attrs.process();
-		LayoutInflaterFactory.setFactory2(LayoutInflater.from(context));
 	}
 
 	protected void genAttrs(){
 
 	}
 
-	protected void addAttr(int[] attrs,int id,AttrType type){
+	final protected void addAttr(int[] attrs,int id,AttrType type){
 		this.attrs.addAttr(attrs,id,type);
 	}
 
@@ -68,11 +67,32 @@ public abstract class ContentView extends ViewGroup implements AttrsView {
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		for (int index = 0; index < getChildCount(); index++) {
-			final View child = getChildAt(index);
+		int count = this.getChildCount();
+		if (count > 0) {
+			View child = getChildAt(0);
 			child.measure(widthMeasureSpec, heightMeasureSpec);
+			this.setMeasuredDimension(child.getMeasuredWidth(),child.getMeasuredHeight());
+//			for (int index = 0; index < getChildCount(); index++) {
+//				final View child = getChildAt(index);
+//				child.measure(widthMeasureSpec, heightMeasureSpec);
+//				child.getMeasuredHeight()
+//			}
+		}else {
+			super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		}
-		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+	}
+
+	private int measure(int measureSpec){
+		int specMode = MeasureSpec.getMode(measureSpec);
+		int specSize = MeasureSpec.getSize(measureSpec);
+		//设置一个默认值，就是这个View的默认宽度为500，这个看我们自定义View的要求
+		int result = 0;
+		if (specMode == MeasureSpec.AT_MOST) {//相当于我们设置为wrap_content
+			result = specSize;
+		} else if (specMode == MeasureSpec.EXACTLY) {//相当于我们设置为match_parent或者为一个具体的值
+			result = specSize;
+		}
+		return result;
 	}
 	
 	@Override
@@ -95,18 +115,18 @@ public abstract class ContentView extends ViewGroup implements AttrsView {
 
 
 	@Override
-	public LayoutParams generateLayoutParams(AttributeSet attrs) {
+	public ViewGroup.LayoutParams generateLayoutParams(AttributeSet attrs) {
 		return new LayoutParams(this,getContext(), attrs);
 	}
 
 
 	@Override
-	protected LayoutParams generateDefaultLayoutParams() {
+	protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
 		return new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 	}
 
 	@Override
-	protected LayoutParams generateLayoutParams(ViewGroup.LayoutParams lp) {
+	protected ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams lp) {
 
 		if (lp instanceof LayoutParams) {
 			return new LayoutParams((LayoutParams) lp);

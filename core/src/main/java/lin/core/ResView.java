@@ -16,47 +16,52 @@ import android.view.ViewGroup;
  * @date Mar 11, 2015 12:19:35 AM
  *
  */
-//public class ResourceView extends ContentView implements ActivieyLifeCycle{
 public abstract class ResView extends ContentView{
 
 
-	public ResView(int resId, Context context, AttributeSet attrs, int defStyle) {
+	protected ResView(int resId, Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		this.resId = resId;
 		this.initWithAnnotation();
+		this.onCreate();
 	}
 
-	public ResView(int resourceId, Context context, AttributeSet attrs) {
+	protected ResView(int resId, Context context, AttributeSet attrs) {
 		super(context, attrs);
 		this.resId = resId;
 		this.initWithAnnotation();
+		this.onCreate();
 	}
 
-	public ResView(int resId, Context context) {
+	protected ResView(int resId, Context context) {
 		super(context);
 		this.resId = resId;
 		this.initWithAnnotation();
+		this.onCreate();
 	}
 	public ResView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		this.initWithAnnotation();
+		this.onCreate();
 	}
 
 	public ResView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		this.initWithAnnotation();
+		this.onCreate();
 	}
 
 	public ResView(Context context) {
 		super(context);
 		this.initWithAnnotation();
+		this.onCreate();
 	}
 
 	protected void init(int resId){
 		this.resId = resId;
 		View view = Views.loadView(this,this.resId);
 		if(view != null){
-			this.addView(view);
+			this.addViewPrivate(view);
 		}
 	}
 
@@ -64,7 +69,7 @@ public abstract class ResView extends ContentView{
 
 		View view = Views.loadView(this,this.resId);
 		if(view != null){
-			this.addView(view);
+			this.addViewPrivate(view);
 		}
 	}
 	
@@ -79,11 +84,25 @@ public abstract class ResView extends ContentView{
 //	private Handler mHandler = new Handler();
 
 
+	protected void onCreate(){};
+
 	protected void onInited(){}
 	
 	@Override
 	public void addView(View child, int index,
 						ViewGroup.LayoutParams params) {
+		this.addViewItemPrivate(child,index,params);
+	}
+
+	private void addViewPrivate(View child){
+		ViewGroup.LayoutParams params = child.getLayoutParams();
+		if (params == null) {
+			params = generateDefaultLayoutParams();
+		}
+		this.addViewItemPrivate(child,-1,params);
+	}
+
+	private void addViewItemPrivate(View child,int index,ViewGroup.LayoutParams params){
 		if(mRootView != null && child != mRootView){
 			addViewItem(child,index,params);
 			return;

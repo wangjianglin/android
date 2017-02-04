@@ -1,14 +1,17 @@
 package lin.demo.binding;
 
 import android.databinding.BaseObservable;
+import android.databinding.Bindable;
+
+import lin.demo.BR;
 
 /**
  * Created by lin on 7/4/16.
  */
 public class User extends BaseObservable {
 
-    private final String firstName;
-    private final String lastName;
+    private String firstName;
+    private String lastName;
     private String displayName;
     private int age;
 
@@ -34,8 +37,19 @@ public class User extends BaseObservable {
         return lastName;
     }
 
+    @Bindable
     public String getDisplayName() {
         return firstName + " " + lastName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+        this.notifyChange();
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+        this.notifyPropertyChanged(BR.displayName);
     }
 
     public boolean isAdult() {

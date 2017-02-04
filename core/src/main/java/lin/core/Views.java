@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import android.app.Activity;
 import android.content.Context;
@@ -142,7 +143,7 @@ public class Views {
 		if(root == null && holder instanceof ViewGroup){
 			root = (ViewGroup) holder;
 		}
-		View view = LayoutInflater.from(context).inflate(resId, root, attachToRoot);
+		View view = LayoutInflaterFactory.from(context).inflate(resId, root, attachToRoot);
 		processAnnotation(view,holder,resCls);
 		return view;
 	}
@@ -251,9 +252,17 @@ public class Views {
 	}
 	private static void processAnnotation(final View view,final Object target,Class<?> resCls) {
 
-		initClassAnnotation(target,view,resCls.getPackage());
-		initFieldAnnotation(target,view,resCls.getPackage());
-		initMethodAnnotation(target,view,resCls.getPackage());
+		if(target == null){
+			return;
+		}
+		Class<?> cls = target.getClass();
+		while (cls != null && cls != Object.class){
+			initClassAnnotationWithCls(cls,target,view,resCls.getPackage());
+			initFieldAnnotationWithCls(cls,target,view,resCls.getPackage());
+			initMethodAnnotationWithCls(cls,target,view,resCls.getPackage());
+			cls = cls.getSuperclass();
+		}
+
 	}
 
 	private static Object getProcessor(Annotation annon){
@@ -272,9 +281,9 @@ public class Views {
 	}
 	private static Map<Class<?>,Object> processors = new HashMap<Class<?>,Object>();
 
-	private static void initClassAnnotation(Object target,View view,Package pack){
+	private static void initClassAnnotationWithCls(Class<?> cls,Object target,View view,Package pack){
 
-		Annotation[] items = target.getClass().getAnnotations();
+		Annotation[] items = cls.getAnnotations();
 
 		if(items != null){
 			ProcessorClass processorClass = null;
@@ -291,10 +300,10 @@ public class Views {
 
 	}
 
-	private static void initFieldAnnotation(Object target,View view,Package pack){
+	private static void initFieldAnnotationWithCls(Class<?> cls,Object target,View view,Package pack){
 
 
-		Field[] fs = target.getClass().getDeclaredFields();
+		Field[] fs = cls.getDeclaredFields();
 		Annotation[] items = null;
 		ProcessorClass processorClass = null;
 		Object processorObj = null;
@@ -316,9 +325,20 @@ public class Views {
 
 	}
 
-	private static void initMethodAnnotation(Object target,View view,Package pack){
+//	private static void initMethodAnnotation(Object target,View view,Package pack) {
+//
+//		if(target == null){
+//			return;
+//		}
+//		Class<?> cls = target.getClass();
+//		while (cls != null && cls != Object.class){
+//			initMethodAnnotationWithCls(cls,target,view,pack);
+//			cls = cls.getSuperclass();
+//		}
+//	}
 
-		Method[] ms = target.getClass().getDeclaredMethods();
+	private static void initMethodAnnotationWithCls(Class<?> cls,Object target,View view,Package pack){
+		Method[] ms = cls.getDeclaredMethods();
 		Annotation[] items = null;
 		ProcessorClass processorClass = null;
 		Object processorObj = null;

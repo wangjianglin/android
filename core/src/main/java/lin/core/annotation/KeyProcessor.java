@@ -15,39 +15,23 @@ import android.view.View.OnKeyListener;
  * @date Jun 14, 2015 5:24:20 PM
  *
  */
-public class KeyProcessor extends AbstractMethodProcessor{
+public class KeyProcessor extends AbstractMethodProcessor<Key>{
 
 	@Override
-	protected int[] getIds(Annotation annotation) {
-		return ((Key)annotation).value();
+	protected int[] getIds(Key annot) {
+		return annot.value();
 	}
 
 	@Override
-	protected String[] getStringIds(Annotation annotation) {
-		return ((Key)annotation).id();
+	protected String[] getStringIds(Key annot) {
+		return annot.id();
 	}
 
 	@Override
 //	public void process(View view,Method method, Annotation annotation,
 //			Class<?> idClass) {
-	protected void processFieldItem(Object target, Method method, View itemView){
+	protected void processMethod(Object target, Method method, View itemView,Key annot){
 
-//		Key item = (Key)annotation;
-//
-//		int viewId = 0;
-//		if(item.value() != 0){
-//			viewId = item.value();
-//		}else if(!"".equals(item.id())){
-//			try{
-//				Field f = idClass.getDeclaredField(item.id());
-//				viewId = f.getInt(null);
-//			}catch(Throwable e){}
-//		}else{
-//			try{
-//				Field f = idClass.getDeclaredField(method.getName());
-//				viewId = f.getInt(null);
-//			}catch(Throwable e){}
-//		}
 
 		Class<?> viewClass = null;
 		Class<?>[] clcikMethodParams = method.getParameterTypes();
@@ -79,18 +63,12 @@ public class KeyProcessor extends AbstractMethodProcessor{
 				}
 			}
 		}
-//		View itemView = view;
-//		if(viewId != 0){
-//			itemView = view.findViewById(viewId);
-//		}
-//		if(itemView == null){
-//			return;
-//		}
+
 		if(!(viewClass == null || viewClass.isAssignableFrom(itemView.getClass()))){
 			return;
 		}
-//			itemView.setOnClickListener(new ViewOnClickListener(itemView,method,view));
-		itemView.setOnKeyListener(new ViewOnKeyListener(target,method,clcikMethodParams));
+
+		itemView.setOnKeyListener(new ViewOnKeyListener(target,method,clcikMethodParams,annot));
 	}
 
 	private class ViewOnKeyListener implements OnKeyListener{
@@ -98,24 +76,20 @@ public class KeyProcessor extends AbstractMethodProcessor{
 		private Object view;
 		private Class<?>[] clcikMethodParams;
 		private Method method;
-		ViewOnKeyListener(Object view,Method method,Class<?>[] clcikMethodParams){
+		private Key annot;
+		ViewOnKeyListener(Object view,Method method,Class<?>[] clcikMethodParams,Key annot){
 			this.view = view;
 			this.clcikMethodParams = clcikMethodParams;
 			this.method = method;
+			this.annot = annot;
 		}
-//		@Override
-//		public void onClick(View v) {
-//			try{
-//				method.setAccessible(true);
-//				if(this.method.getParameterTypes() == null || this.method.getParameterTypes().length == 0){
-//					method.invoke(this.view);
-//				}else{
-//					method.invoke(this.view,this.item);
-//				}
-//			}catch(Throwable e){e.printStackTrace();}
-//		}
+
 		@Override
 		public boolean onKey(View v, int keyCode, KeyEvent event) {
+			if (annot.action() != Integer.MIN_VALUE
+					&& annot.action() != keyCode){
+				return false;
+			}
 			try{
 				method.setAccessible(true);
 				Object result = null;

@@ -11,9 +11,9 @@ import java.lang.reflect.Field;
  * @date Jun 14, 2015 5:20:31 PM
  *
  */
-public interface FieldProcessor {
+public interface FieldProcessor<T extends Annotation> {
 
 //	void process(View view, Field field, Annotation annotation, Class<?> idClass);
 //	void process(View view, Field field, Annotation annotation, Package pack);
-	void process(Object target, View view, Field field, Annotation annotation, Package pack);
+	void process(Object target, View view, Field field, T annot, Package pack);
 }

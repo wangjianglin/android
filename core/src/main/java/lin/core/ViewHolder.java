@@ -27,13 +27,31 @@ public abstract class ViewHolder implements AttrsView {
         this.attrs = new Attrs(context,attrs);
     }
     public View getView(ViewGroup parent){
-        View view = Views.loadView(this,this.context,parent,resId,false);
-//        Views.processAnnotation(view,this);
+        final View view = Views.loadView(this,this.context,parent,resId,false);
+
+        view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            @Override
+            public void onViewAttachedToWindow(View v) {
+                view.removeOnAttachStateChangeListener(this);
+                onInited();
+            }
+
+            @Override
+            public void onViewDetachedFromWindow(View v) {
+
+            }
+        });
         return view;
     }
 
     @Override
     public Attrs getAttrs() {
         return attrs;
+    }
+
+    protected void onInited(){};
+
+    public Context getContext() {
+        return context;
     }
 }

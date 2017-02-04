@@ -143,11 +143,72 @@
         <activity android:name=".nav.NavActivity" />
         <activity
             android:name="lin.core.NavActivity"
-            android:theme="@style/AppTheme.OverlapSystemBar" />
+            android:theme="@style/AppTheme.OverlapSystemBar"/>
         <activity
-            android:name=".swiperefresh.SwiperefreshActivity"
+            android:name=".controls.SwiperefreshActivity"
             android:label="@string/title_activity_swiperefresh"
             android:theme="@style/AppTheme.OverlapSystemBar"></activity>
+
+
+        <activity
+            android:name=".ptr.PtrDefaultActivity"
+            android:label="ptr default"
+            android:theme="@style/AppTheme.OverlapSystemBar">
+        </activity>
+        <activity
+            android:name=".ptr.PtrListActivity"
+            android:label="ptr list"
+            android:theme="@style/AppTheme.OverlapSystemBar">
+        </activity>
+        <activity
+            android:name=".ptr.PtrRecyclerActivity"
+            android:label="ptr recycler"
+            android:theme="@style/AppTheme.OverlapSystemBar">
+        </activity>
+        <activity
+            android:name=".ptr.PtrScrollActivity"
+            android:label="ptr scroll"
+            android:theme="@style/AppTheme.OverlapSystemBar">
+        </activity>
+        <activity
+            android:name=".controls.ReViewActivity"
+            android:label="review"
+            android:theme="@style/AppTheme.OverlapSystemBar">
+        </activity>
+        <activity
+            android:name=".controls.ViewPagerActivity"
+            android:label="view pager"
+            android:theme="@style/AppTheme.OverlapSystemBar">
+        </activity>
+        <activity
+            android:name=".controls.SwipeActivity"
+            android:label="swipe"
+            android:theme="@style/AppTheme.OverlapSystemBar">
+        </activity>
+        <activity
+            android:name=".form.FormActivity"
+            android:label="form"
+            android:theme="@style/AppTheme.OverlapSystemBar">
+        </activity>
+        <activity
+            android:name=".core.ViewInheritActivity"
+            android:label="view inherit">
+        </activity>
+        <activity
+            android:name=".binding.BindViewActivity"
+            android:label="bind view"
+            android:theme="@style/AppTheme.OverlapSystemBar">
+        </activity>
+        <activity
+            android:name=".binding.BindViewHolderActivity"
+            android:label="bind view holder"
+            android:theme="@style/AppTheme.OverlapSystemBar">
+        </activity>
+        <activity
+            android:name=".core.ViewHolderActivity"
+            android:label="view holder"
+            android:theme="@style/AppTheme.OverlapSystemBar">
+        </activity>
     </application>
 
 </manifest>

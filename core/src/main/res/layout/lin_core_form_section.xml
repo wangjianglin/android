@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical" 
     android:background="#00ffffff"
-    android:id="@+id/form_section_container"
-    >
+    android:dividerPadding="0dp"
+    android:divider="@drawable/lin_core_form_row_divier"
+    android:id="@+id/lin_core_form_section_container"
+    android:showDividers="middle">
     
 <!-- <TextView android:layout_width="match_parent"
     android:layout_height="40dp"
@@ -13,24 +16,23 @@
     android:text="headers"/> -->
 
 <LinearLayout  android:layout_width="match_parent"
-    android:id="@+id/form_section_header"
-    android:background="#00000000"
+    android:id="@+id/lin_core_form_section_header"
     android:layout_height="15dp" android:orientation="horizontal"></LinearLayout>
-<LinearLayout  android:layout_width="match_parent"
-    android:background="#dadada"
-    android:layout_height="1dp" android:orientation="horizontal"></LinearLayout>
+<!--<LinearLayout  android:layout_width="match_parent"-->
+    <!--android:background="#dadada"-->
+    <!--android:layout_height="1dp" android:orientation="horizontal"></LinearLayout>-->
 
 <!-- <TextView android:layout_width="wrap_content"
     android:layout_height="40dp"
     android:textColor="#ff00ffff"
     android:id="@+id/form_section_footer"
     android:text="footer"/> -->
+<!--<LinearLayout  android:layout_width="match_parent"-->
+    <!--android:background="#dadada"-->
+    <!--android:layout_height="1dp"-->
+    <!--android:orientation="vertical">-->
+<!--</LinearLayout>-->
 <LinearLayout  android:layout_width="match_parent"
-    android:background="#dadada"
-    android:layout_height="1dp" android:orientation="horizontal">
-</LinearLayout>
-<LinearLayout  android:layout_width="match_parent"
-    android:id="@+id/form_section_footer"
-    android:background="#00000000"
+    android:id="@+id/lin_core_form_section_footer"
     android:layout_height="15dp" android:orientation="horizontal"></LinearLayout>
 </LinearLayout>

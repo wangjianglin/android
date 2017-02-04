@@ -50,10 +50,25 @@ public class Nav {
 	private Object[] args;
 	private Result result;
 
+
+	public Object[] getArgs(){
+		return this.args;
+	}
+
+
+	private static Map<String,Nav> navsMap = new HashMap<>();
+
+
+	private static long seq = 1;
+
 	Nav(String argsId,String preArgsId){
 		this.argsId = argsId;
 		navsMap.put(argsId,this);
 		preNav = navsMap.get(preArgsId);
+	}
+
+	void init(){
+		this.setTitle(title);
 	}
 
 
@@ -101,15 +116,6 @@ public class Nav {
 		}
 	}
 
-	public Object[] getArgs(){
-		return this.args;
-	}
-	
-
-	private static Map<String,Nav> navsMap = new HashMap<>();
-
-
-	private static long seq = 1;
 	public static Nav push(Activity activity, int layoutId, Result result, Object ... args) {
 		return pushImpl(activity,null,layoutId,result,args);
 	}
@@ -129,10 +135,7 @@ public class Nav {
 			intent.putExtra("cls", viewCls.getName());
 		}
 		intent.putExtra("layout_id",layoutId);
-//		argsMap.put(argsId, args);
-//		if(result != null){
-//			resultsMap.put(argsId, result);
-//		}
+
 		String preArgsId = null;
 		if(activity instanceof NavActivity){
 			preArgsId = ((NavActivity) activity).getNav().getArgsId();

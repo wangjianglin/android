@@ -27,12 +27,12 @@ class ViewHolderFactory2 implements LayoutInflater.Factory2 {
             return null;
         }
         try {
-            Constructor<?> constructor = cls.getConstructor(Context.class, AttributeSet.class);
+            Constructor<?> constructor = getConstructor(cls,Context.class, AttributeSet.class);
             ViewHolder viewHolder = null;
             if(constructor != null){
                 viewHolder = (ViewHolder) constructor.newInstance(context,attrs);
             }else{
-                constructor = cls.getConstructor(Context.class);
+                constructor = getConstructor(cls,Context.class);
                 viewHolder = (ViewHolder) constructor.newInstance(context);
             }
             if(parent instanceof ViewGroup){
@@ -40,12 +40,21 @@ class ViewHolderFactory2 implements LayoutInflater.Factory2 {
             }else {
                 return viewHolder.getView(null);
             }
-        }catch (Throwable e){}
-        return null;
+        }catch (Throwable e){
+            throw new RuntimeException("create view holder fail.",e);
+        }
     }
 
     @Override
     public View onCreateView(String name, Context context, AttributeSet attrs) {
+        return null;
+    }
+
+    private Constructor<?> getConstructor(Class<?> cls,Class<?> ... params){
+        try {
+            return cls.getConstructor(params);
+        } catch (NoSuchMethodException e) {
+        }
         return null;
     }
 }

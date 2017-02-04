@@ -26,7 +26,8 @@ public class PtrProcess {
     private int mDurationToClose = 200;
     private int mDurationToCloseHeader = 800;
     private boolean mKeepHeaderWhenRefresh = true;//刷新的时候，显示 header view
-    private Status mStatus = Status.INIT;//表示当前状态
+    private Status mStatus = Status.Init;//表示当前状态
+    private boolean mPullToLoad = false;//表示超过指定高度就开始刷新
 
     private ScrollChecker mScrollChecker;
     private ContentIndicator mIndicator;
@@ -63,7 +64,8 @@ public class PtrProcess {
     }
 
     public void move(float delta){
-        delta = (float) (delta * Math.cos(mPtrIndicator.getCurrentPosY()*3.2/mPtrView.getMeasuredHeight()));
+//        delta = (float) (delta * Math.cos(mPtrIndicator.getCurrentPosY()*3.2/mPtrView.getMeasuredHeight()));
+        delta = (float) (delta / Math.exp(mPtrIndicator.getCurrentPosY()*2.7/ mPtrView.getHeight()));
         movePos(delta);
     }
     private void movePos(float delta) {
@@ -97,15 +99,12 @@ public class PtrProcess {
         }
 
         // leave initiated position or just refresh complete
-        if ((mPtrIndicator.hasJustLeftStartPosition() && mStatus == Status.INIT) ||
-                (mPtrIndicator.goDownCrossFinishPosition() && mStatus == Status.COMPLETE
+        if ((mPtrIndicator.hasJustLeftStartPosition() && mStatus == Status.Init) ||
+                (mPtrIndicator.goDownCrossFinishPosition() && mStatus == Status.Complete
                         && isEnabledNextPtrAtOnce())) {
 
-            mStatus = Status.PREPARE;
+            mStatus = Status.Prepare;
             mPtrUIHandler.onUIPrepare(mPtrView);
-            if (DEBUG) {
-                //PtrCLog.i(LOG_TAG, "PtrUIHandler: onUIRefreshPrepare, mFlag %s", mFlag);
-            }
         }
 
         // back to initiated position
@@ -119,7 +118,7 @@ public class PtrProcess {
         }
 
         // Pull to Refresh
-        if (mStatus == Status.PREPARE) {
+        if (mStatus == Status.Prepare) {
             // reach fresh height while moving from top to bottom
             if (isUnderTouch && !isAutoLoad() && mPtrView.isPullToRefresh()
                     && mPtrIndicator.crossRefreshLineFromTopToBottom()) {
@@ -131,34 +130,16 @@ public class PtrProcess {
             }
         }
 
-        if (DEBUG) {
-//            PtrCLog.v(LOG_TAG, "updatePos: change: %s, current: %s last: %s, top: %s, headerHeight: %s",
-//                    change, mBottomIndicator.getCurrentPosY(), mBottomIndicator.getLastPosY(), mContent.getTop(), mTopHeaderHeight);
-        }
 
-//        mFooterView.offsetTopAndBottom(-change);
-//        if (!isPinContent()) {
-//            mContent.offsetTopAndBottom(-change);
-//        }
-//        invalidate();
         mOnListener.move(change);
-//        this.postInvalidate();
 
         if(mPtrUIHandler.hasHandler()){
             mPtrUIHandler.onUIPositionChange(mPtrView,isUnderTouch,mStatus,mPtrIndicator);
         }
 
-//        if (mPtrUIHandlerHolder.hasHandler()) {
-        //mPtrUIHandlerHolder.onUIPositionChange(this, isUnderTouch, mStatus, mTopIndicator);
-//        }
-        //onPositionChange(isUnderTouch, mStatus, mTopIndicator);
     }
     private void sendCancelEvent() {
-//        if (DEBUG) {
-//            PtrCLog.d(LOG_TAG, "send cancel event");
-//        }
-        // The ScrollChecker will update position and lead to send cancel event when mLastMoveEvent is null.
-        // fix #104, #80, #92
+
         MotionEvent mLastMoveEvent = mIndicator.getLastMoveEvent();
         if (mLastMoveEvent == null) {
             return;
@@ -188,7 +169,7 @@ public class PtrProcess {
 
         tryToPerformRefresh();
 
-        if (mStatus == Status.LOADING) {
+        if (mStatus == Status.Loading) {
             // keep header for fresh
             if (mKeepHeaderWhenRefresh) {
                 // scroll header back
@@ -201,7 +182,7 @@ public class PtrProcess {
                 tryScrollBackToTopWhileLoading();
             }
         } else {
-            if (mStatus == Status.COMPLETE) {
+            if (mStatus == Status.Complete) {
                 notifyUIRefreshComplete(false);
             } else {
                 tryScrollBackToTopAbortRefresh();
@@ -213,28 +194,20 @@ public class PtrProcess {
         if(mDisableLoad){
             return;
         }
-        if (mStatus != Status.PREPARE) {
+        if (mStatus != Status.Prepare) {
             return;
         }
 
         //
         if ((mPtrIndicator.isOverOffsetToKeepHeaderWhileLoading() && isAutoLoad()) || mPtrIndicator.isOverOffsetToRefresh()) {
-            mStatus = Status.LOADING;
+            mStatus = Status.Loading;
             performRefresh();
         }
     }
 
     private void performRefresh() {
         mLoadingStartTime = System.currentTimeMillis();
-//        if (mPtrUIHandlerHolder.hasHandler()) {
-//            mPtrUIHandlerHolder.onUIRefreshBegin(this);
-//            if (DEBUG) {
-//                PtrCLog.i(LOG_TAG, "PtrUIHandler: onUIRefreshBegin");
-//            }
-//        }
-//        if (mPtrHandler != null) {
-//            mPtrHandler.onRefreshBegin(this);
-//        }
+
         if(mPtrUIHandler.hasHandler()){
             mPtrUIHandler.onUIBegin(mPtrView);
         }
@@ -246,19 +219,10 @@ public class PtrProcess {
          * After hook operation is done, {@link #notifyUIRefreshComplete} will be call in resume action to ignore hook.
          */
         if (mPtrIndicator.hasLeftStartPosition() && !ignoreHook && mRefreshCompleteHook != null) {
-//            if (DEBUG) {
-//                PtrCLog.d(LOG_TAG, "notifyUIRefreshComplete mRefreshCompleteHook run.");
-//            }
-//
-//            mRefreshCompleteHook.takeOver();
+            mRefreshCompleteHook.takeOver();
             return;
         }
-//        if (mPtrUIHandlerHolder.hasHandler()) {
-//            if (DEBUG) {
-//                PtrCLog.i(LOG_TAG, "PtrUIHandler: onUIRefreshComplete");
-//            }
-//            mPtrUIHandlerHolder.onUIRefreshComplete(this);
-//        }
+
         if(mPtrUIHandler.hasHandler()){
             mPtrUIHandler.onUIComplete(mPtrView);
         }
@@ -271,22 +235,15 @@ public class PtrProcess {
      * If at the top and not in loading, reset
      */
     private void tryToNotifyReset() {
-        if ((mStatus == Status.COMPLETE || mStatus == Status.PREPARE) &&
+        if ((mStatus == Status.Complete || mStatus == Status.Prepare) &&
                 mPtrIndicator.isInStartPosition()) {
-//            if (mPtrUIHandlerHolder.hasHandler()) {
-//                mPtrUIHandlerHolder.onUIReset(this);
-//                if (DEBUG) {
-//                    PtrCLog.i(LOG_TAG, "PtrUIHandler: onUIReset");
-//                }
-//            }
+
             if(mPtrUIHandler.hasHandler()){
                 mPtrUIHandler.onUIReset(mPtrView);
             }
-            mStatus = Status.INIT;
+            mStatus = Status.Init;
             clearFlag();
-//            return true;
         }
-//        return false;
     }
 
     /*
@@ -332,12 +289,10 @@ public class PtrProcess {
     }
 
     private void sendDownEvent() {
-//        if (DEBUG) {
-//            PtrCLog.d(LOG_TAG, "send down event");
-//        }
+
         final MotionEvent last = mIndicator.getLastMoveEvent();
         MotionEvent e = MotionEvent.obtain(last.getDownTime(), last.getEventTime(), MotionEvent.ACTION_DOWN, last.getX(), last.getY(), last.getMetaState());
-//        dispatchTouchEventSupper(e);
+
         mOnListener.sendEvent(e);
     }
 
@@ -347,25 +302,18 @@ public class PtrProcess {
 
     protected void onPtrScrollFinish() {
         if (mPtrIndicator.hasLeftStartPosition() && isAutoLoad()) {
-            if (DEBUG) {
-                //PtrCLog.d(LOG_TAG, "call onRelease after scroll finish");
-            }
             onRelease(true);
         }
     }
 
     protected void onPtrScrollAbort() {
         if (mPtrIndicator.hasLeftStartPosition() && isAutoLoad()) {
-            if (DEBUG) {
-                //PtrCLog.d(LOG_TAG, "call onRelease after scroll abort");
-            }
             onRelease(true);
         }
     }
 
     private boolean isAutoLoad(){
         return (mFlag & MASK_AUTO_REFRESH) > 0;
-//        return false;
     }
 
 
@@ -373,26 +321,26 @@ public class PtrProcess {
         autoLoad(true, mDurationToCloseHeader);
     }
 
-    public void autoLoad(boolean atOnce) {
-        autoLoad(atOnce, mDurationToCloseHeader);
-    }
+//    public void autoLoad(boolean atOnce) {
+//        autoLoad(atOnce, mDurationToCloseHeader);
+//    }
 
-    public void autoLoad(boolean atOnce, int duration) {
+    private void autoLoad(boolean atOnce, int duration) {
 
-        if (mStatus != Status.INIT) {
+        if (mStatus != Status.Init) {
             return;
         }
 
         mFlag |= atOnce ? FLAG_AUTO_REFRESH_AT_ONCE : FLAG_AUTO_REFRESH_BUT_LATER;
 
-        mStatus = Status.PREPARE;
+        mStatus = Status.Prepare;
         if (mPtrUIHandler.hasHandler()) {
             mPtrUIHandler.onUIPrepare(mPtrView);
         }
-//        mScrollChecker.tryToScrollTo(mPtrIndicator.getOffsetToRefresh(), duration);
+
         mScrollChecker.tryToScrollTo(mPtrIndicator.getHeaderHeight(), duration);
         if (atOnce) {
-            mStatus = Status.LOADING;
+            mStatus = Status.Loading;
             performRefresh();
         }
     }
@@ -418,7 +366,7 @@ public class PtrProcess {
      * Do refresh complete work when time elapsed is greater than {@link #mLoadingMinTime}
      */
     private void performRefreshComplete() {
-        mStatus = Status.COMPLETE;
+        mStatus = Status.Complete;
 
         // if is auto refresh do nothing, wait scroller stop
         if (mScrollChecker.mIsRunning && isAutoLoad()) {
@@ -467,10 +415,7 @@ public class PtrProcess {
             boolean finish = !mScroller.computeScrollOffset() || mScroller.isFinished();
             int curY = mScroller.getCurrY();
             int deltaY = curY - mLastFlingY;
-            if (DEBUG) {
-                if (deltaY != 0) {
-                }
-            }
+
             if (!finish) {
                 mLastFlingY = curY;
                 movePos(deltaY);
@@ -528,6 +473,14 @@ public class PtrProcess {
             mPtrView.post(this);
             mIsRunning = true;
         }
+    }
+
+    public boolean isPullToLoad() {
+        return mPullToLoad;
+    }
+
+    public void setPullToLoad(boolean pullToLoad) {
+        this.mPullToLoad = pullToLoad;
     }
 
     public static interface OnListener{

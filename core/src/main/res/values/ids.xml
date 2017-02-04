@@ -36,6 +36,11 @@
     <!-- ptr view 相关id 结束 -->
 
 
+    <!-- form view 相关id 开始 -->
+
+    <item type="id" name="lin_core_form_row_text_view" />
+
+    <!-- form view 相关id 结束 -->
 
     <item type="drawable" name="ic_launcher" />
 </resources>

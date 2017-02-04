@@ -15,22 +15,22 @@ import android.view.View.OnFocusChangeListener;
  * @date Jul 30, 2015 4:52:01 PM
  *
  */
-public class FocusChangeProcessor extends AbstractMethodProcessor{
+public class FocusChangeProcessor extends AbstractMethodProcessor<FocusChange>{
 
 	@Override
-	protected int[] getIds(Annotation annotation) {
-		return ((FocusChange)annotation).value();
+	protected int[] getIds(FocusChange annot) {
+		return annot.value();
 	}
 
 	@Override
-	protected String[] getStringIds(Annotation annotation) {
-		return ((FocusChange)annotation).id();
+	protected String[] getStringIds(FocusChange annot) {
+		return annot.id();
 	}
 
 	@Override
 //	public void process(View view,Method method, Annotation annotation,
 //			Class<?> idClass) {
-	protected void processFieldItem(Object target, Method method, View itemView){
+	protected void processMethod(Object target, Method method, View itemView,FocusChange annot){
 
 //		FocusChange item = (FocusChange)annotation;
 //

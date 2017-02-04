@@ -37,7 +37,7 @@ public class PullToRefresh extends Activity {
 
 //        listView = (XListView) this.findViewById(R.id.xlistViewId);
 //
-//        listView.setPullMode(XListView.Mode.BOTH);
+//        listView.setPullMode(XListView.Mode.Both);
 //
 //
 ////        listView.setPullLoadEnable(true);
@@ -74,7 +74,7 @@ public class PullToRefresh extends Activity {
 //                    public void run() {
 //                        addDatas();
 //                        adapter.notifyDataSetChanged();
-//                        listView.setPullMode(XListView.Mode.BOTH);
+//                        listView.setPullMode(XListView.Mode.Both);
 //                        listView.complete();
 //                    }
 //                }, 6000);

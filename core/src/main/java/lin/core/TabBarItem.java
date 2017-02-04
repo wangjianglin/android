@@ -170,7 +170,7 @@ public class TabBarItem extends ResView {
 		}
 		if(activate){
 			if(this.activateBackground != null){
-				super.setBackground(activateBackground);
+				super.setBackgroundDrawable(activateBackground);
 			}
 			if(this.activateIcon != null && image != null){
 				image.setImageDrawable(activateIcon);

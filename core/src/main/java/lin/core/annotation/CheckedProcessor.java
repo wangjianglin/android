@@ -16,7 +16,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
  *
  */
 //public class CheckedChangeProcessor implements MethodProcessor{
-public class CheckedProcessor extends AbstractMethodProcessor{
+public class CheckedProcessor extends AbstractMethodProcessor<Checked>{
 
 //	@Override
 //	public void process(View view,Method method, Annotation annotation,
@@ -44,16 +44,16 @@ public class CheckedProcessor extends AbstractMethodProcessor{
 
 
 	@Override
-	protected int[] getIds(Annotation annotation) {
-		return ((Checked)annotation).value();
+	protected int[] getIds(Checked annot) {
+		return annot.value();
 	}
 
 	@Override
-	protected String[] getStringIds(Annotation annotation) {
-		return ((Checked)annotation).id();
+	protected String[] getStringIds(Checked annot) {
+		return annot.id();
 	}
 	@Override
-	protected void processFieldItem(Object target, Method method, View itemView) {
+	protected void processMethod(Object target, Method method, View itemView,Checked annot) {
 //	private void processStringItem(View view,Method method, String stringId,
 //							 Class<?> idClass){
 

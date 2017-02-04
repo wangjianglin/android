@@ -6,11 +6,18 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import lin.core.form.FormFactory2;
+import lin.core.form.RowFactory2;
+import lin.core.form.SectionFactory2;
+import lin.core.form.SegueFactory2;
 import lin.core.tabbar.TabbarFactory2;
 import lin.core.tabbar.TabbarItemFactory2;
 
@@ -22,6 +29,32 @@ public class LayoutInflaterFactory {
 
     private volatile static LayoutInflater.Factory2 factory2 = null;
     private static Lock lock = new ReentrantLock();
+//    private static Map<SoftReference<Context>,LayoutInflater> inflaters = new HashMap<>();
+    private static List<SoftReference<LayoutInflater>> inflaters = new ArrayList<>();
+
+    public static LayoutInflater from(Context context){
+
+        LayoutInflater result = null;
+        lock.lock();
+        List<SoftReference<LayoutInflater>> removes = new ArrayList<>();
+        for(SoftReference<LayoutInflater> item : inflaters){
+            LayoutInflater inflater = item.get();
+            if(inflater == null){
+                removes.add(item);
+                continue;
+            }else if(inflater.getContext() == context){
+                result = inflater;
+                break;
+            }
+        }
+        inflaters.removeAll(removes);
+
+        if(result == null){
+            result = setFactory2(context);
+        }
+        lock.unlock();
+        return result;
+    }
 
     public static LayoutInflater setFactory2(LayoutInflater inflater){
         if(inflater == null){
@@ -42,14 +75,15 @@ public class LayoutInflaterFactory {
             inflater.setFactory2(new LayoutInflaterFactory2Impl(null));
         }else{
             inflater = new LayoutInflaterImpl(inflater);
+            inflaters.add(new SoftReference<LayoutInflater>(inflater));
         }
 
         lock.unlock();
         return inflater;
     }
 
-    public static void setFactory2(Context context) {
-        setFactory2(LayoutInflater.from(context));
+    private static LayoutInflater setFactory2(Context context) {
+        return setFactory2(LayoutInflater.from(context));
     }
 
     private volatile static List<LayoutInflater.Factory2> factory2s = new ArrayList<LayoutInflater.Factory2>();
@@ -180,6 +214,10 @@ public class LayoutInflaterFactory {
         addFactory2(new TabbarFactory2());
         addFactory2(new TabbarItemFactory2());
         addFactory2(new ViewHolderFactory2());
+        addFactory2(new FormFactory2());
+        addFactory2(new SegueFactory2());
+        addFactory2(new SectionFactory2());
+        addFactory2(new RowFactory2());
     }
 }
 

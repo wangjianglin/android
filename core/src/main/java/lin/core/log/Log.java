@@ -12,7 +12,7 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.provider.Settings;
-import lin.client.http.HttpCommunicate;
+import lin.comm.http.HttpCommunicate;
 import lin.core.Crash;
 import lin.core.CrashHandler;
 import lin.core.CrashListener;

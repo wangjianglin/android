@@ -4,7 +4,7 @@ import android.test.AndroidTestCase;
 
 import java.io.File;
 
-import lin.client.http.HttpCommunicate;
+import lin.comm.http.HttpCommunicate;
 import lin.core.log.LogUploadPackage;
 
 /**

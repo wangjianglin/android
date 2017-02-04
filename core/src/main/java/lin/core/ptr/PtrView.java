@@ -9,31 +9,36 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import lin.core.AttrType;
+import lin.core.Attrs;
+import lin.core.ContentView;
 import lin.core.ptr.indicator.ContentIndicator;
 import lin.core.ptr.indicator.PtrIndicator;
+import lin.core.R;
 
 /**
  * Created by lin on 08/01/2017.
  */
-public class PtrView extends ViewGroup {
+public class PtrView extends ContentView {
 
     public static enum Status{
-        INIT,PREPARE,LOADING,COMPLETE
+        Init, Prepare, Loading, Complete
     }
     public static enum  Mode{
-        DISABLE,REFRESH,LOAD_MORE,BOTH
+        Disable, Refresh, LoadMore, Both
     }
-    private Mode mMode = Mode.BOTH;
+    private Mode mMode = Mode.Disable;
     private int mFlag = 0x00;
     private final static byte FLAG_PIN_CONTENT = 0x01 << 3;
 
-    private static final boolean DEBUG_LAYOUT = false;
-    public static final boolean DEBUG = false;
+//    private static final boolean DEBUG_LAYOUT = false;
+//    public static final boolean DEBUG = false;
 
     private PtrUIHandlerHolder mTopPtrUIHandlerHolder = PtrUIHandlerHolder.create();
     private PtrUIHandlerHolder mBottomPtrUIHandlerHolder = PtrUIHandlerHolder.create();
     private int mPagingTouchSlop = 0;
-    private boolean mPullToRefresh = false;//表示超过指定高度就开始刷新
+    private boolean mAutoRefresh = false;
+    private boolean mAutoLoadMode = false;
 
     private ContentIndicator mIndicator = new ContentIndicator();
     private PtrTopProcess mTopProcess = null;
@@ -59,14 +64,13 @@ public class PtrView extends ViewGroup {
         if(this.getBackground() == null){
             this.setBackgroundColor(0xffeeeeee);
         }
-//        mScrollChecker = new ScrollChecker();
+
         final ViewConfiguration conf = ViewConfiguration.get(getContext());
         mPagingTouchSlop = conf.getScaledTouchSlop() * 2;
 
         mTopProcess = new PtrTopProcess(this,mIndicator, new PtrProcess.OnListener() {
             @Override
             public void move(int delta) {
-//                System.out.println("top delta:"+delta);
                 if(mHeaderView != null) {
                     mHeaderView.offsetTopAndBottom(delta);
                 }
@@ -98,7 +102,6 @@ public class PtrView extends ViewGroup {
         mBottomProcess = new PtrBottomProcess(this,mIndicator, new PtrProcess.OnListener() {
             @Override
             public void move(int delta) {
-//                System.out.println("bottom delta:"+delta);
                 if(mFooterView != null) {
                     mFooterView.offsetTopAndBottom(-delta);
                 }
@@ -129,16 +132,38 @@ public class PtrView extends ViewGroup {
 
         mTopProcess.mPtrUIHandler = mTopPtrUIHandlerHolder;
         mBottomProcess.mPtrUIHandler = mBottomPtrUIHandlerHolder;
+
+        Attrs attrs = this.getAttrs();
+        int ptrMode = attrs.getInt(R.styleable.ptr,R.styleable.ptr_ptr_mode,0);
+        switch (ptrMode){
+            case 1:
+                this.setMode(Mode.Refresh);
+                break;
+            case 2:
+                this.setMode(Mode.LoadMore);
+                break;
+            case 3:
+                this.setMode(Mode.Both);
+                break;
+            default:
+                this.setMode(Mode.Disable);
+        }
+
+        setPullToRefresh(attrs.getBoolean(R.styleable.ptr,R.styleable.ptr_ptr_pull_to_refresh,isPullToRefresh()));
+        setPullToLoadMore(attrs.getBoolean(R.styleable.ptr,R.styleable.ptr_ptr_pull_to_load_more,isPullToLoadMore()));
+
+
+        mDisableWhenHorizontalMove = attrs.getBoolean(R.styleable.ptr,R.styleable.ptr_ptr_disable_horizontal_move, mDisableWhenHorizontalMove);
+
+        this.setPinContent(attrs.getBoolean(R.styleable.ptr,R.styleable.ptr_ptr_pin_content, this.isPinContent()));
+        mAutoRefresh = attrs.getBoolean(R.styleable.ptr,R.styleable.ptr_ptr_auto_refresh, mAutoRefresh);
+        mAutoLoadMode = attrs.getBoolean(R.styleable.ptr,R.styleable.ptr_ptr_auto_load_more, mAutoLoadMode);
     }
 
-//    private int mDurationToClose = 200;
-//    private int mDurationToCloseHeader = 5000;
-//    private boolean mKeepHeaderWhenRefresh = true;//刷新的时候，显示 header view
-    private boolean mDisableWhenHorizontalMove = false;//表示是否禁止水平 move， true 禁止,false允许
+    private boolean mDisableWhenHorizontalMove = true;//表示是否禁止水平 move， true 禁止,false允许
 
     // disable when detect moving horizontally
     private boolean mPreventForHorizontal = false;//表示当禁止水平move时，是否检测到水平 move
-
 
 
     private int mHeaderId = 0;
@@ -320,7 +345,6 @@ public class PtrView extends ViewGroup {
             final int top = paddingTop + lp.topMargin + offset;
             final int right = left + mContentView.getMeasuredWidth();
             final int bottom = top + mContentView.getMeasuredHeight();
-//            System.out.println("onLayout content: (left:"+left+",top:" + top +",right:" + right +",bottom:"+bottom+")");
             mContentView.layout(left, top, right, bottom);
         }
     }
@@ -404,16 +428,16 @@ public class PtrView extends ViewGroup {
                 boolean canMoveUp = mTopIndicator.hasLeftStartPosition();
                 boolean canMoveDown = mBottomIndicator.hasLeftStartPosition();
 
-                if(mTopIndicator.isInStartPosition() && mBottomProcess.getStatus() == Status.INIT
-                        && (mMode == Mode.BOTH || mMode == Mode.REFRESH)){
+                if(mTopIndicator.isInStartPosition() && mBottomProcess.getStatus() == Status.Init
+                        && (mMode == Mode.Both || mMode == Mode.Refresh)){
                     mTopProcess.enable();
                     if(mHeaderView != null) {
                         mHeaderView.setVisibility(View.VISIBLE);
                     }
                 }
 
-                if(mBottomIndicator.isInStartPosition() && mTopProcess.getStatus() == Status.INIT
-                        && (mMode == Mode.BOTH || mMode == Mode.LOAD_MORE)){
+                if(mBottomIndicator.isInStartPosition() && mTopProcess.getStatus() == Status.Init
+                        && (mMode == Mode.Both || mMode == Mode.LoadMore)){
                     mBottomProcess.enable();
                     if(mFooterView != null) {
                         mFooterView.setVisibility(VISIBLE);
@@ -436,8 +460,8 @@ public class PtrView extends ViewGroup {
 
     private void setHeaderAndFooterInfo(){
 
-        if(mMode == Mode.BOTH
-                || mMode == Mode.REFRESH){
+        if(mMode == Mode.Both
+                || mMode == Mode.Refresh){
             if(mHeaderView != null) {
                 mHeaderView.setVisibility(View.VISIBLE);
             }
@@ -449,8 +473,8 @@ public class PtrView extends ViewGroup {
             mTopProcess.disable();
         }
 
-        if(mMode == Mode.BOTH
-                || mMode == Mode.LOAD_MORE){
+        if(mMode == Mode.Both
+                || mMode == Mode.LoadMore){
             if(mFooterView != null) {
                 mFooterView.setVisibility(View.VISIBLE);
             }
@@ -462,6 +486,29 @@ public class PtrView extends ViewGroup {
             mBottomProcess.disable();
         }
     }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if(mAutoRefresh){
+            this.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    autoRefresh();
+                }
+            },100);
+        }else if(mAutoLoadMode){
+            this.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    autoLoadMore();
+                }
+            },100);
+        }
+        mAutoRefresh = false;
+        mAutoLoadMode = false;
+    }
+
     public Mode getMode() {
         return mMode;
     }
@@ -495,11 +542,6 @@ public class PtrView extends ViewGroup {
     @SuppressWarnings({"unused"})
     public void removeLoadMoreUIHandler(PtrUIHandler ptrUIHandler) {
         mBottomPtrUIHandlerHolder = PtrUIHandlerHolder.removeHandler(mBottomPtrUIHandlerHolder, ptrUIHandler);
-    }
-
-
-    public boolean isPullToRefresh(){
-        return this.mPullToRefresh;
     }
 
     public void refreshComplete() {
@@ -563,6 +605,22 @@ public class PtrView extends ViewGroup {
         super.addView(mContent,-1,lp);
     }
 
+    public boolean isPullToRefresh(){
+        return mTopProcess.isPullToLoad();
+    }
+
+    public void setPullToRefresh(boolean pullToRefresh){
+        mTopProcess.setPullToLoad(pullToRefresh);
+    }
+
+    public boolean isPullToLoadMore(){
+        return mBottomProcess.isPullToLoad();
+    }
+
+    public void setPullToLoadMore(boolean pullToLoadMore){
+        mBottomProcess.setPullToLoad(pullToLoadMore);
+    }
+
     @Override
     protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
         return p != null && p instanceof LayoutParams;
@@ -610,6 +668,17 @@ public class PtrView extends ViewGroup {
 
     public void setOnLoadMoreListener(OnLoadMoreListener listener){
         this.mOnLoadMoreListener = listener;
+    }
+
+    @Override
+    protected void genAttrs() {
+        this.addAttr(R.styleable.ptr,R.styleable.ptr_ptr_mode, AttrType.Int);
+        this.addAttr(R.styleable.ptr,R.styleable.ptr_ptr_pull_to_refresh, AttrType.Boolean);
+        this.addAttr(R.styleable.ptr,R.styleable.ptr_ptr_pull_to_load_more, AttrType.Boolean);
+        this.addAttr(R.styleable.ptr,R.styleable.ptr_ptr_disable_horizontal_move, AttrType.Boolean);
+        this.addAttr(R.styleable.ptr,R.styleable.ptr_ptr_pin_content, AttrType.Boolean);
+        this.addAttr(R.styleable.ptr,R.styleable.ptr_ptr_auto_refresh, AttrType.Boolean);
+        this.addAttr(R.styleable.ptr,R.styleable.ptr_ptr_auto_load_more, AttrType.Boolean);
     }
 
     private static OnRefreshListener defaultOnRefreshListener = new OnRefreshListener(){

@@ -11,45 +11,39 @@ import java.lang.reflect.Method;
  * @date Jun 14, 2015 5:20:57 PM
  *
  */
-public abstract class AbstractMethodProcessor implements MethodProcessor {
+public abstract class AbstractMethodProcessor<T extends Annotation> implements MethodProcessor<T> {
 
-	private void process(Annotation annotation, Package pack){
-		String[] idStrings = this.getStringIds(annotation);
-		int[] ids = this.getIds(annotation);
+	private void process(Package pack,T annot){
+		String[] idStrings = this.getStringIds(annot);
+		int[] ids = this.getIds(annot);
 		if(idStrings == null || ids == null
 				|| idStrings.length == 0 || ids.length == 0){
-			processItem(0);
+			processItem(0,annot);
 			return;
 		}
 		if(ids.length != 1 || ids[0] != 0) {
 			for (int id : ids) {
-				processItem(id);
+				processItem(id,annot);
 			}
 		}else if(idStrings.length != 1 || !"".equals(idStrings[0])){
 			for (String id : idStrings) {
-				processStringItem(id, pack);
+				processStringItem(id, pack,annot);
 			}
 		}else{
-			processItem(0);
+			processItem(0,annot);
 		}
 	}
 
 	private void processStringItem(String stringId,
-								   Package pack){
+								   Package pack,T annot){
 
 		int viewId = 0;
 		if(stringId != null && !"".equals(stringId)){
-//			try{
-//				Field f = idClass.getDeclaredField(stringId);
-////                if(f != null) {正常情况下，都不会为null，只有当代码不误时才会为null
-//				viewId = f.getInt(null);
-////                }
-//			}catch(Throwable e){}
 			viewId = Utils.getId(pack,stringId);
 		}
 
 		if(viewId != -1) {
-			processItem(viewId);
+			processItem(viewId,annot);
 		}
 	}
 	private Method method;
@@ -58,22 +52,22 @@ public abstract class AbstractMethodProcessor implements MethodProcessor {
 	private Object target;
 
 
-	private void processItem(int viewId) {
+	private void processItem(int viewId,T annot) {
 		method.setAccessible(true);
 		if(viewId == 0) {
 			if(targetView != null) {
-				processFieldItem(target, method, targetView);
+				processMethod(target, method, targetView,annot);
 			}
 		}else{
 			View itemView = view.findViewById(viewId);
 			if(itemView != null) {
-				processFieldItem(target, method, itemView);
+				processMethod(target, method, itemView,annot);
 			}
 		}
 	}
 
 	@Override
-	public void process(Object target,View view, Method method, Annotation annotation, Package pack) {
+	public void process(Object target,View view, Method method, T annotation, Package pack) {
 		this.view = view;
 		this.target = target;
 		if(target instanceof View){
@@ -82,13 +76,13 @@ public abstract class AbstractMethodProcessor implements MethodProcessor {
 			targetView = null;
 		}
 		this.method = method;
-		this.process(annotation,pack);
+		this.process(pack,annotation);
 	}
 
 
-	protected abstract void processFieldItem(Object target, Method method, View itemView);
+	protected abstract void processMethod(Object target, Method method, View itemView,T annot);
 
-	protected abstract int[] getIds(Annotation annotation);
+	protected abstract int[] getIds(T annot);
 
-	protected abstract String[] getStringIds(Annotation annotation);
+	protected abstract String[] getStringIds(T annot);
 }

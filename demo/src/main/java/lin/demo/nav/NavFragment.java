@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import lin.core.annotation.NavTitle;
 import lin.core.annotation.ResId;
 import lin.demo.R;
 
@@ -21,6 +22,7 @@ import lin.demo.R;
  */
 
 @ResId(R.layout.activity_nav_frag)
+@NavTitle("nav frag")
 public class NavFragment  extends lin.core.Fragment{
 
     public NavFragment() {

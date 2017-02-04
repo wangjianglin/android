@@ -12,24 +12,24 @@ import android.view.View;
  * @date Jun 14, 2015 5:22:09 PM
  *
  */
-public class ResIdProcessor implements FieldProcessor{
+public class ResIdProcessor implements FieldProcessor<ResId>{
 
 	@Override
-	public void process(Object target, View view, Field field, Annotation annotation,
+	public void process(Object target, View view, Field field, ResId annot,
 						Package pack) {
-		ResId item = (ResId)annotation;
+
 		field.setAccessible(true);
 		
 		int itemId = 0;
-		 if(item.value() != 0){
-			 itemId = item.value();
+		 if(annot.value() != 0){
+			 itemId = annot.value();
 		 }
-		 else if(!"".equals(item.id())){
+		 else if(!"".equals(annot.id())){
 //			 try{
 //				 Field f = idClass.getDeclaredField(item.id());
 //				 itemId = f.getInt(null);
 //			 }catch(Throwable e){}
-			 itemId = Utils.getId(pack,item.id());
+			 itemId = Utils.getId(pack,annot.id());
 		 }else{
 //			 try{
 //				 Field f = idClass.getDeclaredField(field.getName());
