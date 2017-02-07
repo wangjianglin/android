@@ -1,3 +1,4 @@
-include ':util', ':core', ':comm', ':demo'
+include ':util', ':core', ':comm', ':demo', 'web'
+//':web_plugin', ':web_xwalk', ':web' , 'xwalk_lib'
 //, ':pulltorefresh'
-//, ':web_plugin', ':web_xwalk', ':web', 'xwalk_lib'
+//

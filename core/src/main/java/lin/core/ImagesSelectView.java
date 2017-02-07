@@ -87,25 +87,25 @@ public class ImagesSelectView extends ResView {
 		nav = Nav.getNav(this);
 		//nav.setTitle("图片选择");
 		
-		NavButton cancelButton = new NavButton();
-		cancelButton.setTitle("取消");
-		cancelButton.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				nav.pop();
-			}});
-		
-//		nav.setLeftButton(cancelButton);
-		
-		NavButton doneButton = new NavButton();
-		doneButton.setTitle("完成");
-		doneButton.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				nav.pop();
-			}});
+//		NavButton cancelButton = new NavButton();
+//		cancelButton.setTitle("取消");
+//		cancelButton.setOnClickListener(new OnClickListener(){
+//
+//			@Override
+//			public void onClick(View v) {
+//				nav.pop();
+//			}});
+//
+////		nav.setLeftButton(cancelButton);
+//
+//		NavButton doneButton = new NavButton();
+//		doneButton.setTitle("完成");
+//		doneButton.setOnClickListener(new OnClickListener(){
+//
+//			@Override
+//			public void onClick(View v) {
+//				nav.pop();
+//			}});
 		
 //		nav.setRightButton(doneButton);
 

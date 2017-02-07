@@ -1,6 +1,9 @@
 package lin.core.ptr;
 
 import android.content.Context;
+import android.databinding.BindingAdapter;
+import android.databinding.BindingMethod;
+import android.databinding.BindingMethods;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -18,7 +21,17 @@ import lin.core.R;
 
 /**
  * Created by lin on 08/01/2017.
+ * @BindingAdapter({"app:ptr_load_more"})
+public static void setOnLoadMoreListener(PtrView view, PtrView.OnLoadMoreListener listener) {
+view.setOnLoadMoreListener(listener);
+}
+
  */
+
+@BindingMethods({
+        @BindingMethod(type = PtrView.class, attribute = "ptr_load_more", method = "setOnLoadMoreListener"),
+        @BindingMethod(type = PtrView.class, attribute = "ptr_refresh", method = "setOnRefreshListener")
+})
 public class PtrView extends ContentView {
 
     public static enum Status{
@@ -44,6 +57,8 @@ public class PtrView extends ContentView {
     private PtrTopProcess mTopProcess = null;
 
     private PtrBottomProcess mBottomProcess = null;
+
+    private int mLoadState = 0;//1、表示处于refresh状态，2、表示处于 load more 状态
 
     public PtrView(Context context) {
         super(context);
@@ -87,8 +102,9 @@ public class PtrView extends ContentView {
 
             @Override
             public void onLoading() {
+                mBottomProcess.disable();
+                mLoadState = 1;
                 if(mOnRefreshListener != null){
-                    mBottomProcess.disable();
                     if(mFooterView != null) {
                         mFooterView.setVisibility(View.INVISIBLE);
                     }
@@ -118,9 +134,10 @@ public class PtrView extends ContentView {
 
             @Override
             public void onLoading() {
+                mTopProcess.disable();
+                mLoadState = 2;
                 if(mOnLoadMoreListener != null){
                     mOnLoadMoreListener.onLoadMore(PtrView.this);
-                    mTopProcess.disable();
                     if(mHeaderView != null) {
                         mHeaderView.setVisibility(View.INVISIBLE);
                     }
@@ -544,13 +561,21 @@ public class PtrView extends ContentView {
         mBottomPtrUIHandlerHolder = PtrUIHandlerHolder.removeHandler(mBottomPtrUIHandlerHolder, ptrUIHandler);
     }
 
-    public void refreshComplete() {
-        mTopProcess.complete();
+    public void complete(){
+        if(mLoadState == 1){
+            mTopProcess.complete();
+        }else if(mLoadState == 2){
+            mBottomProcess.complete();
+        }
+        mLoadState = 0;
     }
-
-    public void loadMoreComplete(){
-        mBottomProcess.complete();
-    }
+//    public void refreshComplete() {
+//        mTopProcess.complete();
+//    }
+//
+//    public void loadMoreComplete(){
+//        mBottomProcess.complete();
+//    }
 
     public View getHeaderView() {
         return mHeaderView;
@@ -588,7 +613,7 @@ public class PtrView extends ContentView {
         super.addView(footer,-1,lp);
     }
 
-    public View getContentView() {
+    public View getView() {
         return mContentView;
     }
 
@@ -687,7 +712,7 @@ public class PtrView extends ContentView {
             ptr.post(new Runnable() {
                 @Override
                 public void run() {
-                    ptr.refreshComplete();
+                    ptr.complete();
                 }
             });
         }
@@ -699,7 +724,7 @@ public class PtrView extends ContentView {
             ptr.post(new Runnable() {
                 @Override
                 public void run() {
-                    ptr.loadMoreComplete();
+                    ptr.complete();
                 }
             });
         }

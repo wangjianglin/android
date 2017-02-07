@@ -9,7 +9,7 @@
 <lin.core.Nav xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/nav_activity_nav"
+    android:id="@id/lin_core_nav_activity_nav"
     android:orientation="vertical">
     
 </lin.core.Nav>

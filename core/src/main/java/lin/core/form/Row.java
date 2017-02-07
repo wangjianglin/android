@@ -61,25 +61,25 @@ public class Row extends ResView {
 		this.setAccessory(attrs.getBoolean(R.styleable.form,R.styleable.form_form_row_accessory,true));
 	}
 	
-	private String title;
-	private String text;
+	private CharSequence title;
+	private CharSequence text;
 	public boolean accessory;
-	public String getTitle() {
+	public CharSequence getTitle() {
 		return title;
 	}
 
-	public void setTitle(String title) {
+	public void setTitle(CharSequence title) {
 		this.title = title;
 		if(titleView != null) {
 			titleView.setText(title);
 		}
 	}
 
-	public String getText() {
+	public CharSequence getText() {
 		return text;
 	}
 
-	public void setText(String text) {
+	public void setText(CharSequence text) {
 		this.text = text;
 		if(textView != null) {
 			this.textView.setText(text);

@@ -12,7 +12,7 @@ import android.view.View.OnLongClickListener;
  * @date Jun 14, 2015 5:24:20 PM
  *
  */
-public class LongClickProcessor extends AbstractMethodProcessor<ListItemClick>{
+public class LongClickProcessor extends AbstractMethodProcessor<ListItemClick,View>{
 
 	@Override
 	protected int[] getIds(ListItemClick annot) {
@@ -29,41 +29,14 @@ public class LongClickProcessor extends AbstractMethodProcessor<ListItemClick>{
 //			Class<?> idClass) {
 	protected void processMethod(Object target, Method method, View itemView,ListItemClick annot){
 
-//		LongClick item = (LongClick)annotation;
-//		if(item == null){
-//			return;
-//		}
-//		int viewId = 0;
-//		if(item.value() != 0){
-//			viewId = item.value();
-//		}else if(!"".equals(item.id())){
-//			try{
-//				Field f = idClass.getDeclaredField(item.id());
-//				viewId = f.getInt(null);
-//			}catch(Throwable e){}
-//		}else{
-//			try{
-//				Field f = idClass.getDeclaredField(method.getName());
-//				viewId = f.getInt(null);
-//			}catch(Throwable e){}
-//		}
 
-		Class<?>[] clcikMethodParams = method.getParameterTypes();
-		if(clcikMethodParams != null && clcikMethodParams.length > 1){
+		Class<?>[] methodParams = method.getParameterTypes();
+		if(methodParams != null && methodParams.length > 1){
 			return;
 		}
-//		View itemView = view;
-//		if(viewId != 0){
-//			itemView = view.findViewById(viewId);
-//		}
-//
-//		if(itemView == null){
-//			return;
-//		}
-		if(!(clcikMethodParams.length == 0 || (clcikMethodParams.length == 1 && clcikMethodParams[0].isAssignableFrom(itemView.getClass())))){
+		if(!(methodParams.length == 0 || (methodParams.length == 1 && methodParams[0].isAssignableFrom(itemView.getClass())))){
 			return;
 		}
-//		itemView.setOnClickListener(new ViewOnClickListener(view,method));
 		itemView.setOnLongClickListener(new ViewOnLongClickListener(target,method));
 	}
 

@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <import type="lin.demo.ptr.PtrListActivity" alias="Handler"/>
+        <variable
+            name="handler"
+            type="Handler"/>
+    </data>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -19,12 +28,15 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     </android.support.design.widget.AppBarLayout>
-
+    <!--app:ptr_load_more="@{handler.onLoadMore}"-->
     <lin.core.ptr.PtrListView
         app:ptr_mode="both"
+        app:ptr_load_more="@{()->handler.onLoadMore()}"
         android:id="@+id/ptr_default_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </lin.core.ptr.PtrListView>
 
 </LinearLayout>
+
+    </layout>

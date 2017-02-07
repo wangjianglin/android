@@ -5,6 +5,7 @@ import android.content.Intent;
 import java.util.ArrayList;
 import java.util.List;
 
+import lin.demo.WebViewActivity;
 import lin.demo.binding.BindViewActivity;
 import lin.demo.binding.BindViewHolderActivity;
 import lin.demo.controls.ReViewActivity;
@@ -72,7 +73,8 @@ public class MainPresenter implements MainContract.Presenter{
 
 
                 new Object[]{"form","classic",new Intent(mView.getContext(),FormActivity.class)},
-                new Object[]{"event bus","classic",new Intent(mView.getContext(),FormActivity.class)}
+                new Object[]{"event bus","classic",new Intent(mView.getContext(),FormActivity.class)},
+                new Object[]{"web view","crosss walk",new Intent(mView.getContext(),WebViewActivity.class)}
         };
 
         Data data = null;

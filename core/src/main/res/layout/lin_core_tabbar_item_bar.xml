@@ -6,13 +6,13 @@
      	android:orientation="vertical" 
      	android:layout_weight="1">               	
        <ImageView
-   		android:id="@+id/tabbar_tiem_bar_img_id"
+   		android:id="@+id/lin_core_tabbar_tiem_bar_img_id"
 		android:layout_width="wrap_content"
 		android:layout_height="32dp" 
      	android:paddingTop="3dp"
 		android:clickable="false"/>
        <TextView
-   		android:id="@+id/tabbar_tiem_bar_text_id"
+   		android:id="@+id/lin_core_tabbar_tiem_bar_text_id"
    		android:layout_width="wrap_content"
    		android:layout_height="wrap_content"
    		android:clickable="false"
@@ -23,6 +23,6 @@
        <View
            android:layout_width="match_parent"
    	android:layout_height="match_parent"
-   	android:id="@id/tabbar_tiem_bar_overlay_view_id"
+   	android:id="@id/lin_core_tabbar_tiem_bar_overlay_view_id"
    	/>
  </LinearLayout>

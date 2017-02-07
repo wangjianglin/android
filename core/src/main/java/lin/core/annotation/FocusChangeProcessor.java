@@ -15,7 +15,7 @@ import android.view.View.OnFocusChangeListener;
  * @date Jul 30, 2015 4:52:01 PM
  *
  */
-public class FocusChangeProcessor extends AbstractMethodProcessor<FocusChange>{
+public class FocusChangeProcessor extends AbstractMethodProcessor<FocusChange,View>{
 
 	@Override
 	protected int[] getIds(FocusChange annot) {
@@ -28,74 +28,45 @@ public class FocusChangeProcessor extends AbstractMethodProcessor<FocusChange>{
 	}
 
 	@Override
-//	public void process(View view,Method method, Annotation annotation,
-//			Class<?> idClass) {
 	protected void processMethod(Object target, Method method, View itemView,FocusChange annot){
 
-//		FocusChange item = (FocusChange)annotation;
-//
-//		int viewId = 0;
-//		if(item.value() != 0){
-//			viewId = item.value();
-//		}else if(!"".equals(item.id())){
-//			try{
-//				Field f = idClass.getDeclaredField(item.id());
-//				viewId = f.getInt(null);
-//			}catch(Throwable e){}
-//		}else{
-//			try{
-//				Field f = idClass.getDeclaredField(method.getName());
-//				viewId = f.getInt(null);
-//			}catch(Throwable e){}
-//		}
-
-		Class<?> viewClass = null;
-		Class<?>[] clcikMethodParams = method.getParameterTypes();
-		if(clcikMethodParams != null){
-			if(clcikMethodParams.length > 3){
-				return;
-			}
-			boolean iv = false;
-			boolean ib = false;
-			for(Class<?> clcikMethodParam : clcikMethodParams){
-				if(clcikMethodParam == null){
-					return;
-				}
-				if(View.class.isAssignableFrom(clcikMethodParam)){
-					if(iv){return;}
-					viewClass = clcikMethodParam;
-					iv = true;
-				}
-				else if(boolean.class.isAssignableFrom(clcikMethodParam)){
-					if(ib){return;}
-					ib = true;
-				}else{
-					return;
-				}
-			}
-		}
-//		View itemView = view;
-//		if(viewId != 0){
-//			itemView = view.findViewById(viewId);
-//		}
-//		if(itemView == null){
-//			return;
-//		}
-		if(!(viewClass == null || viewClass.isAssignableFrom(itemView.getClass()))){
+		Class<?>[] methodParams = method.getParameterTypes();
+		if(!Utils.validate(methodParams,itemView.getClass(),boolean.class)){
 			return;
 		}
-//			itemView.setOnClickListener(new ViewOnClickListener(itemView,method,view));
-		itemView.setOnFocusChangeListener(new ViewOnFocusChangeListener(target,method,clcikMethodParams));
+//		if(clcikMethodParams != null){
+//			if(clcikMethodParams.length > 3){
+//				return;
+//			}
+//			boolean iv = false;
+//			boolean ib = false;
+//			for(Class<?> clcikMethodParam : clcikMethodParams){
+//				if(clcikMethodParam == null){
+//					return;
+//				}
+//				if(clcikMethodParam.isAssignableFrom(itemView.getClass())){
+//					if(iv){return;}
+//					iv = true;
+//				}
+//				else if(clcikMethodParam.isAssignableFrom(boolean.class)){
+//					if(ib){return;}
+//					ib = true;
+//				}else{
+//					return;
+//				}
+//			}
+//		}
+		itemView.setOnFocusChangeListener(new ViewOnFocusChangeListener(target,method,methodParams));
 	}
 
 	private class ViewOnFocusChangeListener implements OnFocusChangeListener{
 
 		private Object view;
-		private Class<?>[] clcikMethodParams;
+		private Class<?>[] methodParams;
 		private Method method;
-		ViewOnFocusChangeListener(Object view,Method method,Class<?>[] clcikMethodParams){
+		ViewOnFocusChangeListener(Object view,Method method,Class<?>[] methodParams){
 			this.view = view;
-			this.clcikMethodParams = clcikMethodParams;
+			this.methodParams = methodParams;
 			this.method = method;
 		}
 		
@@ -105,26 +76,26 @@ public class FocusChangeProcessor extends AbstractMethodProcessor<FocusChange>{
 		public void onFocusChange(View v, boolean hasFocus) {
 		try{
 			method.setAccessible(true);
-			if(this.clcikMethodParams == null || this.clcikMethodParams.length == 0){
-				method.invoke(this.view);
-			}else{
-				Class<?> clcikMethodParam = null;
-				List<Object> args = new ArrayList<Object>();
-				for(int n=0;n<clcikMethodParams.length;n++){
-					clcikMethodParam = clcikMethodParams[n];
-					if(clcikMethodParam == null){
-						args.add(null);
-						continue;
-					}
-					if(View.class.isAssignableFrom(clcikMethodParam)){
-						args.add(v);
-					}
-					else if(boolean.class.isAssignableFrom(clcikMethodParam)){
-						args.add(hasFocus);
-					}
-				}
-				method.invoke(this.view,args.toArray());
-			}
+//			if(this.clcikMethodParams == null || this.clcikMethodParams.length == 0){
+//				method.invoke(this.view);
+//			}else{
+//				Class<?> clcikMethodParam = null;
+//				List<Object> args = new ArrayList<Object>();
+//				for(int n=0;n<clcikMethodParams.length;n++){
+//					clcikMethodParam = clcikMethodParams[n];
+//					if(clcikMethodParam == null){
+//						args.add(null);
+//						continue;
+//					}
+//					if(clcikMethodParam.isAssignableFrom(View.class)){
+//						args.add(v);
+//					}
+//					else if(boolean.class.isAssignableFrom(clcikMethodParam)){
+//						args.add(hasFocus);
+//					}
+//				}
+			method.invoke(this.view,Utils.args(methodParams,v,hasFocus));
+//			}
 		}catch(Throwable e){e.printStackTrace();}
 		}		
 	}

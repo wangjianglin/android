@@ -16,16 +16,24 @@ import lin.core.ptr.PtrListView;
 import lin.core.ptr.PtrView;
 import lin.demo.R;
 import lin.demo.Utils;
+import lin.demo.databinding.ActivityPtrListviewBinding;
 
 public class PtrListActivity extends AppCompatActivity {
 
     private int listCount = 0;
+    private ListAdapter mAdapter = null;
+    private PtrListView ptr = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 //        super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_ptr_default);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ptr_listview);
+//        setContentView(R.layout.activity_ptr_listview);
+
+        ActivityPtrListviewBinding binding = ActivityPtrListviewBinding.inflate(LayoutInflater.from(this));
+        binding.setHandler(this);
+        this.setContentView(binding.getRoot());
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -35,26 +43,28 @@ public class PtrListActivity extends AppCompatActivity {
         actionBar.setDisplayShowHomeEnabled(true);
 
 
-        PtrListView ptr = (PtrListView) this.findViewById(R.id.ptr_default_view);
+        ptr = (PtrListView) binding.getRoot().findViewById(R.id.ptr_default_view);
 
-        ListView listView = ptr.getContentView();
+//        ptr = (PtrListView) this.findViewById(R.id.ptr_default_view);
 
-        final ListAdapter mAdapter = new ListAdapter();
+        ListView listView = ptr.getView();
+
+        mAdapter = new ListAdapter();
         listView.setAdapter(mAdapter);
 
-        ptr.setOnLoadMoreListener(new PtrView.OnLoadMoreListener() {
-            @Override
-            public void onLoadMore(final PtrView ptr) {
-                ptr.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        listCount += 20;
-                        mAdapter.notifyDataSetChanged();
-                        ptr.loadMoreComplete();
-                    }
-                }, 2500);
-            }
-        });
+//        ptr.setOnLoadMoreListener(new PtrView.OnLoadMoreListener() {
+//            @Override
+//            public void onLoadMore(final PtrView ptr) {
+//                ptr.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        listCount += 20;
+//                        mAdapter.notifyDataSetChanged();
+//                        ptr.complete();
+//                    }
+//                }, 2500);
+//            }
+//        });
 
         ptr.setOnRefreshListener(new PtrView.OnRefreshListener() {
             @Override
@@ -64,11 +74,22 @@ public class PtrListActivity extends AppCompatActivity {
                     public void run() {
                         listCount = 20;
                         mAdapter.notifyDataSetChanged();
-                        ptr.refreshComplete();
+                        ptr.complete();
                     }
                 }, 2500);
             }
         });
+    }
+
+    public void onLoadMore() {
+        ptr.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                listCount += 20;
+                mAdapter.notifyDataSetChanged();
+                ptr.complete();
+            }
+        }, 2500);
     }
 
     private class ListAdapter extends BaseAdapter {

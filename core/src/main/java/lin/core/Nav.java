@@ -14,7 +14,6 @@ import android.support.v4.app.*;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.TintTypedArray;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -42,11 +41,11 @@ import lin.core.annotation.ViewById;
 @ResCls(lin.core.R.class)
 public class Nav {
 
-	private String argsId;
+	private CharSequence argsId;
 	NavActivity activity;
 	private Nav preNav;
-	private String tag;
-	private String title;
+	private CharSequence tag;
+	private CharSequence title;
 	private Object[] args;
 	private Result result;
 
@@ -61,7 +60,7 @@ public class Nav {
 
 	private static long seq = 1;
 
-	Nav(String argsId,String preArgsId){
+	Nav(String argsId,CharSequence preArgsId){
 		this.argsId = argsId;
 		navsMap.put(argsId,this);
 		preNav = navsMap.get(preArgsId);
@@ -136,7 +135,7 @@ public class Nav {
 		}
 		intent.putExtra("layout_id",layoutId);
 
-		String preArgsId = null;
+		CharSequence preArgsId = null;
 		if(activity instanceof NavActivity){
 			preArgsId = ((NavActivity) activity).getNav().getArgsId();
 		}
@@ -147,23 +146,23 @@ public class Nav {
 		return nav;
 	}
 
-	public String getArgsId() {
+	public CharSequence getArgsId() {
 		return argsId;
 	}
 
-	public String getTag() {
+	public CharSequence getTag() {
 		return tag;
 	}
 
-	public void setTag(String tag) {
+	public void setTag(CharSequence tag) {
 		this.tag = tag;
 	}
 
-	public String getTitle() {
+	public CharSequence getTitle() {
 		return title;
 	}
 
-	public void setTitle(String title) {
+	public void setTitle(CharSequence title) {
 		this.title = title;
 		if(activity != null) {
 			activity.setTitle(title);
@@ -175,15 +174,25 @@ public class Nav {
 	 * @param view
 	 * @return
 	 */
-	public static Nav getNav(android.view.View view){
-		if(view == null){
+	public static Nav getNav(android.view.View view) {
+		if (view == null) {
 			return null;
 		}
 		Context context = view.getContext();
+		return getNav(context);
+	}
+
+	public static Nav getNav(Context context){
 		if(context instanceof NavActivity){
 			return ((NavActivity) context).getNav();
 		}
 		return null;
+	}
+	public static Nav getNav(android.support.v4.app.Fragment fragment){
+		if(fragment == null){
+			return null;
+		}
+		return getNav(fragment.getContext());
 	}
 
 	static Nav getNav(String argsId){

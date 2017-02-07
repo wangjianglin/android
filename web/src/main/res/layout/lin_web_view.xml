@@ -3,11 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-    
-    <lin.web.LinWebView android:layout_width="match_parent"
+
+
+    <!--<lin.web.with.LinWebView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:id="@+id/lin_web_view_view"/>-->
+    <lin.web.x5.X5WebView
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-            android:id="@+id/lin_web_view_view"/>
+        android:id="@+id/lin_web_view_view"/>
     <!--  <ProgressBar
         android:id="@+id/progressBar1"
         style="?android:attr/progressBarStyleLarge"

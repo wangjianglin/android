@@ -28,3 +28,7 @@
 /build
 /captures
 *.iml
+/gradle.properties
+/gradlew.bat
+/.DS_Store
+/android.iml

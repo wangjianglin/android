@@ -42,7 +42,7 @@ public abstract class PtrViewBase<T extends View> extends PtrDefaultView {
     protected abstract T genContentView();
 
     @Override
-    public T getContentView() {
-        return (T) super.getContentView();
+    public T getView() {
+        return (T) super.getView();
     }
 }

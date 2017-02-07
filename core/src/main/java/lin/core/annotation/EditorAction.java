@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@ProcessorClass(TouchProcessor.class)
+@ProcessorClass(EditorActionProcessor.class)
 public @interface EditorAction {
     int[] value() default 0;
     String[] id() default "";

@@ -65,7 +65,7 @@ ext {
     minSdkVersion = 15
     targetSdkVersion = 25
     compileSdkVersion = 25
-    buildToolsVersion = '24.0.2'
+    buildToolsVersion = '25.0.2'
 
     // App dependencies
     supportLibraryVersion = '25+'
@@ -94,6 +94,9 @@ allprojects {
 //        flatDir{
 //            dirs '../web_xwalk/libs' //this way we can find the .aar file in libs folder
 ////            dirs(('../' + project.name + '/libs'))
+//        }
+//        flatDir {
+//            dirs 'libs'
 //        }
         maven {url prop.getProperty('maven.url')}
         jcenter()

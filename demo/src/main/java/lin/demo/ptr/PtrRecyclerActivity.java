@@ -38,7 +38,7 @@ public class PtrRecyclerActivity extends AppCompatActivity {
 
         final PtrRecyclerView ptr = (PtrRecyclerView) this.findViewById(R.id.ptr_default_view);
 
-        RecyclerView listView = ptr.getContentView();
+        RecyclerView listView = ptr.getView();
 
         final SimpleRecyclerAdapter mAdapter = new SimpleRecyclerAdapter();
         listView.setAdapter(mAdapter);
@@ -51,7 +51,7 @@ public class PtrRecyclerActivity extends AppCompatActivity {
                     public void run() {
                         listCount += 20;
                         mAdapter.notifyDataSetChanged();
-                        ptr.loadMoreComplete();
+                        ptr.complete();
                     }
                 }, 2500);
             }
@@ -65,7 +65,7 @@ public class PtrRecyclerActivity extends AppCompatActivity {
                     public void run() {
                         listCount = 20;
                         mAdapter.notifyDataSetChanged();
-                        ptr.refreshComplete();
+                        ptr.complete();
                     }
                 }, 2500);
             }

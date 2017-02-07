@@ -7,8 +7,8 @@ package lin.demo.form;
 public class FormData {
 
     private Class<?> segueCls;
-    private String segueClsStr;
-    private String rowText;
+    private CharSequence segueClsStr;
+    private CharSequence rowText;
 
     public Class<?> getSegueCls() {
         return segueCls;
@@ -19,19 +19,19 @@ public class FormData {
         segueClsStr = segueCls.getName();
     }
 
-    public String getSegueClsStr() {
+    public CharSequence getSegueClsStr() {
         return segueClsStr;
     }
 
-    public void setSegueClsStr(String segueClsStr) {
+    public void setSegueClsStr(CharSequence segueClsStr) {
         this.segueClsStr = segueClsStr;
     }
 
-    public String getRowText() {
+    public CharSequence getRowText() {
         return rowText;
     }
 
-    public void setRowText(String rowText) {
+    public void setRowText(CharSequence rowText) {
         this.rowText = rowText;
         System.out.println(rowText);
     }

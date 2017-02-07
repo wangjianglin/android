@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
  * @date Jun 14, 2015 5:20:57 PM
  *
  */
-public abstract class AbstractMethodProcessor<T extends Annotation> implements MethodProcessor<T> {
+public abstract class AbstractMethodProcessor<T extends Annotation,V extends View> implements MethodProcessor<T> {
 
 	private void process(Package pack,T annot){
 		String[] idStrings = this.getStringIds(annot);
@@ -56,12 +56,12 @@ public abstract class AbstractMethodProcessor<T extends Annotation> implements M
 		method.setAccessible(true);
 		if(viewId == 0) {
 			if(targetView != null) {
-				processMethod(target, method, targetView,annot);
+				processViewMethod(target, method, targetView,annot);
 			}
 		}else{
 			View itemView = view.findViewById(viewId);
 			if(itemView != null) {
-				processMethod(target, method, itemView,annot);
+				processViewMethod(target, method, itemView,annot);
 			}
 		}
 	}
@@ -80,7 +80,15 @@ public abstract class AbstractMethodProcessor<T extends Annotation> implements M
 	}
 
 
-	protected abstract void processMethod(Object target, Method method, View itemView,T annot);
+	private void processViewMethod(Object target, Method method, View itemView,T annot){
+
+		try {
+			processMethod(target, method, (V) itemView, annot);
+		}catch (ClassCastException e){
+
+		}
+	}
+	protected abstract void processMethod(Object target, Method method, V itemView,T annot);
 
 	protected abstract int[] getIds(T annot);
 

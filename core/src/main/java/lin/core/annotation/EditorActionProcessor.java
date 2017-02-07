@@ -19,7 +19,7 @@ import lin.core.Nav;
  * @date Jun 14, 2015 5:24:20 PM
  *
  */
-public class EditorActionProcessor extends AbstractMethodProcessor<EditorAction>{
+public class EditorActionProcessor extends AbstractMethodProcessor<EditorAction,TextView>{
 
 	@Override
 	protected int[] getIds(EditorAction annot) {
@@ -32,51 +32,43 @@ public class EditorActionProcessor extends AbstractMethodProcessor<EditorAction>
 	}
 
 	@Override
-	protected void processMethod(Object target, Method method, View itemView,EditorAction annot){
+	protected void processMethod(Object target, Method method, TextView itemView,EditorAction annot){
 
-		if(!(itemView instanceof EditText)){
+
+		Class<?>[] methodParams = method.getParameterTypes();
+
+		if(!Utils.validate(methodParams,itemView.getClass(),KeyEvent.class,int.class)){
 			return;
 		}
+//		if(clcikMethodParams != null){
+//			if(clcikMethodParams.length > 3){
+//				return;
+//			}
+//			boolean iv = false;
+//			boolean ik = false;
+//			boolean ii = false;
+//			for(Class<?> clcikMethodParam : clcikMethodParams){
+//				if(clcikMethodParam == null){
+//					return;
+//				}
+//				if(clcikMethodParam.isAssignableFrom(itemView.getClass())){
+//					if(iv){return;}
+//					iv = true;
+//				}
+//				else if(clcikMethodParam.isAssignableFrom(KeyEvent.class)){
+//					if(ik){return;}
+//					ik = true;
+//				}else if(clcikMethodParam.isAssignableFrom(int.class)
+//						|| Integer.class.isAssignableFrom(clcikMethodParam)){
+//					if(ii){return;}
+//					ii = true;
+//				}else{
+//					return;
+//				}
+//			}
+//		}
 
-		EditText editText = (EditText) itemView;
-
-		Class<?>[] clcikMethodParams = method.getParameterTypes();
-		Class<?> viewClass = null;
-		if(clcikMethodParams != null){
-			if(clcikMethodParams.length > 3){
-				return;
-			}
-			boolean iv = false;
-			boolean ik = false;
-			boolean ii = false;
-			for(Class<?> clcikMethodParam : clcikMethodParams){
-				if(clcikMethodParam == null){
-					return;
-				}
-				if(View.class.isAssignableFrom(clcikMethodParam)){
-					if(iv){return;}
-					viewClass = clcikMethodParam;
-					iv = true;
-				}
-				else if(KeyEvent.class.isAssignableFrom(clcikMethodParam)){
-					if(ik){return;}
-					ik = true;
-				}else if(int.class.isAssignableFrom(clcikMethodParam)
-						|| Integer.class.isAssignableFrom(clcikMethodParam)){
-					if(ii){return;}
-					ii = true;
-				}else{
-					return;
-				}
-			}
-		}
-
-		if(!(viewClass == null || viewClass.isAssignableFrom(itemView.getClass()))
-				|| viewClass == View.class){
-			return;
-		}
-
-		editText.setOnEditorActionListener(new ViewOnEditorActionListener(target,method,clcikMethodParams,annot));
+		itemView.setOnEditorActionListener(new ViewOnEditorActionListener(target,method,methodParams,annot));
 	}
 
 
@@ -85,17 +77,17 @@ public class EditorActionProcessor extends AbstractMethodProcessor<EditorAction>
 
 		private Object view;
 		private Method method;
-		private Class<?>[] clcikMethodParams;
+		private Class<?>[] methodParams;
 		private EditorAction annot;
 
-		ViewOnEditorActionListener(Object view,Method method,Class<?>[] clcikMethodParams,EditorAction annot){
+		ViewOnEditorActionListener(Object view,Method method,Class<?>[] methodParams,EditorAction annot){
 			this.view = view;
 			this.method = method;
-			this.clcikMethodParams = clcikMethodParams;
+			this.methodParams = methodParams;
 			this.annot = annot;
 		}
+
 		@Override
-//		public void onClick(View v) {
 		public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 			if(this.annot.action() != Integer.MIN_VALUE
 					&& this.annot.action() != event.getAction()){
@@ -103,26 +95,27 @@ public class EditorActionProcessor extends AbstractMethodProcessor<EditorAction>
 			}
 			try{
 				method.setAccessible(true);
-				Object result = null;
-				if(clcikMethodParams == null || clcikMethodParams.length == 0){
-					result = method.invoke(this.view);
-				}else{
-					Class<?> clickMethodParam = null;
-					List<Object> args = new ArrayList<>();
-					for(int n=0;n<clcikMethodParams.length;n++){
-						clickMethodParam = clcikMethodParams[n];
-						if(clickMethodParam == null){
-							args.add(null);
-						}else if(View.class.isAssignableFrom(clickMethodParam)){
-							args.add(v);
-						}else if(KeyEvent.class.isAssignableFrom(clickMethodParam)){
-							args.add(event);
-						}else{
-							args.add(actionId);
-						}
-					}
-					result = method.invoke(this.view,args);
-				}
+//				Object result = null;
+//				if(clcikMethodParams == null || clcikMethodParams.length == 0){
+//					result = method.invoke(this.view);
+//				}else{
+//					Class<?> clickMethodParam = null;
+//					List<Object> args = new ArrayList<>();
+//					for(int n=0;n<clcikMethodParams.length;n++){
+//						clickMethodParam = clcikMethodParams[n];
+//						if(clickMethodParam == null){
+//							args.add(null);
+//						}else if(clickMethodParam.isAssignableFrom(view.getClass())){
+//							args.add(v);
+//						}else if(clickMethodParam.isAssignableFrom(KeyEvent.class)){
+//							args.add(event);
+//						}else{
+//							args.add(actionId);
+//						}
+//					}
+//					result = method.invoke(this.view,args);
+//				}
+				Object result = method.invoke(this.view,Utils.args(methodParams,v,actionId,event));
 				if(result != null && result instanceof Boolean){
 					return (Boolean)result;
 				}
@@ -130,33 +123,5 @@ public class EditorActionProcessor extends AbstractMethodProcessor<EditorAction>
 			return false;
 		}
 
-//		@Override
-//		public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//
-//			try{
-//				method.setAccessible(true);
-//				Object result = null;
-//				if(this.method.getParameterTypes() == null || this.method.getParameterTypes().length == 0){
-//					method.invoke(this.view);
-//				}else{
-//
-//					method.invoke(this.view,v);
-//				}
-//			}catch(Throwable e){e.printStackTrace();}
-////			for(int n=0;n<clcikMethodParams.length;n++){
-////				clcikMethodParam = clcikMethodParams[n];
-////				if(clcikMethodParam == null){
-////					args.add(null);
-////					continue;
-////				}
-////				if(View.class.isAssignableFrom(clcikMethodParam)){
-////					args.add(v);
-////				}
-////				else if(MotionEvent.class.isAssignableFrom(clcikMethodParam)){
-////					args.add(event);
-////				}
-////			}
-//			return false;
-//		}
 	}
 }

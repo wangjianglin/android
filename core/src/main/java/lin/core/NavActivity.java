@@ -128,9 +128,10 @@ public class NavActivity extends ViewActivity {
 
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 		if(item instanceof View) {
-			transaction.replace(R.id.lin_core_nav_content_frame, new ViewFragment((View) item));
+//			transaction.add()
+			transaction.add(R.id.lin_core_nav_content_frame, new ViewFragment((View) item));
 		}else{
-			transaction.replace(R.id.lin_core_nav_content_frame, (android.support.v4.app.Fragment) item);
+			transaction.add(R.id.lin_core_nav_content_frame, (android.support.v4.app.Fragment) item);
 		}
 		transaction.commit();
 

@@ -14,7 +14,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @ProcessorClass(KeyProcessor.class)
 public @interface Key {
-	int[] value();
+	int[] value() default 0;
 	String[] id() default "";
 	int action() default Integer.MIN_VALUE;
+	int keyCode() default Integer.MIN_VALUE;
 }

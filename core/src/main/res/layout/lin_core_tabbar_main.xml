@@ -11,7 +11,7 @@
 		android:layout_alignParentBottom="true"
 		android:paddingBottom="0dp"
 		android:background="#999"
-		android:id="@id/tabbar_bar_layout"
+		android:id="@id/lin_core_tabbar_bar_layout"
 		android:showDividers="none"
 		android:orientation="horizontal"
 		>
@@ -21,8 +21,8 @@
 	<FrameLayout
 		android:layout_alignParentTop="true"
 		android:layout_width="match_parent"
-		android:id="@id/tabbar_content"
-		android:layout_above="@id/tabbar_bar_layout"
+		android:id="@id/lin_core_tabbar_content"
+		android:layout_above="@id/lin_core_tabbar_bar_layout"
 		android:layout_height="match_parent"></FrameLayout>
 
 

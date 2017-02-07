@@ -41,7 +41,7 @@ public class TabBarItem extends ResView {
 
 	private int textColor = 0xffffff;
 	private int activateTextColor = 0;
-	private String title;
+	private CharSequence title;
 
 	private TabBar tabBar;
 	public TabBarItem(TabBar tabBar,Context context) {

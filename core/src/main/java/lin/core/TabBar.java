@@ -162,7 +162,7 @@ public class TabBar extends ResView {
 				FragmentManager fragmentManager = activity.getSupportFragmentManager();
 
 				FragmentTransaction transaction = fragmentManager.beginTransaction();
-				transaction.replace(R.id.tabbar_content, tabItems.get(tabIndex));
+				transaction.replace(R.id.lin_core_tabbar_content, tabItems.get(tabIndex));
 				transaction.commit();
 			}else {//暂不对 android.app.Fragment 兼容
 

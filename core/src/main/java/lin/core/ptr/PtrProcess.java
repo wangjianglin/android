@@ -395,6 +395,10 @@ public class PtrProcess {
         mDisableLoad = true;
     }
 
+    public boolean isDisableLoad(){
+        return mDisableLoad;
+    }
+
     public void enable(){
         mDisableLoad = false;
     }

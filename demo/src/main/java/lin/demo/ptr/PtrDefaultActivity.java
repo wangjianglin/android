@@ -33,7 +33,7 @@ public class PtrDefaultActivity extends AppCompatActivity {
                 ptr.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        ptr.loadMoreComplete();
+                        ptr.complete();
                     }
                 }, 2500);
             }
@@ -45,7 +45,7 @@ public class PtrDefaultActivity extends AppCompatActivity {
                 ptr.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        ptr.refreshComplete();
+                        ptr.complete();
                     }
                 }, 2500);
             }

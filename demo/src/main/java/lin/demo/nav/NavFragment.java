@@ -23,7 +23,7 @@ import lin.demo.R;
 
 @ResId(R.layout.activity_nav_frag)
 @NavTitle("nav frag")
-public class NavFragment  extends lin.core.Fragment{
+public class NavFragment  extends lin.core.ResFragment{
 
     public NavFragment() {
         // Requires empty public constructor

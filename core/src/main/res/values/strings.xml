@@ -5,25 +5,7 @@
     <!--<string name="hello_world">Hello world!</string>-->
     <!--<string name="action_settings">Settings</string>-->
 
-    <!-- ptr view 相关id 开始 -->
 
-    <string name="lin_core_ptr_pull_down_to_refresh">下拉刷新</string>
-    <string name="lin_core_ptr_release_to_refresh">松开刷新数据</string>
-    <string name="lin_core_ptr_refreshing">数据刷新中...</string>
-    <string name="lin_core_ptr_refresh_complete">刷新完成</string>
-
-    <string name="lin_core_ptr_last_update">上次更新时间：&#160;</string>
-    <string name="lin_core_ptr_last_load_more">上次加载时间：&#160;</string>
-    <string name="lin_core_ptr_seconds_ago">&#160;秒前</string>
-    <string name="lin_core_ptr_minutes_ago">&#160;分钟前</string>
-    <string name="lin_core_ptr_hours_ago">&#160;小时前</string>
-
-    <string name="lin_core_ptr_load_more_to_load">上拉载入更多</string>
-    <string name="lin_core_ptr_release_to_load">松开载入更多</string>
-    <string name="lin_core_ptr_loading">数据加载中...</string>
-    <string name="lin_core_ptr_load_more_complete">数据加载完成</string>
-
-    <!-- ptr view 相关id 结束 -->
 
     <!--<string name="xlistview_header_hint_normal">下拉刷新</string>-->
     <!--<string name="xlistview_header_hint_ready">松开刷新数据</string>-->
@@ -34,7 +16,8 @@
     
     
     
-    <string name="form_row_accessory"><b>0102</b><span style=":before{content:\e258;}"></span></string>
+    <!--<string name="form_row_accessory"><b>0102</b><span style=":before{content:\e258;}"></span></string>-->
+
 
 	
 </resources>

@@ -38,21 +38,24 @@
     <plugin name="device">
         <param name="android-package" value="lin.web.plugin.LinDevicePlugin" />
     </plugin>
-    <plugin name="weixin">
-        <param name="android-package" value="lin.buyers.plugin.LinWeixinPlugin" />
-    </plugin>
-    <plugin name="alipay">
-        <param name="android-package" value="lin.buyers.plugin.AlipayPlugin" />
-    </plugin>
-    <plugin name="wxpay">
-        <param name="android-package" value="lin.buyers.plugin.WXPayPlugin" />
-    </plugin>
+    <!--<plugin name="weixin">-->
+        <!--<param name="android-package" value="lin.buyers.plugin.LinWeixinPlugin" />-->
+    <!--</plugin>-->
+    <!--<plugin name="alipay">-->
+        <!--<param name="android-package" value="lin.buyers.plugin.AlipayPlugin" />-->
+    <!--</plugin>-->
+    <!--<plugin name="wxpay">-->
+        <!--<param name="android-package" value="lin.buyers.plugin.WXPayPlugin" />-->
+    <!--</plugin>-->
     <plugin name="video">
         <param name="android-package" value="lin.web.plugin.VideoPlugin" />
     </plugin>
-    <plugin name="weixinShareVideo">
-        <param name="android-package" value="lin.buyers.plugin.WeiXinVideoSharePlugin"/>
+    <plugin name="httpDns">
+        <param name="android-package" value="lin.web.plugin.HttpDNSPlugin"/>
     </plugin>
+    <!--<plugin name="weixinShareVideo">-->
+        <!--<param name="android-package" value="lin.buyers.plugin.WeiXinVideoSharePlugin"/>-->
+    <!--</plugin>-->
     <!-- <plugin name="storage">
         <param name="ios-package" value="LinStoragePlugin" />
     </plugin> -->

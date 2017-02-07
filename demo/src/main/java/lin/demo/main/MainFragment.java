@@ -21,6 +21,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import lin.core.ResFragment;
 import lin.core.ptr.PtrRecyclerView;
 import lin.core.recyclerview.headers.StickyHeadersAdapter;
 import lin.core.recyclerview.headers.StickyHeadersDecoration;
@@ -52,7 +53,7 @@ public class MainFragment extends Fragment implements MainContract.View {
         View root = inflater.inflate(R.layout.activity_main_frag, container, false);
 
         PtrRecyclerView ptrView = (PtrRecyclerView) root.findViewById(R.id.activity_list_frag_recyclerview);
-        RecyclerView recyclerView = ptrView.getContentView();
+        RecyclerView recyclerView = ptrView.getView();
                 //recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerView.addItemDecoration(new DividerDecoration(this.getContext()));
 
@@ -141,7 +142,7 @@ public class MainFragment extends Fragment implements MainContract.View {
         public void onBindHeaderViewHolder(SimpleHeaderViewHolder holder, int position) {
             holder.binding.setData(mDatas.get(position));
             DataBindingUtil a;
-            holder.vContent.setText(mDatas.get(position).getGroup());
+            //holder.vContent.setText(mDatas.get(position).getGroup());
         }
 
         @Override

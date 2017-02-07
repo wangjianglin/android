@@ -8,7 +8,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import lin.core.Fragment;
+import lin.core.ResFragment;
 import lin.core.annotation.ResId;
 import lin.demo.R;
 
@@ -17,7 +17,7 @@ import lin.demo.R;
  */
 
 @ResId(R.layout.activity_tabbar_frag)
-public class TabbarFragment extends Fragment {// implements MainContract.View {
+public class TabbarFragment extends ResFragment {// implements MainContract.View {
 
 //    private MainContract.Presenter mPresenter;
 //    private MainFragment.SimpleRecyclerAdapter mAdapter;

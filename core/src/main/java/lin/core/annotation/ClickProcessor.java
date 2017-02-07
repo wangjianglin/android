@@ -12,7 +12,7 @@ import android.view.View.OnClickListener;
  * @date Jun 14, 2015 5:24:20 PM
  *
  */
-public class ClickProcessor extends AbstractMethodProcessor<Click>{
+public class ClickProcessor extends AbstractMethodProcessor<Click,View>{
 
 	@Override
 	protected int[] getIds(Click annot) {
@@ -25,40 +25,14 @@ public class ClickProcessor extends AbstractMethodProcessor<Click>{
 	}
 
 	@Override
-//	public void process(View view,Method method, Annotation annotation,
-//			Class<?> idClass) {
 	protected void processMethod(Object target, Method method, View itemView,Click annot){
-//	Click item = (Click)annotation;
-//		if(item == null){
-//			return;
-//		}
-//		int viewId = 0;
-//		if(item.value() != 0){
-//			viewId = item.value();
-//		}else if(!"".equals(item.id())){
-//			try{
-//				Field f = idClass.getDeclaredField(item.id());
-//				viewId = f.getInt(null);
-//			}catch(Throwable e){}
-//		}else{
-//			try{
-//				Field f = idClass.getDeclaredField(method.getName());
-//				viewId = f.getInt(null);
-//			}catch(Throwable e){}
-//		}
+
 
 		Class<?>[] clcikMethodParams = method.getParameterTypes();
 		if(clcikMethodParams != null && clcikMethodParams.length > 1){
 			return;
 		}
-//		View itemView = view;
-//		if(viewId != 0){
-//			itemView = view.findViewById(viewId);
-//		}
-		
-//		if(itemView == null){
-//			return;
-//		}
+
 		if(!(clcikMethodParams.length == 0 || (clcikMethodParams.length == 1 && clcikMethodParams[0].isAssignableFrom(itemView.getClass())))){
 			return;
 		}

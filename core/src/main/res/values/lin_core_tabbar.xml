@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="tabbar">
+        <attr name="tabbar_icon" format="reference"/>
+        <attr name="tabbar_activate_icon" format="reference"/>
+        <attr name="tabbar_background" format="reference|color"/>
+        <attr name="tabbar_text_color" format="reference|color"/>
+        <attr name="tabbar_text_activate_color" format="reference|color"/>
+        <attr name="tabbar_activate_background" format="reference|color"/>
+        <attr name="tabbar_name" format="reference|string"/>
+        <!-- <attr name="tab_theme" format="reference|integer"/> -->
+        <attr name="tabbar_item_theme" format="reference"/>
+        <attr name="tabbar_overlay" format="reference|color"/>
+    </declare-styleable>
+
+
+
+    <!-- TabBar 相关id 开始 -->
+    <item type="id" name="lin_core_tabbar_bar_layout" />
+    <item type="id" name="lin_core_tabbar_content" />
+    <item type="id" name="lin_core_tabbar_main_bottom" />
+    <item type="id" name="lin_core_tabbar_tiem_bar_img_id" />
+    <item type="id" name="lin_core_tabbar_tiem_bar_text_id" />
+    <item type="id" name="lin_core_tabbar_tiem_bar_overlay_view_id" />
+
+    <!-- TabBar 相关id 结束 -->
+
+</resources>

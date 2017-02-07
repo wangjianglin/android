@@ -111,17 +111,17 @@ public class Attrs {
 		return (Drawable) values.get(id+"");
 	}
 
-	public String getString(int[] ids,int id,String def){
+	public CharSequence getString(int[] ids,int id,CharSequence def){
 		return getString(ids[id],def);
 	}
-	public String getString(int[] ids,int id){
+	public CharSequence getString(int[] ids,int id){
 		return getString(ids[id],null);
 	}
-	public String getString(int id){
+	public CharSequence getString(int id){
 		return getString(id,null);
 	}
 
-	public String getString(int id,String def){
+	public CharSequence getString(int id,CharSequence def){
 		String v = (String) values.get(id+"");
 		if(v == null){
 			return def;

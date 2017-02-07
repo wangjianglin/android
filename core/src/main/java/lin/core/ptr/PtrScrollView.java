@@ -42,6 +42,6 @@ public class PtrScrollView extends PtrViewBase<ScrollView> {
 
     @Override
     public void addView(View child, int index, ViewGroup.LayoutParams params) {
-        getContentView().addView(child, index, params);
+        getView().addView(child, index, params);
     }
 }

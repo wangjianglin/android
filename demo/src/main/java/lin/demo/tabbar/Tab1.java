@@ -2,7 +2,7 @@ package lin.demo.tabbar;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import lin.core.Fragment;
+import lin.core.ResFragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,7 +17,7 @@ import lin.demo.R;
  */
 
 @ResId(R.layout.activity_tabbar_tabbar_item)
-public class Tab1 extends Fragment {
+public class Tab1 extends ResFragment {
 
     public Tab1(){
         this.setHasOptionsMenu(true);

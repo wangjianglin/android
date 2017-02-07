@@ -28,8 +28,8 @@ import lin.core.annotation.Click;
 //})
 public class Text extends Row {
 
-    private String hint;
-    private String navTitle;
+    private CharSequence hint;
+    private CharSequence navTitle;
 
     public Text(Context context) {
         super(context);
@@ -58,10 +58,10 @@ public class Text extends Row {
             @Override
             public void result(Object... result) {
                 if(result == null || result.length == 0
-                        || !(result[0] instanceof String)){
+                        || !(result[0] instanceof CharSequence)){
                     return;
                 }
-                String s = (String) result[0];
+                CharSequence s = (CharSequence) result[0];
                 if(s == null || "".equals(s)){
                     return;
                 }
@@ -70,23 +70,23 @@ public class Text extends Row {
                     mRowTextAttrChanged.onChange();
                 }
             }
-        },this.hint).setTitle(navTitle);
+        },this.hint,this.getText()).setTitle(navTitle);
 
     }
 
-    public String getHint() {
+    public CharSequence getHint() {
         return hint;
     }
 
-    public void setHint(String hint) {
+    public void setHint(CharSequence hint) {
         this.hint = hint;
     }
 
-    public String getNavTitle() {
+    public CharSequence getNavTitle() {
         return navTitle;
     }
 
-    public void setNavTitle(String navTitle) {
+    public void setNavTitle(CharSequence navTitle) {
         this.navTitle = navTitle;
     }
 
@@ -103,7 +103,7 @@ public class Text extends Row {
 //    }
 
     @InverseBindingAdapter(attribute = "form_row_text", event = "rowTextAttrChanged")
-    public static String getText(Text text){
+    public static CharSequence getText(Text text){
         return text.getText();
     }
 

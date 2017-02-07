@@ -50,16 +50,16 @@ public class Segue extends Row {
     }
 
 
-    public void setSegue(String className){
+    public void setSegue(CharSequence className){
         try{
-            mCls = Class.forName(className,false,this.getClass().getClassLoader());
+            mCls = Class.forName(className.toString(),false,this.getClass().getClassLoader());
         }catch (Throwable e){
             throw new RuntimeException("class don't exit.",e);
         }
     }
 
     @BindingAdapter("form_row_segue")
-    public static void setSegue(Segue segue,String className){
+    public static void setSegue(Segue segue,CharSequence className){
         segue.setSegue(className);
     }
     @BindingAdapter("form_row_segue")

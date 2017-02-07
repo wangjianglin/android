@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <declare-styleable name="nav">
+        <attr name="nav_title" format="reference|string"/>
+        <attr name="nav_tag" format="string"/>
+        <attr name="nav_show" format="reference|boolean"/>
+    </declare-styleable>
+
+
+    <!-- nav 相关id 开始 -->
+    <item type="id" name="lin_core_nav_toolbar" />
+    <item type="id" name="lin_core_nav_content_frame" />
+    <item type="id" name="lin_core_nav_view" />
+    <item type="id" name="lin_core_nav_activity_nav"/>
+
+    <!-- nav 相关id 结束 -->
+</resources>

@@ -1,50 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-     <declare-styleable name="tabbar">
-          <attr name="tabbar_icon" format="reference"/>
-          <attr name="tabbar_activate_icon" format="reference"/>
-          <attr name="tabbar_background" format="reference|color"/>
-          <attr name="tabbar_text_color" format="reference|color"/>
-          <attr name="tabbar_text_activate_color" format="reference|color"/>
-          <attr name="tabbar_activate_background" format="reference|color"/>
-          <attr name="tabbar_name" format="reference|string"/>
-          <!-- <attr name="tab_theme" format="reference|integer"/> -->
-          <attr name="tabbar_item_theme" format="reference"/>
-          <attr name="tabbar_overlay" format="reference|color"/>
-     </declare-styleable>
 
-     <declare-styleable name="nav">
-          <attr name="nav_title" format="reference|string"/>
-          <attr name="nav_tag" format="string"/>
-          <attr name="nav_show" format="reference|boolean"/>
-     </declare-styleable>
 
-     <declare-styleable name="form">
-
-          <attr name="form_row_text" format="string|reference"/>
-          <attr name="form_row_title" format="reference|string"/>
-          <attr name="form_row_text_hint" format="string|reference"/>
-          <attr name="form_row_text_navtitle" format="reference|string"/>
-          <attr name="form_row_accessory" format="boolean"/>
-          <attr name="form_row_segue" format="string"/>
-     </declare-styleable>
-
-     <declare-styleable name="ptr">
-
-          <attr name="ptr_mode" format="enum">
-              <enum name="disable" value="0"/>
-               <enum name="refresh" value="1"/>
-               <enum name="load_more" value="2"/>
-               <enum name="both" value="3"/>
-              </attr>
-          <attr name="ptr_pull_to_refresh" format="boolean"/>
-          <attr name="ptr_pull_to_load_more" format="boolean"/>
-          <attr name="ptr_disable_horizontal_move" format="boolean"/>
-          <attr name="ptr_pin_content" format="boolean"/>
-          <attr name="ptr_auto_refresh" format="boolean"/>
-          <attr name="ptr_auto_load_more" format="boolean"/>
-     </declare-styleable>
 
 
      <!--app:ptr_mode="disable/refresh/load_more/both"-->

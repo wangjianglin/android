@@ -8,6 +8,8 @@ Nav 的 attr 属性不生效
 
 PtrScroll 内容不足时，向上不能滚动
 
+TextEdit加保存菜单
+
 组件进行值绑定,attr都需要支持绑定
 
 用 on
@@ -24,6 +26,9 @@ PtrScroll 内容不足时，向上不能滚动
     app:ptr_pin_content="true/false"
     app:ptr_auto_refresh="true/false"
     app:ptr_auto_load_more="true/false"
+
+    app:ptr_load_more="fun"
+    app:ptr_refresh="fun"
 
 11、当list scroll recycler 内容为空时的页面显示内容
 

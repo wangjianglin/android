@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/list_header_textview"
-            android:text="@{data.name}"
+            android:text="@{data.group}"
             android:gravity="center_vertical"
             android:layout_marginLeft="8dp" />
     </LinearLayout>
