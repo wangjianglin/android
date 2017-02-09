@@ -59,16 +59,16 @@ public class NavActivity extends ViewActivity {
 		nav.activity = this;
 
 		ActionBar actionBar = this.getSupportActionBar();
-		if(actionBar == null) {
-			this.setContentViewById(R.layout.lin_core_nav_main);
-			this.setSupportActionBar(toolbar);
-			actionBar = this.getSupportActionBar();
-		}else{
-			this.setContentViewById(R.layout.lin_core_nav_main_without_toolbar);
-		}
-
-
-
+//		if(actionBar == null) {
+//			this.setContentViewById(R.layout.lin_core_nav_main);
+//			this.setSupportActionBar(toolbar);
+//			actionBar = this.getSupportActionBar();
+//		}else{
+//			this.setContentViewById(R.layout.lin_core_nav_main_without_toolbar);
+//		}
+//
+//
+//
 		actionBar.setDisplayShowHomeEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -84,7 +84,8 @@ public class NavActivity extends ViewActivity {
 			setInfoWithView(view,(View) view);
 		}
 
-		addNavView(view);
+//		addNavView(view);
+		addContent(view);
 
 		nav.init();
 	}

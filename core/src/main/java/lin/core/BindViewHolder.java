@@ -55,6 +55,8 @@ public abstract class BindViewHolder<T extends ViewDataBinding> extends ViewHold
                 }
             });
 
+            lin.core.mvvm.Utils.processViewModel(this);
+
             return view;
 
         }catch (Throwable e){

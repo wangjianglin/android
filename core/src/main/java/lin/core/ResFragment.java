@@ -51,6 +51,7 @@ public class ResFragment extends android.support.v4.app.Fragment {
         }
         Views.process(this);
         this.onCreateView();
+        lin.core.mvvm.Utils.processViewModel(this);
         return mView;
     }
 

@@ -24,7 +24,6 @@ import lin.core.annotation.ViewById;
 /**
  * Created by lin on 20/01/2017.
  */
-//ic_menu_save
 @ResCls(R.class)
 @ResId(id="lin_core_form_text_edit")
 @OptionsMenu
@@ -33,7 +32,7 @@ public class TextEdit extends ResFragment{
     private TextView hintView;
 
     @ViewById(id="lin_core_form_row_text_edit")
-    private TextView textView;
+    private EditText editText;
 
     @EditorAction(id = "lin_core_form_row_text_edit")
     private void action(TextView v,int actionId, KeyEvent event){
@@ -47,9 +46,9 @@ public class TextEdit extends ResFragment{
             if(args.length > 0) {
                 hintView.setText((CharSequence) args[0]);
             }
-            if(args.length > 1){
-                textView.setText((CharSequence) args[1]);
-                textView.setSelected(true);
+            if(args.length > 1 && args[1] != null){
+                editText.setText((CharSequence) args[1]);
+                editText.setSelection(((CharSequence) args[1]).length());
             }
         }
     }
@@ -62,7 +61,7 @@ public class TextEdit extends ResFragment{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.lin_core_form_edit_text_save_item){
-            Nav.getNav(this).pop(textView.getText());
+            Nav.getNav(this).pop(editText.getText());
             return true;
         }
 

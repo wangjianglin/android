@@ -5,6 +5,7 @@ import android.content.Intent;
 import java.util.ArrayList;
 import java.util.List;
 
+import lin.core.mvvm.AbsBasePresenter;
 import lin.demo.WebViewActivity;
 import lin.demo.binding.BindViewActivity;
 import lin.demo.binding.BindViewHolderActivity;
@@ -25,16 +26,12 @@ import lin.demo.tabbar.TabbarActivity;
  * Created by lin on 23/11/2016.
  */
 
-public class MainPresenter implements MainContract.Presenter{
-
-
-    private MainContract.View mView;
+public class MainPresenter extends AbsBasePresenter<MainContract.View> implements MainContract.Presenter{
 
     private Object[][] items = null;
 
-    public MainPresenter(MainContract.View view){
-        mView = view;
-
+    public MainPresenter(){
+        System.out.println();
     }
     @Override
     public void start() {

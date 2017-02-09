@@ -5,12 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import lin.core.Nav;
-import lin.core.ToolsActivity;
+import lin.core.ViewActivity;
 import lin.core.ViewActivity;
 import lin.core.annotation.Click;
 import lin.demo.R;
 
-public class NavActivity extends ToolsActivity {
+public class NavActivity extends ViewActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

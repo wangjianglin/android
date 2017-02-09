@@ -28,7 +28,7 @@ public interface MainContract {
         Context getContext();
     }
 
-    interface Presenter extends BasePresenter {
+    interface Presenter extends BasePresenter<View> {
 
 //        void saveTask(String title, String description);
         void loadData();

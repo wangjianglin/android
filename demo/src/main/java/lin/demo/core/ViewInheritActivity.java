@@ -9,12 +9,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import lin.core.ReView;
-import lin.core.ToolsActivity;
+import lin.core.ViewActivity;
 import lin.core.ViewActivity;
 import lin.demo.R;
 import lin.demo.Utils;
 
-public class ViewInheritActivity extends ToolsActivity {
+public class ViewInheritActivity extends ViewActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

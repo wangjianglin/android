@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lin.core.ResFragment;
+import lin.core.annotation.OptionsMenu;
+import lin.core.annotation.ResId;
 import lin.core.ptr.PtrRecyclerView;
 import lin.core.recyclerview.headers.StickyHeadersAdapter;
 import lin.core.recyclerview.headers.StickyHeadersDecoration;
@@ -33,8 +35,12 @@ import lin.demo.databinding.ActivityMainItemBinding;
 /**
  * Created by lin on 23/11/2016.
  */
-
-public class MainFragment extends Fragment implements MainContract.View {
+@lin.core.mvvm.View
+@lin.core.mvvm.Presenter(MainPresenter.class)
+//@lin.core.mvm.
+@ResId(R.layout.activity_main_frag)
+@OptionsMenu
+public class MainFragment extends ResFragment implements MainContract.View {
 
     private MainContract.Presenter mPresenter;
     private SimpleRecyclerAdapter mAdapter;
@@ -47,10 +53,10 @@ public class MainFragment extends Fragment implements MainContract.View {
         return new MainFragment();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.activity_main_frag, container, false);
+    protected void onCreateView() {
+
+        View root = this.getView();
 
         PtrRecyclerView ptrView = (PtrRecyclerView) root.findViewById(R.id.activity_list_frag_recyclerview);
         RecyclerView recyclerView = ptrView.getView();
@@ -88,10 +94,53 @@ public class MainFragment extends Fragment implements MainContract.View {
             }
         });
 
-        setHasOptionsMenu(true);
-
-        return root;
     }
+
+    //    @Nullable
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+//        View root = inflater.inflate(R.layout.activity_main_frag, container, false);
+//
+//        PtrRecyclerView ptrView = (PtrRecyclerView) root.findViewById(R.id.activity_list_frag_recyclerview);
+//        RecyclerView recyclerView = ptrView.getView();
+//                //recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+//        recyclerView.addItemDecoration(new DividerDecoration(this.getContext()));
+//
+//        mAdapter = new SimpleRecyclerAdapter(this.getContext());
+//        recyclerView.setAdapter(mAdapter);
+//
+//        final StickyHeadersDecoration headersDecor = new StickyHeadersDecoration(mAdapter);
+//        recyclerView.addItemDecoration(headersDecor);
+//
+//        // Add touch listeners
+//        StickyHeadersTouchListener touchListener =
+//                new StickyHeadersTouchListener(recyclerView, headersDecor);
+//        touchListener.setOnHeaderClickListener(
+//                new StickyHeadersTouchListener.OnHeaderClickListener() {
+//                    @Override
+//                    public void onHeaderClick(View header, int position, long headerId) {
+//
+//                    }
+//                });
+//        recyclerView.addOnItemTouchListener(touchListener);
+//        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this.getContext(), new RecyclerItemClickListener.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(View view, int position) {
+//                MainFragment.this.startActivity(mAdapter.mDatas.get(position).getIntent());
+//
+//            }
+//        }));
+//        mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+//            @Override
+//            public void onChanged() {
+//                headersDecor.invalidateHeaders();
+//            }
+//        });
+//
+//        setHasOptionsMenu(true);
+//
+//        return root;
+//    }
 
     private class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAdapter.SimpleViewHolder>
             implements StickyHeadersAdapter<SimpleRecyclerAdapter.SimpleHeaderViewHolder> {

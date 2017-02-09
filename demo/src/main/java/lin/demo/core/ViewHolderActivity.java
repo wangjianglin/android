@@ -3,10 +3,10 @@ package lin.demo.core;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 
-import lin.core.ToolsActivity;
+import lin.core.ViewActivity;
 import lin.demo.R;
 
-public class ViewHolderActivity extends ToolsActivity {
+public class ViewHolderActivity extends ViewActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -41,6 +41,7 @@ public abstract class ViewHolder implements AttrsView {
 
             }
         });
+        lin.core.mvvm.Utils.processViewModel(this);
         return view;
     }
 

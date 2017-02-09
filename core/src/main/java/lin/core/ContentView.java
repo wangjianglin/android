@@ -41,6 +41,7 @@ public abstract class ContentView extends ViewGroup implements AttrsView {
 		this.attrs.addAttr(this);
 		this.genAttrs();
 		this.attrs.process();
+		lin.core.mvvm.Utils.processViewModel(this);
 	}
 
 	protected void genAttrs(){
