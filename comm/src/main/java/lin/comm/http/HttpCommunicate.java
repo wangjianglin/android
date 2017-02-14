@@ -175,7 +175,7 @@ public class HttpCommunicate {
 
 	private static HttpCommunicateImpl globalImpl = null;
 
-	private static HttpCommunicateImpl global(){
+	public static HttpCommunicateImpl global(){
 		if(globalImpl != null){
 			return globalImpl;
 		}

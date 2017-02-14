@@ -6,6 +6,8 @@ import android.util.AttributeSet;
 
 import java.lang.reflect.Constructor;
 
+import lin.core.annotation.ViewCls;
+
 /**
  * Created by lin on 09/02/2017.
  */
@@ -68,18 +70,21 @@ public class Utils {
 
             Handler handler = cls.getAnnotation(Handler.class);
             if (handler != null) {
-                ActionHandler actionHandler = (ActionHandler) obj;
+                ActionHandler actionHandler = handler.value().newInstance();
                 actionHandler.setPresenter(presenter);
+                if (mView instanceof BaseBindView) {
+                    ((BaseBindView) mView).setHandler(actionHandler);
+                }
             }
 
             ViewModel viewModelAnnot = cls.getAnnotation(ViewModel.class);
             if (viewModelAnnot != null) {
                 BaseViewModel viewModel = viewModelAnnot.value().newInstance();
-                if (presenter instanceof BaseViewModelPresenter) {
-                    ((BaseViewModelPresenter) presenter).setViewModel(viewModel);
+                if (presenter instanceof BaseBindPresenter) {
+                    ((BaseBindPresenter) presenter).setViewModel(viewModel);
                 }
-                if (mView instanceof BaseViewModelView) {
-                    ((BaseViewModelView) mView).setViewModel(viewModel);
+                if (mView instanceof BaseBindView) {
+                    ((BaseBindView) mView).setViewModel(viewModel);
                 }
             }
         }catch (Throwable e){

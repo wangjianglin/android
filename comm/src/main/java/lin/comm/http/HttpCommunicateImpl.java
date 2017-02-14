@@ -12,6 +12,7 @@ import lin.comm.httpdns.HttpDNS;
  */
 public interface HttpCommunicateImpl{
     void init(Context context);
+    Context getContext();
 
     void setHttpDNS(HttpDNS httpDNS);
     HttpDNS getHttpDNS();

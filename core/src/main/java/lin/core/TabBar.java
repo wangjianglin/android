@@ -28,7 +28,7 @@ import lin.core.annotation.ViewById;
 @ResCls(R.class)
 public class TabBar extends ResView {
 
-	@ViewById(id="tabbar_bar_layout")
+	@ViewById(id="lin_core_tabbar_bar_layout")
 	private LinearLayout barLayout;
 
 //	@ViewById(id="tabbar_main_bottom")

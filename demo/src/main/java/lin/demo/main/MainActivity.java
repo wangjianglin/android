@@ -9,7 +9,7 @@ import lin.core.ViewActivity;
 import lin.demo.ActivityUtils;
 import lin.demo.R;
 
-@lin.core.mvvm.ViewCls(MainFragment.class)
+@lin.core.annotation.ViewCls(MainFragment.class)
 public class MainActivity extends ViewActivity {
 
 //

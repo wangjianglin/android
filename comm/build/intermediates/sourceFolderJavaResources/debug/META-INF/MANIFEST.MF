@@ -1,5 +1,0 @@
-Manifest-Version: 0.1.0-SNAPSHOT
-Provider: lin
-Date: 2017-02-09 21:20:29.613
-
-

@@ -97,13 +97,13 @@ public class TabBarItem extends ResView {
 
 	}
 
-	@ViewById(id="tabbar_tiem_bar_text_id")
+	@ViewById(id="lin_core_tabbar_tiem_bar_text_id")
 	private TextView text;// = (TextView) barView.findViewById(R.id.tabbar_tiem_bar_text_id);
 	
-	@ViewById(id="tabbar_tiem_bar_overlay_view_id")
+	@ViewById(id="lin_core_tabbar_tiem_bar_overlay_view_id")
 	private View overlayView;
 	
-	@ViewById(id="tabbar_tiem_bar_img_id")
+	@ViewById(id="lin_core_tabbar_tiem_bar_img_id")
 	private ImageView image;// = (ImageView) barView.findViewById(R.id.tabbar_tiem_bar_img_id);
 	
 

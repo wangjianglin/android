@@ -85,7 +85,7 @@ public class NavActivity extends ViewActivity {
 		}
 
 //		addNavView(view);
-		addContent(view);
+		setObjectContent(view);
 
 		nav.init();
 	}

@@ -42,6 +42,21 @@ public class ViewActivity extends AppCompatActivity{
 	public ViewActivity(){
 		activitys.add(new SoftReference<Activity>(this));
 	}
+
+	public void hideToolbar(){
+		ActionBar actionBar = this.getSupportActionBar();
+		if(actionBar != null){
+			actionBar.hide();
+		}
+	}
+
+	public void showToolbar(){
+		ActionBar actionBar = this.getSupportActionBar();
+		if(actionBar != null){
+			actionBar.show();
+		}
+	}
+	Toolbar toolbar = null;
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -49,7 +64,7 @@ public class ViewActivity extends AppCompatActivity{
 
 		if(this.getSupportActionBar() == null){
 			this.setContentViewById(R.layout.lin_core_tools_act);
-			Toolbar toolbar = (Toolbar)this.findViewById(R.id.lin_core_tools_act_toolbar);
+			toolbar = (Toolbar)this.findViewById(R.id.lin_core_tools_act_toolbar);
 			this.setSupportActionBar(toolbar);
 			intercept = true;
 		}
@@ -59,7 +74,7 @@ public class ViewActivity extends AppCompatActivity{
 			this.setContentView(view);
 		}else {
 			Object obj = lin.core.mvvm.Utils.loadView(this);
-			this.addContent(obj);
+			this.setObjectContent(obj);
 		}
 //		LayoutInflaterFactory.setFactory2(this);
 	}
@@ -168,7 +183,7 @@ public class ViewActivity extends AppCompatActivity{
 //	}
 
 
-	public void addContent(Object obj){
+	public void setObjectContent(Object obj){
 		if(obj instanceof View){
 			addContent((View)obj);
 		}else if(obj instanceof android.support.v4.app.Fragment){

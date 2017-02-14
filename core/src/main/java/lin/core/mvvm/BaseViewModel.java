@@ -7,12 +7,12 @@ import android.databinding.BaseObservable;
  */
 
 public abstract class BaseViewModel<T extends BasePresenter> extends BaseObservable {
-    protected T mPresenter;
-    public void setPresenter(T presenter){
-        this.mPresenter = presenter;
-    }
-
-    protected T getPresenter(){
-        return mPresenter;
-    }
+//    protected T mPresenter;
+//    public void setPresenter(T presenter){
+//        this.mPresenter = presenter;
+//    }
+//
+//    protected T getPresenter(){
+//        return mPresenter;
+//    }
 }

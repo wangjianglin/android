@@ -76,6 +76,10 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
         }
     }
 
+    public Context getContext(){
+        return this.context;
+    }
+
     @Override
     public int getTimeout() {
         return timeout;
