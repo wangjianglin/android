@@ -17,16 +17,20 @@
 
             <TextView
                 android:id="@id/lin_core_ptr_default_footer_rotate_view_header_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:textColor="#666666"
                 android:textSize="12sp" />
 
             <TextView
                 android:id="@id/lin_core_ptr_default_footer_rotate_view_header_last_update"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:layout_marginTop="2dp"
+                android:gravity="center"
                 android:textColor="#999999"
                 android:textSize="10sp" />
         </LinearLayout>

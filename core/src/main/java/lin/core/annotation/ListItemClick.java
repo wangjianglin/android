@@ -15,6 +15,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @ProcessorClass(ListItemClickProcessor.class)
 public @interface ListItemClick {
-	int[] value();
+	int[] value() default 0;
 	String[] id() default "";
 }

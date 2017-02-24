@@ -21,12 +21,4 @@ public @interface Attr{
     String id() default "";
     AttrType type();
     Class<?> R() default Object.class;
-//    String strDef() default "";
-//    int colorDef() default 0;
-//    int intDef() default 0;
-//    boolean boolDef() default false;
 }
-//String,Drawable,Color,Int,Boolean
-//public @interface StrAttr extends Attr{
-//    String def() default "";
-//}

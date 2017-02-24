@@ -49,7 +49,7 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
     private static long cacheSize = 200 * 1024 * 1024;
 
-    private boolean mainThread = false;
+    private boolean mMainThread = false;
 
     //HttpCommunicateImpl(){}
     protected AbstractHttpCommunicateImpl(String name,HttpCommunicate c) {
@@ -214,24 +214,27 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
     private void fireRequestResultListener(HttpPackage pack,Object obj, List<lin.comm.http.Error> warning){
         for(SoftReference<HttpRequestListener> item : listeners){
-            if(item.get() != null){
-                item.get().requestComplete(this, pack, obj, warning);
+            HttpRequestListener listener = item.get();
+            if(listener != null){
+                listener.requestComplete(this, pack, obj, warning);
             }
         }
     }
 
     private void fireRequestFaultListener(HttpPackage pack,Error error){
         for(SoftReference<HttpRequestListener> item : listeners){
-            if(item.get() != null){
-                item.get().requestFault(this, pack, error);
+            HttpRequestListener listener = item.get();
+            if(listener != null){
+                listener.requestFault(this, pack, error);
             }
         }
     }
 
     private void fireRequestListener(HttpPackage pack){
         for(SoftReference<HttpRequestListener> item : listeners){
-            if(item.get() != null){
-                item.get().request(this, pack);
+            HttpRequestListener listener = item.get();
+            if(listener != null){
+                listener.request(this, pack);
             }
         }
     }
@@ -438,7 +441,7 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
     private boolean fireResult(final HttpCommunicateResult httpResult,final ResultListener listener,final Object obj,final List<Error> warning){
         if(listener != null){
-            if(this.mainThread && httpResult.threadId != mHandler.getLooper().getThread().getId()){
+            if(this.mMainThread && httpResult.threadId != mHandler.getLooper().getThread().getId()){
                 mHandler.post(new Runnable(){
 
                     @Override
@@ -473,7 +476,7 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 //		}
     private void fireFault(final HttpCommunicateResult httpResult,final ResultListener listener,final Error error){
         if(listener != null){
-            if(this.mainThread && httpResult.threadId != mHandler.getLooper().getThread().getId()){
+            if(this.mMainThread && httpResult.threadId != mHandler.getLooper().getThread().getId()){
                 mHandler.post(new Runnable(){
 
                     @Override
@@ -498,7 +501,7 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
     private void fireProgress(final HttpCommunicateResult httpResult,final ProgressResultListener listener,final long progress,final long total){
         if(listener != null){
 //			System.out.println("3 progress:"+progress+"\ttotal:"+total);
-            if(this.mainThread && httpResult.threadId != mHandler.getLooper().getThread().getId()){
+            if(this.mMainThread && httpResult.threadId != mHandler.getLooper().getThread().getId()){
                 mHandler.post(new Runnable(){
 
                     @Override
@@ -718,16 +721,14 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
     }
 
 
-    @Override
     public boolean isMainThread() {
-        return mainThread;
+        return mMainThread;
     }
 
     private Handler mHandler = new Handler();
 
-    @Override
     public void setMainThread(boolean mainThread) {
-        this.mainThread = mainThread;
+        this.mMainThread = mainThread;
     }
 
 //    protected Error error(long code,String message,String cause,String stackTrace){

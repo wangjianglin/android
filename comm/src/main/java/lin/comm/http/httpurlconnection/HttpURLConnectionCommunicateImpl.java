@@ -552,7 +552,7 @@ private CloseableHttpClient http;// = HttpClients.custom().useSystemProperties()
 //	}
 //
 //	private boolean mainThread = false;
-//	public boolean isMainThread() {
+//	public boolean ismMainThread() {
 //		return mainThread;
 //	}
 //

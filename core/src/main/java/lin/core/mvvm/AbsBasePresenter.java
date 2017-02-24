@@ -1,10 +1,13 @@
 package lin.core.mvvm;
 
+import android.content.Context;
+import android.databinding.BaseObservable;
+
 /**
  * Created by lin on 23/11/2016.
  */
 
-public abstract class AbsBasePresenter<V extends BaseView> implements BasePresenter<V> {
+public abstract class AbsBasePresenter<V extends BaseView> extends BaseObservable implements BasePresenter<V> {
 
     public void start(){};
 
@@ -16,5 +19,9 @@ public abstract class AbsBasePresenter<V extends BaseView> implements BasePresen
 
     public V getView(){
         return this.mView;
+    }
+
+    public Context getContext(){
+        return this.mView.getContext();
     }
 }

@@ -44,6 +44,14 @@ public class LocalStorage {
 	public static <T> T getItem(String name,Class<T> type){
 		return (T) getItemImpl(name,type);
 	}
+
+	public static <T> Object getItem(String name,T def){
+		Object r = getItem(name,def.getClass());
+		if(r == null){
+			return def;
+		}
+		return (T)r;
+	}
 	
 	public static Object getItem(String name,Type type){
 		return getItemImpl(name,type);

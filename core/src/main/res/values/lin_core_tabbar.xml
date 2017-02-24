@@ -3,7 +3,7 @@
     <declare-styleable name="tabbar">
         <attr name="tabbar_icon" format="reference"/>
         <attr name="tabbar_activate_icon" format="reference"/>
-        <attr name="tabbar_background" format="reference|color"/>
+        <attr name="tabbar_background" format="reference"/>
         <attr name="tabbar_text_color" format="reference|color"/>
         <attr name="tabbar_text_activate_color" format="reference|color"/>
         <attr name="tabbar_activate_background" format="reference|color"/>

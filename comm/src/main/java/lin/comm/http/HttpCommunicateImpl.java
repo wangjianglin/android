@@ -61,7 +61,7 @@ public interface HttpCommunicateImpl{
 
     boolean isMainThread();
 
-    void setMainThread(boolean mainThread);
+    void setMainThread(boolean mMainThread);
 
     void newSession();
 

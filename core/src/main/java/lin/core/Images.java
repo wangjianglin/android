@@ -9,6 +9,12 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.widget.ImageView;
 import android.view.View;
 
@@ -212,9 +218,66 @@ public class Images {
 		void onLoadingFailed(String url, View imageView);
 		void onLoadingStarted(String url, View imageView);
 	}
+
+
+	public static Bitmap setImageColor(Bitmap bitmap,int color){
+
+
+//		setContentView(R.layout.activity_main);
+//		ma = (ImageView) findViewById(R.id.imageView00);
+//		bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.d1);
+//		updateBitmap = Bitmap.createBitmap(bitmap.getWidth(),
+//				bitmap.getHeight(), bitmap.getConfig());
+		Bitmap updaeBitmap = Bitmap.createBitmap(bitmap.getWidth(),bitmap.getHeight(),bitmap.getConfig());
+
+		Canvas canvas = new Canvas(updaeBitmap);
+		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);////抗锯齿的画笔
+
+		ColorMatrix cm = new ColorMatrix();
+		paint.setColorFilter(new ColorMatrixColorFilter(cm));
+		paint.setColor(color);
+		paint.setAntiAlias(true);
+//		canvas = new Canvas(updateBitmap);
+//		paint = new Paint(Paint.ANTI_ALIAS_FLAG);//抗锯齿的画笔
+//		final ColorMatrix cm = new ColorMatrix();
+//		paint.setColorFilter(new ColorMatrixColorFilter(cm));
+//		paint.setColor(Color.BLACK);
+//		paint.setAntiAlias(true);
+//		final Matrix matrix = new Matrix();
+//		canvas.drawBitmap(bitmap, matrix, paint);
+//		ma.setImageBitmap(updateBitmap);
+
+		Matrix matrix = new Matrix();
+		canvas.drawBitmap(bitmap,matrix,paint);
+		updaeBitmap.recycle();
+		return updaeBitmap;
+//		findViewById(R.id.button1).setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				cm.set(new float[] { 160 / 128f, 0, 0, 0, 0,// 红色值
+//						0, 32 / 128f, 0, 0, 0,// 绿色值
+//						0, 0, 240 / 128f, 0, 0,// 蓝色值
+//						0, 0, 0, 1, 0 // 透明度
+//				});
+//				paint.setColorFilter(new ColorMatrixColorFilter(cm));
+//				canvas.drawBitmap(bitmap, matrix, paint);
+//				ma.setImageBitmap(updateBitmap);
+//			}
+//		});
+//	}
+	}
 }
 
 
+
+
+
+
+
+
+
+//============================================================================================
 
 //
 //public class Images {

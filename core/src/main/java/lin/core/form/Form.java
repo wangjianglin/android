@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import lin.core.ReView;
+import lin.core.ptr.PtrScrollView;
 
 /**
  * Created by lin on 12/01/2017.
@@ -24,7 +25,15 @@ public class Form extends ReView {
         super(context, attrs, defStyleAttr);
     }
 
-//    @Override
+    @Override
+    protected void onInited() {
+        super.onInited();
+
+        this.setVerticalScrollBarEnabled(false);
+        this.setHorizontalScrollBarEnabled(false);
+    }
+
+    //    @Override
 //    protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
 //        return p instanceof LinearLayout.LayoutParams;
 //    }

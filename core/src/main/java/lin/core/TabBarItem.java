@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -37,6 +38,8 @@ public class TabBarItem extends ResView {
 	private Drawable activateIcon = null;
 	private Drawable background = null;
 	private Drawable icon = null;
+	private Drawable tintIcon = null;
+	private Drawable tintActivateIcon = null;
 	private Drawable overlayDrawable = null;
 
 	private int textColor = 0xffffff;
@@ -81,10 +84,10 @@ public class TabBarItem extends ResView {
 
 		background = attrs.getDrawable(R.styleable.tabbar,R.styleable.tabbar_tabbar_background);
 		if(background == null){
-			background = tabBar.getBackground();
+			//background = tabBar.getBackground();
 		}
 		if(background == null){
-			background = super.getBackground();
+			//background = super.getBackground();
 		}
 		activateBackground = attrs.getDrawable(R.styleable.tabbar,R.styleable.tabbar_tabbar_activate_background);
 		if(activateBackground == null){
@@ -95,6 +98,22 @@ public class TabBarItem extends ResView {
 
 		activateTextColor = attrs.getColor(R.styleable.tabbar,R.styleable.tabbar_tabbar_text_activate_color,tabBar.getActivateTextColor());
 
+		setIconColor();
+	}
+
+	private void setIconColor(){
+		if(activateIcon == null && icon != null) {
+			tintIcon = icon.getConstantState().newDrawable();
+			tintIcon = DrawableCompat.wrap(tintIcon);
+			DrawableCompat.setTint(tintIcon, textColor);
+
+			tintActivateIcon = icon.getConstantState().newDrawable();
+			tintActivateIcon = DrawableCompat.wrap(tintActivateIcon);
+			DrawableCompat.setTint(tintActivateIcon,activateTextColor);
+		}else{
+			tintIcon = icon;
+			tintActivateIcon = activateIcon;
+		}
 	}
 
 	@ViewById(id="lin_core_tabbar_tiem_bar_text_id")
@@ -172,11 +191,11 @@ public class TabBarItem extends ResView {
 			if(this.activateBackground != null){
 				super.setBackgroundDrawable(activateBackground);
 			}
-			if(this.activateIcon != null && image != null){
-				image.setImageDrawable(activateIcon);
+			if(this.tintActivateIcon != null && image != null){
+				image.setImageDrawable(tintActivateIcon);
 			}
 			if(this.overlayView != null){
-				overlayView.setBackgroundDrawable(null);
+				overlayView.setBackground(null);
 			}
 			text.setTextColor(activateTextColor);
 		}else{
@@ -184,10 +203,10 @@ public class TabBarItem extends ResView {
 				super.setBackground(background);
 			//}
 			if(image != null){
-				image.setImageDrawable(icon);
+				image.setImageDrawable(tintIcon);
 			}
 			if(this.overlayView != null){
-				overlayView.setBackgroundDrawable(overlayDrawable);
+				overlayView.setBackground(overlayDrawable);
 			}
 			text.setTextColor(textColor);
 		}
@@ -215,6 +234,7 @@ public class TabBarItem extends ResView {
 
 	public void setActivateIcon(Drawable activateIcon) {
 		this.activateIcon = activateIcon;
+		setIconColor();
 	}
 
 	public Drawable getBackground() {
@@ -232,6 +252,7 @@ public class TabBarItem extends ResView {
 
 	public void setIcon(Drawable icon) {
 		this.icon = icon;
+		setIconColor();
 	}
 
 	public Drawable getOverlayDrawable() {
@@ -242,4 +263,21 @@ public class TabBarItem extends ResView {
 		this.overlayDrawable = overlayDrawable;
 	}
 
+	public int getTextColor() {
+		return textColor;
+	}
+
+	public void setTextColor(int textColor) {
+		this.textColor = textColor;
+		setIconColor();
+	}
+
+	public int getActivateTextColor() {
+		return activateTextColor;
+	}
+
+	public void setActivateTextColor(int activateTextColor) {
+		this.activateTextColor = activateTextColor;
+		setIconColor();
+	}
 }

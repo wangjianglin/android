@@ -159,7 +159,7 @@ public class PtrView extends ContentView {
             case 2:
                 this.setMode(Mode.LoadMore);
                 break;
-            case 3:
+            case 4:
                 this.setMode(Mode.Both);
                 break;
             default:

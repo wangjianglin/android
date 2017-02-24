@@ -18,6 +18,9 @@
     <!--lin:tabbar_activate_background="#085e2c"-->
     <!--lin:tabbar_text_color="#333"-->
     <tabbar
+        lin:tabbar_background="@drawable/tabbar_background"
+        lin:tabbar_text_color="#0f0"
+        lin:tabbar_text_activate_color="#00f"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
@@ -28,7 +31,6 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             lin:tabbar_name="首页"
-            lin:tabbar_activate_icon="@drawable/nav_home_activate"
             lin:tabbar_icon="@drawable/nav_home_icon"
             lin:theme="@layout/lin_core_nav_main"/>
 

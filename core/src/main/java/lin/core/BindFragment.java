@@ -17,29 +17,16 @@ import lin.core.annotation.OptionsMenu;
 /**
  * Created by lin on 18/01/2017.
  */
-
-public class BindFragment <T extends ViewDataBinding> extends android.support.v4.app.Fragment {
+public class BindFragment <T extends ViewDataBinding> extends AbsFragment{
     private Class<T> cls = null;
     public BindFragment() {
-        this.setHasOptionsMenu(this.defaultOptionsMenu());
+        super();
     }
 
     protected BindFragment(Class<T> cls) {
-        this.setHasOptionsMenu(this.defaultOptionsMenu());
         this.cls = cls;
     }
 
-    protected boolean defaultOptionsMenu(){
-        OptionsMenu optionsMenu = this.getClass().getAnnotation(OptionsMenu.class);
-        if(optionsMenu != null){
-            return optionsMenu.value();
-        }
-        return this.hasOptionsMenu();
-    }
-
-    public LayoutInflater getLayoutInflater(Bundle savedInstanceState) {
-        return LayoutInflaterFactory.setFactory2(super.getLayoutInflater(savedInstanceState));
-    }
 
     private View mView;
     @Nullable
@@ -58,8 +45,6 @@ public class BindFragment <T extends ViewDataBinding> extends android.support.v4
         return mView;
     }
 
-    protected void onCreateView(){}
-
     public View getFragmentView(LayoutInflater inflater,ViewGroup parent) {
         if(cls == null){
             BindCls bindCls = this.getClass().getAnnotation(BindCls.class);
@@ -72,18 +57,6 @@ public class BindFragment <T extends ViewDataBinding> extends android.support.v4
             binding = (T) method.invoke(null,inflater,parent,false);
             final View view = binding.getRoot();
 
-//            view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
-//                @Override
-//                public void onViewAttachedToWindow(View v) {
-//                    view.removeOnAttachStateChangeListener(this);
-//                    onInited();
-//                }
-//
-//                @Override
-//                public void onViewDetachedFromWindow(View v) {
-//
-//                }
-//            });
 
             return view;
 

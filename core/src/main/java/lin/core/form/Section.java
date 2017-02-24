@@ -5,11 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import lin.core.AttrType;
 import lin.core.R;
 import lin.core.ResView;
 import lin.core.annotation.ResCls;
@@ -40,56 +43,83 @@ public class Section extends ResView {
 	}
 
 	@ViewById(id="lin_core_form_section_container")
-	private ViewGroup containerView;
+	private LinearLayout containerView;
+
+
+	@ViewById(id="lin_core_form_section_header")
+	private ViewGroup headerView;
+
+	@ViewById(id="lin_core_form_section_footer")
+	private ViewGroup footerView;
+
+
+	@ViewById(id="lin_core_form_section_header_text")
+	private TextView headerTextView;
+
+	@ViewById(id="lin_core_form_section_footer_text")
+	private TextView footerTextView;
+
 //	private View header;
 //	private View footer;
 	@Override
-//	protected void onViewCreate() {
 	protected void onInited(){
 
 //		minimumHeight = (int)(25 * this.getContext().getResources().getDisplayMetrics().density+0.5 );
 //		this.setMinimumHeight(minimumHeight);
+		this.setHeaderText(this.getAttrs().getString(R.styleable.form,R.styleable.form_form_section_header,""));
+		this.setFooterText(this.getAttrs().getString(R.styleable.form,R.styleable.form_form_section_footer,""));
+
+
+		Drawable divider = this.getAttrs().getDrawable(R.styleable.form,R.styleable.form_form_row_divider);
+		int dividerPadding = this.getAttrs().getInt(R.styleable.form,R.styleable.form_form_row_divider,Integer.MIN_VALUE);
+		int showDivider = this.getAttrs().getInt(R.styleable.form,R.styleable.form_form_row_show_divider,Integer.MIN_VALUE);
+
+		if(divider != null) {
+			containerView.setDividerDrawable(divider);
+		}
+		if(dividerPadding != Integer.MIN_VALUE) {
+			containerView.setDividerPadding(dividerPadding);
+		}
+		if(showDivider != Integer.MIN_VALUE) {
+			containerView.setShowDividers(showDivider);
+		}
 	}
 
-	private List<View> rows = new ArrayList<View>();
 	@SuppressLint("NewApi")
 	@Override
 	protected void addViewItem(View item,int index,ViewGroup.LayoutParams params) {
-
-//		if(rows.size() > 0){
-//			View border = new View(this.getContext());
-//			border.setLayoutParams(new LinearLayout.LayoutParams(
-//		            ViewGroup.LayoutParams.MATCH_PARENT,
-//		            (int)(2 * this.getContext().getResources().getDisplayMetrics().density+0.5 ),
-//		        1.0F));
-//			border.setRight(10);
-//			border.setLeft(10);
-////			border.setBackgroundColor(0xffdadada);
-//			border.setBackground(this.getResources().getDrawable(R.drawable.lin_core_form_section_separate));
-//
-//			containerView.addView(border,containerView.getChildCount()-2);
-//			minimumHeight += 2;
-//		}
-		containerView.addView(item,containerView.getChildCount()-1,params);
-////		this.setMinimumHeight((int)(600 * scale+0.5));
-////		minimumHeight += item.getSuggestedMinimumHeight();
-		rows.add(item);
-//
-//		minimumHeight += getViewMininumHeight(item);
-//		this.setMinimumHeight(minimumHeight);
+		if(item instanceof SectionHeader){
+			headerView.addView(item);
+		}else if(item instanceof SectionFooter){
+			footerView.addView(item);
+		}else {
+			containerView.addView(item, containerView.getChildCount() - 1, params);
+		}
 	}
-	
-	
-//	private int getViewMininumHeight(View view){
-//		try {
-//
-//			Field f = View.class.getDeclaredField("mMinHeight");
-//			f.setAccessible(true);
-//			Object r = f.get(view);
-//			return (Integer)r;
-//		} catch (Throwable e) {
-//			e.printStackTrace();
-//		}
-//		return 0;
-//	}
+
+
+	public void setHeaderText(CharSequence text){
+		headerTextView.setText(text);
+	}
+	public CharSequence getHeaderText(){
+		return headerTextView.getText();
+	}
+
+	public void setFooterText(CharSequence text){
+		footerTextView.setText(text);
+	}
+	public CharSequence getFooterText(){
+		return footerTextView.getText();
+	}
+	@Override
+	protected void genAttrs() {
+		super.genAttrs();
+		this.addAttr(R.styleable.form,R.styleable.form_form_section_header, AttrType.String);
+		this.addAttr(R.styleable.form,R.styleable.form_form_section_footer,AttrType.String);
+		this.addAttr(R.styleable.form,R.styleable.form_form_row_divider,AttrType.Drawable);
+		this.addAttr(R.styleable.form,R.styleable.form_form_row_divider,AttrType.Drawable);
+		this.addAttr(R.styleable.form,R.styleable.form_form_row_divider_padding,AttrType.Int);
+		this.addAttr(R.styleable.form,R.styleable.form_form_row_show_divider,AttrType.Int);
+
+	}
 }

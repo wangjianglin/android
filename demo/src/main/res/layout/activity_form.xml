@@ -31,9 +31,17 @@
             android:orientation="vertical">
 
             <lin.core.form.Section
+                app:form_section_header="ok"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
+                <lin.core.form.SectionFooter
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="============"/>
+                </lin.core.form.SectionFooter>
                 <lin.core.form.Segue
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/form_row_height"
@@ -56,18 +64,30 @@
                     app:form_row_text="text"
                     app:form_row_title="title3"
                     />
-                <lin.core.form.Row
+                <lin.core.form.Switch
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/form_row_height"
-                    app:form_row_text="text"
+                    app:form_row_switch="true"
                     app:form_row_title="title4"
                     />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="自定义1"/>
                 <lin.core.form.Row
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/form_row_height"
                     app:form_row_text="text"
                     app:form_row_title="title5"
-                    />
+                    >
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_centerInParent="true"
+                        android:layout_alignParentRight="true"
+                        android:text="自定义2"/>
+                    </lin.core.form.Row>
                 <lin.core.form.Row
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/form_row_height"

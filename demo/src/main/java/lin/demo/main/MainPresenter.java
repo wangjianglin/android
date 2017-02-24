@@ -11,6 +11,7 @@ import lin.demo.binding.BindViewActivity;
 import lin.demo.binding.BindViewHolderActivity;
 import lin.demo.controls.ReViewActivity;
 import lin.demo.controls.SwipeActivity;
+import lin.demo.controls.SwitchButtonActivity;
 import lin.demo.controls.ViewPagerActivity;
 import lin.demo.core.ViewHolderActivity;
 import lin.demo.core.ViewInheritActivity;
@@ -56,6 +57,7 @@ public class MainPresenter extends AbsBasePresenter<MainContract.View> implement
                 new Object[]{"controls","swipe",new Intent(mView.getContext(),SwipeActivity.class)},
                 new Object[]{"controls","review",new Intent(mView.getContext(),ReViewActivity.class)},
                 new Object[]{"controls","view pager",new Intent(mView.getContext(),ViewPagerActivity.class)},
+                new Object[]{"controls","switch button",new Intent(mView.getContext(),SwitchButtonActivity.class)},
 
                 //SwipeRefreshLayout 官方
 

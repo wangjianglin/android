@@ -14,26 +14,15 @@ import lin.core.annotation.OptionsMenu;
  */
 
 //处理注解
-public class ResFragment extends android.support.v4.app.Fragment {
+public class ResFragment extends AbsFragment {
 
 
     private int mResId = 0;
-    private boolean mHasOptionsMenu = false;
+
     public ResFragment(){
-        this.setHasOptionsMenu(defaultOptionsMenu());
-    }
-
-
-    protected boolean defaultOptionsMenu(){
-        OptionsMenu optionsMenu = this.getClass().getAnnotation(OptionsMenu.class);
-        if(optionsMenu != null){
-            return optionsMenu.value();
-        }
-        return this.hasOptionsMenu();
     }
 
     protected ResFragment(int resId){
-        this.setHasOptionsMenu(defaultOptionsMenu());
         this.mResId = resId;
     }
     public LayoutInflater getLayoutInflater(Bundle savedInstanceState) {

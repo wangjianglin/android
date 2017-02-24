@@ -6,6 +6,8 @@ import android.databinding.BindingMethod;
 import android.databinding.BindingMethods;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import lin.core.AttrType;
@@ -50,6 +52,9 @@ public class Row extends ResView {
 	private TextView textView;
 	@ViewById(id="lin_core_form_row_title")
 	private TextView titleView;
+
+	@ViewById(id="lin_core_form_row_layout")
+	private ViewGroup layout;
 	
 	@Override
 	protected void onCreate(){
@@ -59,8 +64,25 @@ public class Row extends ResView {
 		this.setTitle(attrs.getString(R.styleable.form,R.styleable.form_form_row_title));
 
 		this.setAccessory(attrs.getBoolean(R.styleable.form,R.styleable.form_form_row_accessory,true));
+
+		if(this.getBackground() == null){
+			this.setBackgroundColor(0xffffffff);
+		}
 	}
-	
+
+	@Override
+	protected void addViewItem(View item, int index, ViewGroup.LayoutParams params) {
+		titleView.setVisibility(View.GONE);
+		textView.setVisibility(View.GONE);
+		layout.addView(item,index,params);
+	}
+
+	protected void addTextView(View item){
+		titleView.setVisibility(View.VISIBLE);
+		textView.setVisibility(View.GONE);
+		layout.addView(item);
+	}
+
 	private CharSequence title;
 	private CharSequence text;
 	public boolean accessory;
@@ -93,7 +115,7 @@ public class Row extends ResView {
 	public void setAccessory(boolean accessory) {
 		this.accessory = accessory;
 		if(accessoryView != null) {
-			accessoryView.setVisibility(accessory?View.VISIBLE:View.INVISIBLE);
+			accessoryView.setVisibility(accessory?View.VISIBLE:View.GONE);
 		}
 	}
 
@@ -102,5 +124,31 @@ public class Row extends ResView {
 		this.addAttr(R.styleable.form,R.styleable.form_form_row_text, AttrType.String);
 		this.addAttr(R.styleable.form,R.styleable.form_form_row_title,AttrType.String);
 		this.addAttr(R.styleable.form,R.styleable.form_form_row_accessory,AttrType.Boolean);
+	}
+
+	@Override
+	public RelativeLayout.LayoutParams generateLayoutParams(AttributeSet attrs) {
+		return new RelativeLayout.LayoutParams(getContext(), attrs);
+	}
+
+	@Override
+	protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
+		return new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+	}
+
+
+	@Override
+	protected ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams lp) {
+
+		if (lp instanceof RelativeLayout.LayoutParams) {
+			return new LayoutParams((RelativeLayout.LayoutParams) lp);
+		}
+
+		return new LayoutParams(lp);
+	}
+
+	@Override
+	protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
+		return p instanceof RelativeLayout.LayoutParams;
 	}
 }

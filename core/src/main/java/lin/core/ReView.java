@@ -55,6 +55,14 @@ public class ReView extends ResView{
     public void addView(View child, int index, ViewGroup.LayoutParams params) {
         layout.addView(child, index, params);
     }
+
+    public void setVerticalScrollBarEnabled(boolean enabled){
+        ((PtrView)this.getNodeView()).getView().setVerticalScrollBarEnabled(enabled);
+    }
+
+    public void setHorizontalScrollBarEnabled(boolean enabled){
+        ((PtrView)this.getNodeView()).getView().setHorizontalScrollBarEnabled(enabled);
+    }
 }
 //public class ReboundScrollView extends PullToRefreshScrollView{
 //  public ReboundScrollView(Context context, AttributeSet attrs)

@@ -140,7 +140,7 @@ public class Attrs {
 		return getColor(ids[id],defValue);
 	}
 	public int getColor(int id,int defValue){
-		Object obj = values.get(id);
+		Object obj = values.get(id+"");
 		if(obj != null){
 			return (Integer) obj;
 		}

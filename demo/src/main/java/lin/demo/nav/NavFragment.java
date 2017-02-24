@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import lin.core.Nav;
+import lin.core.annotation.Click;
 import lin.core.annotation.NavTitle;
 import lin.core.annotation.ResId;
 import lin.demo.R;
@@ -46,6 +48,10 @@ public class NavFragment  extends lin.core.ResFragment{
 //        return root;
 //    }
 
+    @Click(R.id.nav_frag_button)
+    private void click(){
+        Nav.getNav(this).pop();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

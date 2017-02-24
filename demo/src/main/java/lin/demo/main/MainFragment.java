@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lin.core.ResFragment;
+import lin.core.annotation.MenuId;
 import lin.core.annotation.OptionsMenu;
 import lin.core.annotation.ResId;
 import lin.core.ptr.PtrRecyclerView;
@@ -40,6 +42,7 @@ import lin.demo.databinding.ActivityMainItemBinding;
 //@lin.core.mvm.
 @ResId(R.layout.activity_main_frag)
 @OptionsMenu
+@MenuId(R.menu.tasks_fragment_menu)
 public class MainFragment extends ResFragment implements MainContract.View {
 
     private MainContract.Presenter mPresenter;
@@ -229,32 +232,37 @@ public class MainFragment extends ResFragment implements MainContract.View {
     }
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-//            case R.id.menu_clear:
-////                mPresenter.clearCompletedTasks();
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+////            case R.id.menu_clear:
+//////                mPresenter.clearCompletedTasks();
+////                break;
+//            case R.id.menu_filter:
+//                showFilteringPopUpMenu();
+////                AlertDialog mDialog = new AlertDialog.Builder(this.getContext())
+////                        .setCancelable(false)
+////                        .create();
+////                mDialog.show();
 //                break;
-            case R.id.menu_filter:
-                showFilteringPopUpMenu();
-                break;
-            case R.id.menu_refresh:
-////                mPresenter.loadTasks(true);
-                mPresenter.loadData();
-                break;
-        }
-        return true;
-    }
+//            case R.id.menu_refresh:
+//////                mPresenter.loadTasks(true);
+//                mPresenter.loadData();
+//                break;
+//        }
+//        return true;
+//    }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.tasks_fragment_menu, menu);
-    }
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        inflater.inflate(R.menu.tasks_fragment_menu, menu);
+//    }
 
 //    public void setViewModel(TasksViewModel viewModel) {
 //        mTasksViewModel = viewModel;
 //    }
 
+    @MenuId(R.id.menu_filter)
     private void showFilteringPopUpMenu() {
         PopupMenu popup = new PopupMenu(getContext(), getActivity().findViewById(R.id.menu_filter));
         popup.getMenuInflater().inflate(R.menu.filter_tasks, popup.getMenu());
