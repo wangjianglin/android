@@ -101,13 +101,13 @@ public class HostObject {
         this.queryTime = queryTime;
     }
 
-    public long getExpiredRequestTime() {
-        return expiredRequestTime;
-    }
-
-    public void setExpiredRequestTime(long expiredRequestTime) {
-        this.expiredRequestTime = expiredRequestTime;
-    }
+//    public long getExpiredRequestTime() {
+//        return expiredRequestTime;
+//    }
+//
+//    public void setExpiredRequestTime(long expiredRequestTime) {
+//        this.expiredRequestTime = expiredRequestTime;
+//    }
 
     public HttpDNS.SessionMode getSessionMode() {
         return sessionMode;
