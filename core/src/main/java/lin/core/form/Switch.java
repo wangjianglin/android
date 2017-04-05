@@ -22,7 +22,7 @@ import lin.core.annotation.ViewById;
  * Created by lin on 18/01/2017.
  */
 @BindingMethods({
-        @BindingMethod(type = Text.class, attribute = "form_row_switch", method = "setSwitch")
+        @BindingMethod(type = Switch.class, attribute = "form_row_switch", method = "setSwitch")
 })
 
 //@InverseBindingMethods({
@@ -56,39 +56,14 @@ public class Switch extends Row {
     @Override
     protected void onInited() {
         super.onInited();
-        this.setSwitch(this.getAttrs().getBoolean(R.styleable.form,R.styleable.form_form_row_switch,false));
+        this.setSwitch(this.getAttrs().getBoolean(R.styleable.form,R.styleable.form_form_row_switch,mSwitch));
     }
 
     private InverseBindingListener mRowSwitchAttrChanged;
 
     @Click(id="lin_core_form_row_switch")
     private void click(SwitchButton button){
-        if(button.isChecked() == this.mSwitch){
-            return;
-        }
-        this.mSwitch = button.isChecked();
-        if(mRowSwitchAttrChanged != null){
-            mRowSwitchAttrChanged.onChange();
-        }
-//        Nav.push(this.getActivity(),mCls,null);
-//        Nav.push(this.getActivity(), TextEdit.class, new Nav.Result() {
-//            @Override
-//            public void result(Object... result) {
-//                if(result == null || result.length == 0
-//                        || !(result[0] instanceof CharSequence)){
-//                    return;
-//                }
-//                CharSequence s = (CharSequence) result[0];
-//                if(s == null || "".equals(s)){
-//                    return;
-//                }
-//                setText(s);
-//                if(mRowTextAttrChanged != null){
-//                    mRowTextAttrChanged.onChange();
-//                }
-//            }
-//        },this.hint,this.getText()).setTitle(navTitle);
-
+        setSwitch(button.isChecked());
     }
 
     public boolean isSwitch() {
@@ -96,9 +71,15 @@ public class Switch extends Row {
     }
 
     public void setSwitch(boolean v) {
+        if(this.mSwitch == v){
+            return;
+        }
         this.mSwitch = v;
         if(button != null) {
             button.setChecked(v);
+        }
+        if(mRowSwitchAttrChanged != null){
+            mRowSwitchAttrChanged.onChange();
         }
     }
 
@@ -114,8 +95,8 @@ public class Switch extends Row {
 //    }
 
     @InverseBindingAdapter(attribute = "form_row_switch", event = "rowSwithAttrChanged")
-    public static CharSequence getText(Text text){
-        return text.getText();
+    public static boolean getText(Switch row){
+        return row.isSwitch();
     }
 
     @BindingAdapter(value = {"rowSwithAttrChanged"}, requireAll = false)

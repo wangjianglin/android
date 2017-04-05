@@ -1,5 +1,6 @@
 package lin.comm.httpdns;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,82 +15,38 @@ import java.util.concurrent.Future;
 public abstract class AbstractHttpDNS implements HttpDNS {
 
     private static final int MAX_THREAD_NUM = 5;
-//    private static final int RESOLVE_TIMEOUT_IN_SEC = 10;
-    private static final int MAX_HOLD_HOST_NUM = 100;
-//    private static final int EMPTY_RESULT_HOST_TTL = 30;
+
+    private HttpDNS.SessionMode sessionMode = SessionMode.Sticky;
 
     private boolean isExpiredIpAvailable = true;
 
     private class QueryHostTask implements Callable<String> {
         private String hostName;
+        private int timeout;
 //        private boolean isRequestRetried = false;
 
-        public QueryHostTask(String hostToQuery) {
+        //timeout以毫秒为单位
+        public QueryHostTask(String hostToQuery,int timeout) {
             this.hostName = hostToQuery;
         }
 
         @Override
         public String call() {
-            HostObject hostObject = AbstractHttpDNS.this.fetch(this.hostName);
-            if(hostObject != null && hostObject.getIp() != null && !"".equals(hostObject.getIp())){
-                if(hostObject.getTtl() <= 0){
-                    hostObject.setTtl(120);
-                }
-                hostObject.setQueryTime(System.currentTimeMillis() / 1000);
-                hostManager.put(hostName, hostObject);
-                return hostObject.getIp();
-//                if (hostManager.size() < MAX_HOLD_HOST_NUM) {
-//                    hostManager.put(hostName, hostObject);
-//                }
+            HostObject hostObject = fetch(this.hostName,this.timeout);
+            if(hostObject == null){
+                hostObject = new HostObject();
+                hostObject.setHostName(this.hostName);
             }
-            return null;
-//            String resolveUrl = "http://" + SERVER_IP + "/" + accountId + "/d?host=" + hostName;
-////            HttpDNSLog.logD("[QueryHostTask.call] - buildUrl: " + resolveUrl);
-//            try {
-//                HttpURLConnection conn = (HttpURLConnection) new URL(resolveUrl).openConnection();
-//                conn.setConnectTimeout(RESOLVE_TIMEOUT_IN_SEC * 1000);
-//                conn.setReadTimeout(RESOLVE_TIMEOUT_IN_SEC * 1000);
-//                if (conn.getResponseCode() != 200) {
-////                    HttpDNSLog.logW("[QueryHostTask.call] - response code: " + conn.getResponseCode());
-//                } else {
-//                    InputStream in = conn.getInputStream();
-//                    BufferedReader streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-//                    StringBuilder sb = new StringBuilder();
-//                    String line;
-//                    while ((line = streamReader.readLine()) != null) {
-//                        sb.append(line);
-//                    }
-//                    JSONObject json = new JSONObject(sb.toString());
-//                    String host = json.getString("host");
-//                    long ttl = json.getLong("ttl");
-//                    JSONArray ips = json.getJSONArray("ips");
-//                    if (host != null) {
-//                        if (ttl == 0) {
-//                            // 如果有结果返回，但是ip列表为空，ttl也为空，那默认没有ip就是解析结果，并设置ttl为一个较长的时间
-//                            // 避免一直请求同一个ip冲击sever
-//                            ttl = EMPTY_RESULT_HOST_TTL;
-//                        }
-//                        HostObject hostObject = new HostObject();
-//                        String ip = (ips == null) ? null : ips.getString(0);
-////                        HttpDNSLog.logD("[QueryHostTask.call] - resolve host:" + host + " ip:" + ip + " ttl:" + ttl);
-//                        hostObject.setHostName(host);
-//                        hostObject.setTtl(ttl);
-//                        hostObject.setIp(ip);
-//                        hostObject.setQueryTime(System.currentTimeMillis() / 1000);
-//                        if (hostManager.size() < MAX_HOLD_HOST_NUM) {
-//                            hostManager.put(hostName, hostObject);
-//                        }
-//                        return ip;
-//                    }
-//                }
-//            } catch (Exception e) {
-////                if (HttpDNSLog.isLogEnabled()) {
-////                    e.printStackTrace();
-////                }
-//            }
-//            if (!isRequestRetried) {
-//                isRequestRetried = true;
-//                return call();
+            if(hostObject.getTtl() <= 0){
+                hostObject.setTtl(120);
+            }
+            hostObject.setSessionMode(sessionMode);
+            hostObject.status(hostManager.get(hostName));
+            hostObject.setQueryTime(System.currentTimeMillis() / 1000);
+            hostManager.put(hostName, hostObject);
+            return hostObject.getIp();
+//            if(hostObject != null && hostObject.getIp() != null && !"".equals(hostObject.getIp())){
+//
 //            }
 //            return null;
         }
@@ -115,18 +72,17 @@ public abstract class AbstractHttpDNS implements HttpDNS {
 
     public void setPreResolveHosts(List<String> hosts){
         for(String hostName : hosts){
-            HostObject host = hostManager.get(hostName);
-            if (host == null || (host.isExpired() && !isExpiredIpAvailable())) {
-                pool.submit(new QueryHostTask(hostName));
-            }
+            getIpByHost(hostName,20000);
         }
     }
 
-    protected abstract HostObject fetch(String hostName);
+    protected abstract HostObject fetch(String hostName,int timeout);
+
     public String getIpByHost(String hostName) {
-//        if(Utils.detectIfProxyExist(context)) {
-//            return null;
-//        }
+        return getIpByHost(hostName,3000);
+    }
+
+    private String getIpByHost(String hostName,int timeout) {
         if (degradationFilter != null) {
             if (degradationFilter.shouldDegradeHttpDNS(hostName)) {
                 return null;
@@ -134,28 +90,31 @@ public abstract class AbstractHttpDNS implements HttpDNS {
         }
         HostObject host = hostManager.get(hostName);
         if (host == null || (host.isExpired() && !isExpiredIpAvailable())) {
-//            HttpDNSLog.logD("[getIpByHost] - fetch result from network, host: " + hostName);
-            Future<String> future = pool.submit(new QueryHostTask(hostName));
+            Future<String> future = pool.submit(new QueryHostTask(hostName,timeout));
             try {
                 return future.get();
             } catch (Exception e) {
-//                if (HttpDNSLog.isLogEnabled()) {
-//                    e.printStackTrace();
-//                }
             }
             return null;
         } else if (host.isExpired()) {
             // 同步返回，异步更新
-//            HttpDNSLog.logD("[getIpByHost] - fetch result from cache, host: " + hostName);
-            pool.submit(new QueryHostTask(hostName));
+            host.setQueryTime(System.currentTimeMillis()/1000);
+            pool.submit(new QueryHostTask(hostName,20000));
             return host.getIp();
         }
-//        HttpDNSLog.logD("[getIpByHost] - fetch result from cache, host: " + hostName);
         return host.getIp();
     }
 
     public void setDegradationFilter(DegradationFilter filter) {
         degradationFilter = filter;
+    }
+
+    public SessionMode getSessionMode() {
+        return sessionMode;
+    }
+
+    public void setSessionMode(SessionMode sessionMode) {
+        this.sessionMode = sessionMode;
     }
 }
 

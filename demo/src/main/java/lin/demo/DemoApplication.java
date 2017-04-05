@@ -12,6 +12,7 @@ import lin.comm.http.HttpCommunicate;
 import lin.comm.httpdns.AliHttpDNS;
 import lin.comm.httpdns.HttpDNS;
 import lin.core.Images;
+import lin.core.LocalStorage;
 
 public class DemoApplication extends Application {
 
@@ -19,6 +20,7 @@ public class DemoApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        LocalStorage.init(this);
         HttpCommunicate.init(this);
 
 //        HttpCommunicate.setType(HttpCommunicateType.HttpClient);

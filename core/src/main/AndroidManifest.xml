@@ -2,8 +2,26 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="lin.core" >
 
-    <!--<application-->
-        <!--android:allowBackup="true"-->
-        <!--android:label="core" ></application>-->
+    <application
+        android:allowBackup="true"
+        android:label="core" >
+
+        <activity
+            android:name="lin.core.NavActivity"/>
+
+        <activity
+        android:name="lin.core.gallery.PhotoSelectActivity"
+        android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
+        android:screenOrientation="portrait" />
+        <activity
+        android:name="lin.core.gallery.PhotoEditActivity"
+        android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
+        android:screenOrientation="portrait" />
+        <activity
+        android:name="lin.core.gallery.PhotoPreviewActivity"
+        android:screenOrientation="portrait"
+        android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
+        />
+    </application>
 
 </manifest>

@@ -28,7 +28,7 @@ public class Utils {
 	 * @param context
 	 * @return
 	 */
-	public static boolean isRunningForeground(Context context)  
+	public static boolean isAppRunningForeground(Context context)
 	{  
 	    ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);  
 	    ComponentName cn = am.getRunningTasks(1).get(0).topActivity;  
@@ -39,6 +39,10 @@ public class Utils {
 	    }  
 	   
 	    return false ;  
+	}
+
+	public static boolean isAppRunningBackground(Context context){
+		return !isAppRunningForeground(context);
 	}
 	
 //	public static boolean isRunningForeground(Context context)  

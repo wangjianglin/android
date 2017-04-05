@@ -1,11 +1,11 @@
 package lin.demo;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import lin.core.ImagePicker;
+import lin.core.ViewActivity;
 
-public class ImagesActivity extends AppCompatActivity {
+public class ImagesActivity extends ViewActivity {
 
     private static final String[] imagePaths = new String[]{
             "http://i.feicuibaba.com/upload/store/61/29483A7B-2AAA-41D5-8730-7C734668A413.jpg",
@@ -17,7 +17,7 @@ public class ImagesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_images);
+        setContentView(R.layout.activity_images_view);
 
         ImagePicker images = (ImagePicker) this.findViewById(R.id.imagePickerId);
 

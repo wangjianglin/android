@@ -4,8 +4,9 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import lin.core.Segmented;
+import lin.core.ViewActivity;
 
-public class ControlsActivity extends Activity {
+public class ControlsActivity extends ViewActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

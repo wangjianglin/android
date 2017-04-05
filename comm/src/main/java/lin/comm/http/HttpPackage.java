@@ -205,7 +205,7 @@ public abstract class HttpPackage {
 					contentBody.setFileName(fileName);
     				multipart = true;
     			}else{
-    				params.put(paramName, paramValue.toString());
+    				params.put(paramName, paramValue);
     				continue;
     			}
 				params.put(paramName, contentBody);

@@ -171,7 +171,7 @@ public class UpdateService extends Service {
 				context = (Context) msg.obj;
 				break;
 			case UpdateService.DOWNLOAD_COMPLETE:
-				if(Utils.isRunningForeground(context)){
+				if(Utils.isAppRunningForeground(context)){
 					Object[] args = (Object[]) msg.obj;
 					Uri uri = (Uri) args[0];
 					int flag = (Integer) args[1];

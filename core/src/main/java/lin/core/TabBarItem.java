@@ -103,11 +103,11 @@ public class TabBarItem extends ResView {
 
 	private void setIconColor(){
 		if(activateIcon == null && icon != null) {
-			tintIcon = icon.getConstantState().newDrawable();
+			tintIcon = icon.getConstantState().newDrawable().mutate();
 			tintIcon = DrawableCompat.wrap(tintIcon);
 			DrawableCompat.setTint(tintIcon, textColor);
 
-			tintActivateIcon = icon.getConstantState().newDrawable();
+			tintActivateIcon = icon.getConstantState().newDrawable().mutate();
 			tintActivateIcon = DrawableCompat.wrap(tintActivateIcon);
 			DrawableCompat.setTint(tintActivateIcon,activateTextColor);
 		}else{
@@ -195,18 +195,18 @@ public class TabBarItem extends ResView {
 				image.setImageDrawable(tintActivateIcon);
 			}
 			if(this.overlayView != null){
-				overlayView.setBackground(null);
+				overlayView.setBackgroundDrawable(null);
 			}
 			text.setTextColor(activateTextColor);
 		}else{
 			//if(this.background != null){
-				super.setBackground(background);
+				super.setBackgroundDrawable(background);
 			//}
 			if(image != null){
 				image.setImageDrawable(tintIcon);
 			}
 			if(this.overlayView != null){
-				overlayView.setBackground(overlayDrawable);
+				overlayView.setBackgroundDrawable(overlayDrawable);
 			}
 			text.setTextColor(textColor);
 		}

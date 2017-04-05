@@ -146,6 +146,33 @@ public class Nav {
 		return nav;
 	}
 
+
+	public static void pop(Activity activity,Object ... args){
+		popImpl(Nav.getNav(activity.getApplicationContext()),args);
+	}
+
+	public static void pop(Context context,Object ... args){
+		popImpl(Nav.getNav(context),args);
+	}
+
+	public static void pop(android.view.View view, Object ... args){
+		popImpl(Nav.getNav(view),args);
+	}
+
+	public static boolean pop(android.support.v4.app.Fragment fragment, Object ... args){
+		return popImpl(Nav.getNav(fragment),args);
+	}
+	public static boolean pop(String argsId, Object ... args){
+		return popImpl(Nav.getNav(argsId),args);
+	}
+
+	private static boolean popImpl(Nav nav,Object ... args){
+		if(nav != null){
+			nav.pop(args);
+			return true;
+		}
+		return false;
+	}
 	public CharSequence getArgsId() {
 		return argsId;
 	}

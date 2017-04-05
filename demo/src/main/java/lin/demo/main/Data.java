@@ -11,7 +11,7 @@ import android.databinding.Bindable;
 public class Data extends BaseObservable {
 
     private String name;
-    private Intent intent;
+    private Object intent;
     private String group;
 
     public Data(){
@@ -35,11 +35,11 @@ public class Data extends BaseObservable {
         this.name = name;
     }
 
-    public Intent getIntent() {
+    public Object getIntent() {
         return intent;
     }
 
-    public void setIntent(Intent intent) {
+    public void setIntent(Object intent) {
         this.intent = intent;
     }
 

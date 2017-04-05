@@ -96,10 +96,10 @@ public class NavActivity extends ViewActivity {
 			if (view.getLayoutParams() instanceof ContentView.LayoutParams) {
 				ContentView.LayoutParams lp = (ContentView.LayoutParams) view.getLayoutParams();
 				if (nav.getTitle() == null) {
-					nav.setTitle(lp.getAttrs().getString(R.styleable.nav, R.styleable.nav_nav_title, nav.getTitle()));
+					nav.setTitle(lp.getAttrs().getString(R.styleable.nav, R.styleable.nav_nav_title, nav.getTitle()+""));
 				}
 				if (nav.getTag() == null) {
-					nav.setTag(lp.getAttrs().getString(R.styleable.nav, R.styleable.nav_nav_tag, nav.getTag()));
+					nav.setTag(lp.getAttrs().getString(R.styleable.nav, R.styleable.nav_nav_tag, nav.getTag()+""));
 				}
 			}
 		}

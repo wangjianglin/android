@@ -5,7 +5,10 @@ import android.content.Intent;
 import java.util.ArrayList;
 import java.util.List;
 
+import lin.core.Nav;
 import lin.core.mvvm.AbsBasePresenter;
+import lin.demo.ControlsActivity;
+import lin.demo.ImagesActivity;
 import lin.demo.WebViewActivity;
 import lin.demo.binding.BindViewActivity;
 import lin.demo.binding.BindViewHolderActivity;
@@ -16,6 +19,7 @@ import lin.demo.controls.ViewPagerActivity;
 import lin.demo.core.ViewHolderActivity;
 import lin.demo.core.ViewInheritActivity;
 import lin.demo.form.FormActivity;
+import lin.demo.gallery.GalleryActivity;
 import lin.demo.nav.NavActivity;
 import lin.demo.ptr.PtrDefaultActivity;
 import lin.demo.ptr.PtrListActivity;
@@ -58,6 +62,10 @@ public class MainPresenter extends AbsBasePresenter<MainContract.View> implement
                 new Object[]{"controls","review",new Intent(mView.getContext(),ReViewActivity.class)},
                 new Object[]{"controls","view pager",new Intent(mView.getContext(),ViewPagerActivity.class)},
                 new Object[]{"controls","switch button",new Intent(mView.getContext(),SwitchButtonActivity.class)},
+                new Object[]{"controls","images",ImagesActivity.class},
+                new Object[]{"controls","controls",ControlsActivity.class},
+                new Object[]{"controls","gallery", GalleryActivity.class},
+                new Object[]{"controls","images", lin.demo.controls.ImagesActivity.class},
 
                 //SwipeRefreshLayout 官方
 
@@ -71,8 +79,8 @@ public class MainPresenter extends AbsBasePresenter<MainContract.View> implement
                 new Object[]{"pull to refresh","ptr scroll",new Intent(mView.getContext(),PtrScrollActivity.class)},
 
 
-                new Object[]{"form","classic",new Intent(mView.getContext(),FormActivity.class)},
-                new Object[]{"event bus","classic",new Intent(mView.getContext(),FormActivity.class)},
+                new Object[]{"form","classic",FormActivity.class},
+                new Object[]{"event bus","classic",FormActivity.class},
                 new Object[]{"web view","crosss walk",new Intent(mView.getContext(),WebViewActivity.class)}
         };
 
@@ -81,7 +89,7 @@ public class MainPresenter extends AbsBasePresenter<MainContract.View> implement
             data = new Data();
             data.setGroup((String) item[0]);
             data.setName((String) item[1]);
-            data.setIntent((Intent) item[2]);
+            data.setIntent(item[2]);
             mDatas.add(data);
         }
 

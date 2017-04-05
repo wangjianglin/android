@@ -1,19 +1,16 @@
 package lin.demo.main;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +19,13 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import lin.core.Nav;
 import lin.core.ResFragment;
 import lin.core.annotation.MenuId;
 import lin.core.annotation.OptionsMenu;
 import lin.core.annotation.ResId;
 import lin.core.ptr.PtrRecyclerView;
+import lin.core.recyclerview.RecyclerItemClickListener;
 import lin.core.recyclerview.headers.StickyHeadersAdapter;
 import lin.core.recyclerview.headers.StickyHeadersDecoration;
 import lin.core.recyclerview.headers.StickyHeadersTouchListener;
@@ -86,7 +85,24 @@ public class MainFragment extends ResFragment implements MainContract.View {
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this.getContext(), new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                MainFragment.this.startActivity(mAdapter.mDatas.get(position).getIntent());
+
+                Object obj = mAdapter.mDatas.get(position).getIntent();
+                if(obj instanceof Intent){
+                    MainFragment.this.startActivity((Intent) obj);
+                }else if(obj instanceof Class<?>){
+                    Class<?> cls = (Class<?>) obj;
+                    if(Activity.class.isAssignableFrom(cls)) {
+                        MainFragment.this.startActivity(new Intent(MainFragment.this.getContext(), (Class<?>) obj));
+                    }else if(Fragment.class.isAssignableFrom(cls) ||
+                            lin.core.ContentView.class.isAssignableFrom(cls) ||
+                            lin.core.ViewHolder.class.isAssignableFrom(cls)){
+                        Nav.push(MainFragment.this.getActivity(),cls,null);
+                    }
+                }else if(obj instanceof Integer){
+                    Nav.push(MainFragment.this.getActivity(),(Integer) obj,null);
+                }else if(obj instanceof Long){
+                    Nav.push(MainFragment.this.getActivity(),((Long) obj).intValue(),null);
+                }
 
             }
         }));
@@ -99,51 +115,6 @@ public class MainFragment extends ResFragment implements MainContract.View {
 
     }
 
-    //    @Nullable
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        View root = inflater.inflate(R.layout.activity_main_frag, container, false);
-//
-//        PtrRecyclerView ptrView = (PtrRecyclerView) root.findViewById(R.id.activity_list_frag_recyclerview);
-//        RecyclerView recyclerView = ptrView.getView();
-//                //recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-//        recyclerView.addItemDecoration(new DividerDecoration(this.getContext()));
-//
-//        mAdapter = new SimpleRecyclerAdapter(this.getContext());
-//        recyclerView.setAdapter(mAdapter);
-//
-//        final StickyHeadersDecoration headersDecor = new StickyHeadersDecoration(mAdapter);
-//        recyclerView.addItemDecoration(headersDecor);
-//
-//        // Add touch listeners
-//        StickyHeadersTouchListener touchListener =
-//                new StickyHeadersTouchListener(recyclerView, headersDecor);
-//        touchListener.setOnHeaderClickListener(
-//                new StickyHeadersTouchListener.OnHeaderClickListener() {
-//                    @Override
-//                    public void onHeaderClick(View header, int position, long headerId) {
-//
-//                    }
-//                });
-//        recyclerView.addOnItemTouchListener(touchListener);
-//        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this.getContext(), new RecyclerItemClickListener.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(View view, int position) {
-//                MainFragment.this.startActivity(mAdapter.mDatas.get(position).getIntent());
-//
-//            }
-//        }));
-//        mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-//            @Override
-//            public void onChanged() {
-//                headersDecor.invalidateHeaders();
-//            }
-//        });
-//
-//        setHasOptionsMenu(true);
-//
-//        return root;
-//    }
 
     private class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAdapter.SimpleViewHolder>
             implements StickyHeadersAdapter<SimpleRecyclerAdapter.SimpleHeaderViewHolder> {

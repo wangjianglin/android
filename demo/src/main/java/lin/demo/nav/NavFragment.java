@@ -1,10 +1,12 @@
 package lin.demo.nav;
 
+import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,7 +38,27 @@ public class NavFragment  extends lin.core.ResFragment{
         return new NavFragment();
     }
 
-//    @Nullable
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onAttachFragment(Fragment childFragment) {
+        super.onAttachFragment(childFragment);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+    }
+
+    @Override
+    protected void onCreateView() {
+        super.onCreateView();
+    }
+
+    //    @Nullable
 //    @Override
 //    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 //        View root = inflater.inflate(R.layout.activity_nav_frag, container, false);

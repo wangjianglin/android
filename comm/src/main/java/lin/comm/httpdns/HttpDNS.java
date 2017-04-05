@@ -20,4 +20,8 @@ public interface HttpDNS {
     interface DegradationFilter {
         boolean shouldDegradeHttpDNS(String hostName);
     }
+
+    enum SessionMode{
+        Sticky,Random
+    }
 }

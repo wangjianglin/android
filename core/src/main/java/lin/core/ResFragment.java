@@ -32,14 +32,13 @@ public class ResFragment extends AbsFragment {
     private View mView;
     @Nullable
     @Override
-    final public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    final public View onCreateViewInternal(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if(mResId != 0){
             mView = inflater.inflate(mResId,container,false);
         }else {
             mView = inflater.inflate(Views.layoutId(this), container, false);
         }
         Views.process(this);
-        this.onCreateView();
         lin.core.mvvm.Utils.processViewModel(this);
         return mView;
     }
@@ -50,5 +49,4 @@ public class ResFragment extends AbsFragment {
         return mView;
     }
 
-    protected void onCreateView(){}
 }

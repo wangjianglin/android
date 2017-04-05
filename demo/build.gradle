@@ -70,6 +70,10 @@ dependencies {
     //    compile project(':xwalk_lib')
         //compile project(':web_xwalk')
         compile project(':web')
+
+
+    compile 'com.baoyz.actionsheet:library:1.1.4'
+
     //    compile project(':web')
 
     //    compile "com.android.databinding:dataBinder:1.0-rc1"

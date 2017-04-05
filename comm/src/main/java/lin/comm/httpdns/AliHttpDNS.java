@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lin on 4/25/16.
@@ -16,10 +18,6 @@ import java.net.URL;
 public class AliHttpDNS extends AbstractHttpDNS{
 
     private static String SERVER_IP = "203.107.1.1";
-//    private static final int MAX_THREAD_NUM = 5;
-    private static final int RESOLVE_TIMEOUT_IN_SEC = 10;
-//    private static final int MAX_HOLD_HOST_NUM = 100;
-    private static final int EMPTY_RESULT_HOST_TTL = 30;
 
     public static void setServerIp(String ip){
         SERVER_IP = ip;
@@ -30,13 +28,12 @@ public class AliHttpDNS extends AbstractHttpDNS{
     }
 
     @Override
-    protected HostObject fetch(String hostName) {
+    protected HostObject fetch(String hostName,int timeout) {
                 String resolveUrl = "http://" + SERVER_IP + "/" + accountId + "/d?host=" + hostName;
-//            HttpDNSLog.logD("[QueryHostTask.call] - buildUrl: " + resolveUrl);
         try {
             HttpURLConnection conn = (HttpURLConnection) new URL(resolveUrl).openConnection();
-            conn.setConnectTimeout(RESOLVE_TIMEOUT_IN_SEC * 1000);
-            conn.setReadTimeout(RESOLVE_TIMEOUT_IN_SEC * 1000);
+            conn.setConnectTimeout(timeout);
+            conn.setReadTimeout(timeout);
             if (conn.getResponseCode() != 200) {
 //                    HttpDNSLog.logW("[QueryHostTask.call] - response code: " + conn.getResponseCode());
             } else {
@@ -52,21 +49,24 @@ public class AliHttpDNS extends AbstractHttpDNS{
                 long ttl = json.getLong("ttl");
                 JSONArray ips = json.getJSONArray("ips");
                 if (host != null) {
-                    if (ttl == 0) {
-                        // 如果有结果返回，但是ip列表为空，ttl也为空，那默认没有ip就是解析结果，并设置ttl为一个较长的时间
-                        // 避免一直请求同一个ip冲击sever
-                        ttl = EMPTY_RESULT_HOST_TTL;
-                    }
+
                     HostObject hostObject = new HostObject();
-                    String ip = (ips == null) ? null : ips.getString(0);
-//                        HttpDNSLog.logD("[QueryHostTask.call] - resolve host:" + host + " ip:" + ip + " ttl:" + ttl);
+
+                    List<String> ipsList = new ArrayList<>();
+
+                    String ipItem = null;
+                    for(int n=0;n<ips.length();n++){
+                        ipItem = ips.getString(n);
+                        if(ipItem == null || "".equals(ipItem)){
+                            continue;
+                        }
+                        ipsList.add(ipItem);
+                    }
+
                     hostObject.setHostName(host);
                     hostObject.setTtl(ttl);
-                    hostObject.setIp(ip);
-//                    hostObject.setQueryTime(System.currentTimeMillis() / 1000);
-//                    if (hostManager.size() < MAX_HOLD_HOST_NUM) {
-//                        hostManager.put(hostName, hostObject);
-//                    }
+                    hostObject.setIps(ipsList.toArray(new String[]{}));
+
                     return hostObject;
                 }
             }

@@ -140,11 +140,10 @@ public class PtrProcess {
     }
     private void sendCancelEvent() {
 
-        MotionEvent mLastMoveEvent = mIndicator.getLastMoveEvent();
-        if (mLastMoveEvent == null) {
+        MotionEvent last = mIndicator.getLastMoveEvent();
+        if (last == null) {
             return;
         }
-        MotionEvent last = mLastMoveEvent;
         MotionEvent e = MotionEvent.obtain(last.getDownTime(), last.getEventTime() + ViewConfiguration.getLongPressTimeout(), MotionEvent.ACTION_CANCEL, last.getX(), last.getY(), last.getMetaState());
 
         mOnListener.sendEvent(e);
@@ -291,6 +290,9 @@ public class PtrProcess {
     private void sendDownEvent() {
 
         final MotionEvent last = mIndicator.getLastMoveEvent();
+        if (last == null) {
+            return;
+        }
         MotionEvent e = MotionEvent.obtain(last.getDownTime(), last.getEventTime(), MotionEvent.ACTION_DOWN, last.getX(), last.getY(), last.getMetaState());
 
         mOnListener.sendEvent(e);

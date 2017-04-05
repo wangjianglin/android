@@ -15,5 +15,5 @@ import lin.core.mvvm.BaseView;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface ViewCls {
-    Class<? extends BaseView> value();
+    Class<?> value();
 }

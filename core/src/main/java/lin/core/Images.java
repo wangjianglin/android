@@ -5,6 +5,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import android.content.Context;
@@ -50,9 +51,13 @@ public class Images {
 		DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
 				.cacheInMemory(true)
 				.cacheOnDisk(true)
+				.bitmapConfig(Bitmap.Config.RGB_565)
+				.imageScaleType(ImageScaleType.IN_SAMPLE_INT)// 或 imageScaleType(ImageScaleType.EXACTLY)
 				.build();
+
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
-				.diskCacheSize(10*1024*1024)
+				.diskCacheSize(Integer.MAX_VALUE)
+				.memoryCacheSizePercentage(60)
 				.defaultDisplayImageOptions(defaultOptions)
 				.build();
 		ImageLoader.getInstance().init(config);
@@ -81,7 +86,7 @@ public class Images {
 //		}
 //	}
 
-	private static String _imageUrl = null;
+	private static String _imageUrl = "";
 	public static void setImageUrl(String url){
 		_imageUrl = url;
 		if(_imageUrl != null){
@@ -95,7 +100,7 @@ public class Images {
 		return _imageUrl;
 	}
 
-	private static String _imageBackupUrl = null;
+	private static String _imageBackupUrl = "";
 
 	public static void  setImageBackupUrl(String url){
 		_imageBackupUrl = url;
@@ -130,7 +135,11 @@ public class Images {
 	}
 
 	public static Bitmap getImage(String url){
-		return imageLoader.loadImageSync(url);
+		Bitmap bitmap = imageLoader.loadImageSync(imageUrl(_imageUrl,url));
+		if(bitmap == null){
+			bitmap = imageLoader.loadImageSync(imageUrl(_imageBackupUrl,url));
+		}
+		return bitmap;
 	}
 
 

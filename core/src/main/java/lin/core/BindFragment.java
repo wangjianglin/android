@@ -31,11 +31,10 @@ public class BindFragment <T extends ViewDataBinding> extends AbsFragment{
     private View mView;
     @Nullable
     @Override
-    final public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    final public View onCreateViewInternal(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = getFragmentView(inflater,container);
         Views.process(this);
         lin.core.mvvm.Utils.processViewModel(this);
-        this.onCreateView();
         return mView;
     }
 

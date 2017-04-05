@@ -16,9 +16,13 @@ import java.lang.reflect.Constructor;
  *
  */
 public class ClassFragment extends android.support.v4.app.Fragment {
-	
-	public ClassFragment(){}
+
 	private Class<?> cls;
+
+	public ClassFragment(){
+
+	}
+
 	public ClassFragment(Class<?> cls){
 		this.cls = cls;
 	}

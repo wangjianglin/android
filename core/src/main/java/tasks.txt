@@ -1,7 +1,12 @@
 
+属性与主题相结合
+
+
+MenuId：字段注解，设置 MenuItem 的值
 
 Motion 注解
 
+ptr 支持水平和垂直两个方向
 
 Nav 的 attr 属性不生效
 继承已经继承 ResView 的类，基类的 ViewById,click 是否生效

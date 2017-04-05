@@ -40,6 +40,10 @@ public class PtrView extends ContentView {
     public static enum  Mode{
         Disable, Refresh, LoadMore, Both
     }
+
+    public static enum Dir{
+        Ver,Hor
+    }
     private Mode mMode = Mode.Disable;
     private int mFlag = 0x00;
     private final static byte FLAG_PIN_CONTENT = 0x01 << 3;
@@ -81,7 +85,7 @@ public class PtrView extends ContentView {
         }
 
         final ViewConfiguration conf = ViewConfiguration.get(getContext());
-        mPagingTouchSlop = conf.getScaledTouchSlop() * 2;
+        mPagingTouchSlop = conf.getScaledTouchSlop();
 
         mTopProcess = new PtrTopProcess(this,mIndicator, new PtrProcess.OnListener() {
             @Override
@@ -420,7 +424,9 @@ public class PtrView extends ContentView {
                 PtrIndicator mTopIndicator = mTopProcess.getPtrIndicator();
                 PtrIndicator mBottomIndicator = mBottomProcess.getPtrIndicator();
                 if (mDisableWhenHorizontalMove && !mPreventForHorizontal//表示是否需要检测水平move
-                        && (Math.abs(offsetX) > mPagingTouchSlop && Math.abs(offsetX) > Math.abs(offsetY))//检测是否有水平move
+                        && Math.abs(offsetX) > Math.abs(offsetY)
+//                        && (Math.abs(offsetX) > mPagingTouchSlop
+//                        && Math.abs(offsetX) > Math.abs(offsetY))//检测是否有水平move
                         ) {
                     if (mTopIndicator.isInStartPosition()) {//如果是处理开始位置，则不处理
                         mPreventForHorizontal = true;

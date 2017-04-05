@@ -98,6 +98,13 @@ class PtrHandler {
             }
             int lastPos = absListView.getLastVisiblePosition();
             if (lastPos > 0 && count > 0 && lastPos == count - 1) {
+                View view = absListView.getChildAt(absListView.getChildCount()-1);
+                if(view != null){
+                    int diff = (view.getBottom() - (absListView.getHeight() + absListView.getScrollY()));
+                    if (diff > 0) {
+                        return false;
+                    }
+                }
                 return true;
             }
             return false;

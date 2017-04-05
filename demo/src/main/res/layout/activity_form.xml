@@ -67,7 +67,7 @@
                 <lin.core.form.Switch
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/form_row_height"
-                    app:form_row_switch="true"
+                    app:form_row_switch="@={data.check}"
                     app:form_row_title="title4"
                     />
                 <TextView

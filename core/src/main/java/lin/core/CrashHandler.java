@@ -82,10 +82,12 @@ public class CrashHandler {
 //			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //			mContext.startActivity(intent);
 //			android.os.Process.killProcess(android.os.Process.myPid());
-			Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(mContext.getPackageName());
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			mContext.startActivity(intent);
-			android.os.Process.killProcess(android.os.Process.myPid());
+			if(Utils.isAppRunningBackground(mContext)) {
+				Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(mContext.getPackageName());
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				mContext.startActivity(intent);
+				android.os.Process.killProcess(android.os.Process.myPid());
+			}
 		}
 //		else{
 //			mDefaultHandler.uncaughtException(thread, ex);

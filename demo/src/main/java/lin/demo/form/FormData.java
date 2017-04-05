@@ -1,5 +1,9 @@
 package lin.demo.form;
 
+import android.databinding.Bindable;
+
+import lin.core.LocalStorage;
+
 /**
  * Created by lin on 18/01/2017.
  */
@@ -9,6 +13,8 @@ public class FormData {
     private Class<?> segueCls;
     private CharSequence segueClsStr;
     private CharSequence rowText;
+
+    private boolean check;
 
     public Class<?> getSegueCls() {
         return segueCls;
@@ -34,5 +40,15 @@ public class FormData {
     public void setRowText(CharSequence rowText) {
         this.rowText = rowText;
         System.out.println(rowText);
+    }
+
+    public boolean isCheck() {
+        return LocalStorage.getItem("check",false);
+    }
+
+//    @Bindable
+    public void setCheck(boolean check) {
+        this.check = check;
+        LocalStorage.setItem("check",check);
     }
 }

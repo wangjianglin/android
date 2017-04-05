@@ -39,10 +39,10 @@
         android:id="@+id/imagesId"/>
 
     <Button
+        android:id="@+id/controlsId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="controls"
-        android:id="@+id/controlsId"/>
+        android:text="controls" />
 
 
     <Button

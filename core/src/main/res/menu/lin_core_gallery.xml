@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!--<item-->
+        <!--android:id="@+id/lin_core_gallery_camera"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:title="相机"-->
+        <!--android:icon="@android:drawable/ic_menu_camera"-->
+        <!--app:showAsAction="always"/>-->
+
+    <item
+        android:id="@+id/lin_core_gallery_ok"
+        android:orderInCategory="100"
+        android:title="@string/lin_core_grallery_saving"
+        android:icon="@drawable/lin_core_from_text_edit_check"
+        app:showAsAction="always"/>
+</menu>
