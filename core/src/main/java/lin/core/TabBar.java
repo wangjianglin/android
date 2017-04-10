@@ -2,14 +2,17 @@ package lin.core;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -19,16 +22,14 @@ import lin.core.annotation.ResCls;
 import lin.core.annotation.ViewById;
 
 /**
- * 
  * @author lin
  * @date Mar 10, 2015 3:18:58 PM
- *
  */
 
 @ResCls(R.class)
 public class TabBar extends ResView {
 
-	@ViewById(id="lin_core_tabbar_bar_layout")
+	@ViewById(id = "lin_core_tabbar_bar_layout")
 	private LinearLayout barLayout;
 
 //	@ViewById(id="tabbar_main_bottom")
@@ -45,12 +46,13 @@ public class TabBar extends ResView {
 
 
 	public TabBar(Context context, AttributeSet attrs, int defStyleAttr) {
-		super(context,attrs,defStyleAttr);
+		super(context, attrs, defStyleAttr);
 		this.initWithTheme();
 		this.initDefValue();
 	}
+
 	public TabBar(Context context, AttributeSet attrs) {
-		super(context,attrs);
+		super(context, attrs);
 		this.initWithTheme();
 		this.initDefValue();
 	}
@@ -63,25 +65,25 @@ public class TabBar extends ResView {
 		this.init(r);
 	}
 
-	private void initDefValue(){
+	private void initDefValue() {
 
 		Attrs attrs = this.getAttrs();
 
 
-		background = attrs.getDrawable(R.styleable.tabbar,R.styleable.tabbar_tabbar_background);
+		background = attrs.getDrawable(R.styleable.tabbar, R.styleable.tabbar_tabbar_background);
 
-		if(background != null){
+		if (background != null) {
 			super.setBackground(background);
-		}else{
+		} else {
 			background = barLayout.getBackground();
 		}
 
 
-		activateBackground = attrs.getDrawable(R.styleable.tabbar,R.styleable.tabbar_tabbar_activate_background);
+		activateBackground = attrs.getDrawable(R.styleable.tabbar, R.styleable.tabbar_tabbar_activate_background);
 
-		textColor = attrs.getColor(R.styleable.tabbar,R.styleable.tabbar_tabbar_text_color,textColor);
+		textColor = attrs.getColor(R.styleable.tabbar, R.styleable.tabbar_tabbar_text_color, textColor);
 
-		activateTextColor = attrs.getColor(R.styleable.tabbar,R.styleable.tabbar_tabbar_text_activate_color,activateTextColor);
+		activateTextColor = attrs.getColor(R.styleable.tabbar, R.styleable.tabbar_tabbar_text_activate_color, activateTextColor);
 
 		overlayDrawable = attrs.getDrawable(R.styleable.tabbar_tabbar_overlay);
 	}
@@ -103,32 +105,39 @@ public class TabBar extends ResView {
 
 	}
 
+
 	@Override
-	protected void addViewItem(View item, int index,ViewGroup.LayoutParams params){
-		int tabbarItemId = this.getAttrs().getInt(R.styleable.tabbar,R.styleable.tabbar_tabbar_item_theme);
-		if(tabbarItemId == 0){
+	protected void addViewItem(View item, int index, ViewGroup.LayoutParams params) {
+		int tabbarItemId = this.getAttrs().getInt(R.styleable.tabbar, R.styleable.tabbar_tabbar_item_theme);
+		if (tabbarItemId == 0) {
 			tabbarItemId = R.layout.lin_core_tabbar_item_bar;
 		}
 
-		TabBarItem barItem = new TabBarItem(this,this.getContext());
-		if(params instanceof ContentView.LayoutParams) {
-			barItem.setBarItemResource(tabbarItemId, item,((ContentView.LayoutParams) params).getAttrs());
-		}else{
-			barItem.setBarItemResource(tabbarItemId, item,null);
+		TabBarItem barItem = new TabBarItem(this, this.getContext());
+		barItem.setId(item.getId());
+		item.setId(0);
+		if (params instanceof ContentView.LayoutParams) {
+			barItem.setBarItemResource(tabbarItemId, item, ((ContentView.LayoutParams) params).getAttrs());
+		} else {
+			barItem.setBarItemResource(tabbarItemId, item, null);
 		}
 
-		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams (ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT, 1.0f);
+		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f);
 		barItem.setLayoutParams(layoutParams);
 		this.barLayout.addView(barItem);
 		this.tabs.add(barItem);
-		barItem.setOnClickListener(new MyOnClickListener(tabs.size()-1));
-		if(isSupportAppCompat()) {
+		if (item instanceof ClickItem) {
+
+		} else {
+			barItem.setOnClickListener(new MyOnClickListener(tabs.size() - 1));
+		}
+		if (isSupportAppCompat()) {
 			if (item.getTag() instanceof android.support.v4.app.Fragment) {
 				tabItems.add((android.support.v4.app.Fragment) item.getTag());
 			} else {
 				tabItems.add(new ViewFragment(item));
 			}
-		}else {//暂不对 android.app.Fragment 兼容
+		} else {//暂不对 android.app.Fragment 兼容
 
 		}
 	}
@@ -139,22 +148,24 @@ public class TabBar extends ResView {
 		public MyOnClickListener(int i) {
 			index = i;
 		}
+
 		@Override
 		public void onClick(View v) {
 			setTab(index);
 		}
-	};
+	}
 
 
 	private int preIndex = -1;
-	private void setTab(int tabIndex){
-		if (preIndex == tabIndex){
+
+	private void setTab(int tabIndex) {
+		if (preIndex == tabIndex) {
 			return;
 		}
-		if(preIndex>=0&&preIndex<tabs.size()){
+		if (preIndex >= 0 && preIndex < tabs.size()) {
 			this.tabs.get(preIndex).setActivate(false);
 		}
-		if(tabIndex>=0&&tabIndex<tabs.size()) {
+		if (tabIndex >= 0 && tabIndex < tabs.size()) {
 			this.tabs.get(tabIndex).setActivate(true);
 
 			if (isSupportAppCompat()) {
@@ -164,7 +175,7 @@ public class TabBar extends ResView {
 				FragmentTransaction transaction = fragmentManager.beginTransaction();
 				transaction.replace(R.id.lin_core_tabbar_content, tabItems.get(tabIndex));
 				transaction.commit();
-			}else {//暂不对 android.app.Fragment 兼容
+			} else {//暂不对 android.app.Fragment 兼容
 
 				//a.getFragmentManager().beginTransaction().replace(R.id.tabbar_content, tabItems.get(tabIndex)).commit();
 			}
@@ -172,7 +183,7 @@ public class TabBar extends ResView {
 		}
 	}
 
-	private boolean isSupportAppCompat(){
+	private boolean isSupportAppCompat() {
 		return this.getActivity() instanceof AppCompatActivity;
 	}
 
@@ -224,31 +235,39 @@ public class TabBar extends ResView {
 	@Override
 	protected void genAttrs() {
 
-		this.addAttr(R.styleable.tabbar,R.styleable.tabbar_tabbar_background,AttrType.Drawable);
-		this.addAttr(R.styleable.tabbar,R.styleable.tabbar_tabbar_activate_background,AttrType.Drawable);
-		this.addAttr(R.styleable.tabbar,R.styleable.tabbar_tabbar_overlay,AttrType.Drawable);
-		this.addAttr(R.styleable.tabbar,R.styleable.tabbar_tabbar_item_theme,AttrType.Int);
-		this.addAttr(R.styleable.tabbar,R.styleable.tabbar_tabbar_icon,AttrType.Drawable);
-		this.addAttr(R.styleable.tabbar,R.styleable.tabbar_tabbar_activate_icon,AttrType.Drawable);
-		this.addAttr(R.styleable.tabbar,R.styleable.tabbar_tabbar_text_color,AttrType.Int);
-		this.addAttr(R.styleable.tabbar,R.styleable.tabbar_tabbar_text_activate_color,AttrType.Int);
-		this.addAttr(R.styleable.tabbar,R.styleable.tabbar_tabbar_name,AttrType.String);
-		this.addAttr(R.styleable.lin,R.styleable.lin_view_theme,AttrType.Int);
+		this.addAttr(R.styleable.tabbar, R.styleable.tabbar_tabbar_background, AttrType.Drawable);
+		this.addAttr(R.styleable.tabbar, R.styleable.tabbar_tabbar_activate_background, AttrType.Drawable);
+		this.addAttr(R.styleable.tabbar, R.styleable.tabbar_tabbar_overlay, AttrType.Drawable);
+		this.addAttr(R.styleable.tabbar, R.styleable.tabbar_tabbar_item_theme, AttrType.Int);
+		this.addAttr(R.styleable.tabbar, R.styleable.tabbar_tabbar_icon, AttrType.Drawable);
+		this.addAttr(R.styleable.tabbar, R.styleable.tabbar_tabbar_activate_icon, AttrType.Drawable);
+		this.addAttr(R.styleable.tabbar, R.styleable.tabbar_tabbar_text_color, AttrType.Int);
+		this.addAttr(R.styleable.tabbar, R.styleable.tabbar_tabbar_text_activate_color, AttrType.Int);
+		this.addAttr(R.styleable.tabbar, R.styleable.tabbar_tabbar_name, AttrType.String);
+		this.addAttr(R.styleable.lin, R.styleable.lin_view_theme, AttrType.Int);
 	}
 
 	@Override
 	protected void genLayoutAttrs() {
-		this.addLayoutAttr(R.styleable.tabbar,R.styleable.tabbar_tabbar_background,AttrType.Drawable);
-		this.addLayoutAttr(R.styleable.tabbar,R.styleable.tabbar_tabbar_activate_background,AttrType.Drawable);
-		this.addLayoutAttr(R.styleable.tabbar,R.styleable.tabbar_tabbar_overlay,AttrType.Drawable);
-		this.addLayoutAttr(R.styleable.tabbar,R.styleable.tabbar_tabbar_item_theme,AttrType.Int);
-		this.addLayoutAttr(R.styleable.tabbar,R.styleable.tabbar_tabbar_icon,AttrType.Drawable);
-		this.addLayoutAttr(R.styleable.tabbar,R.styleable.tabbar_tabbar_activate_icon,AttrType.Drawable);
-		this.addLayoutAttr(R.styleable.tabbar,R.styleable.tabbar_tabbar_text_color,AttrType.Int);
-		this.addLayoutAttr(R.styleable.tabbar,R.styleable.tabbar_tabbar_text_activate_color,AttrType.Int);
-		this.addLayoutAttr(R.styleable.tabbar,R.styleable.tabbar_tabbar_name,AttrType.String);
-		this.addLayoutAttr(R.styleable.lin,R.styleable.lin_view_theme,AttrType.Int);
+		this.addLayoutAttr(R.styleable.tabbar, R.styleable.tabbar_tabbar_background, AttrType.Drawable);
+		this.addLayoutAttr(R.styleable.tabbar, R.styleable.tabbar_tabbar_activate_background, AttrType.Drawable);
+		this.addLayoutAttr(R.styleable.tabbar, R.styleable.tabbar_tabbar_overlay, AttrType.Drawable);
+		this.addLayoutAttr(R.styleable.tabbar, R.styleable.tabbar_tabbar_item_theme, AttrType.Int);
+		this.addLayoutAttr(R.styleable.tabbar, R.styleable.tabbar_tabbar_icon, AttrType.Drawable);
+		this.addLayoutAttr(R.styleable.tabbar, R.styleable.tabbar_tabbar_activate_icon, AttrType.Drawable);
+		this.addLayoutAttr(R.styleable.tabbar, R.styleable.tabbar_tabbar_text_color, AttrType.Int);
+		this.addLayoutAttr(R.styleable.tabbar, R.styleable.tabbar_tabbar_text_activate_color, AttrType.Int);
+		this.addLayoutAttr(R.styleable.tabbar, R.styleable.tabbar_tabbar_name, AttrType.String);
+		this.addLayoutAttr(R.styleable.lin, R.styleable.lin_view_theme, AttrType.Int);
 	}
+
+	public static class ClickItem extends android.view.View {
+
+		public ClickItem(Context context, @Nullable AttributeSet attrs) {
+			super(context, attrs);
+		}
+	}
+
 }
 
 

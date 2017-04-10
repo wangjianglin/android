@@ -18,7 +18,7 @@ import lin.core.ViewHolder;
  * Created by lin on 30/12/2016.
  */
 
-public class TabbarItemFactory2 extends LayoutInflaterFactory.AbsFactory2{
+public class TabbarItemFactory2 extends LayoutInflaterFactory.AbsFactory2 {
 
     @Override
     protected String tag() {
@@ -26,42 +26,45 @@ public class TabbarItemFactory2 extends LayoutInflaterFactory.AbsFactory2{
     }
 
     @Override
-    protected View createView(View parent,Context context, AttributeSet attributeSet) {
-
+    protected View createView(View parent, Context context, AttributeSet attributeSet) {
         String className = attributeSet.getAttributeValue(null, "class");
-        try{
+        View view = null;
+        if (className == null || "".equals(className)) {
+            view = new TabBar.ClickItem(context,attributeSet);
+            return view;
+        }
+        try {
             Class<?> cls = Class.forName(className);
-            View view = null;
-            if(Fragment.class.isAssignableFrom(cls)){
+            if (Fragment.class.isAssignableFrom(cls)) {
                 Fragment fragment = (Fragment) cls.newInstance();
-                view = new ViewImpl(context,attributeSet);
+                view = new ViewImpl(context, attributeSet);
                 view.setTag(fragment);
-            }else if(View.class.isAssignableFrom(cls)){
-                Constructor<?> constructor = getConstructor(cls,Context.class,AttributeSet.class);
-                if(constructor == null){
-                    constructor = getConstructor(cls,Context.class);
+            } else if (View.class.isAssignableFrom(cls)) {
+                Constructor<?> constructor = getConstructor(cls, Context.class, AttributeSet.class);
+                if (constructor == null) {
+                    constructor = getConstructor(cls, Context.class);
                     view = (View) constructor.newInstance(context);
-                }else {
-                    view = (View) constructor.newInstance(context,attributeSet);
+                } else {
+                    view = (View) constructor.newInstance(context, attributeSet);
                 }
-            }else if (ViewHolder.class.isAssignableFrom(cls)){
+            } else if (ViewHolder.class.isAssignableFrom(cls)) {
                 ViewHolder viewHolder = null;
-                Constructor<?> constructor = getConstructor(cls,Context.class,AttributeSet.class);
-                if(constructor == null){
-                    constructor = getConstructor(cls,Context.class);
+                Constructor<?> constructor = getConstructor(cls, Context.class, AttributeSet.class);
+                if (constructor == null) {
+                    constructor = getConstructor(cls, Context.class);
                     viewHolder = (ViewHolder) constructor.newInstance(context);
-                }else {
-                    viewHolder = (ViewHolder) constructor.newInstance(context,attributeSet);
+                } else {
+                    viewHolder = (ViewHolder) constructor.newInstance(context, attributeSet);
                 }
 
-                if(parent instanceof ViewGroup){
+                if (parent instanceof ViewGroup) {
                     view = viewHolder.getView((ViewGroup) parent);
-                }else {
+                } else {
                     view = viewHolder.getView(null);
                 }
             }
             return view;
-        }catch (Throwable e){
+        } catch (Throwable e) {
 
         }
 //        TabBar tabBar = new TabBar(context,attributeSet);
@@ -69,14 +72,14 @@ public class TabbarItemFactory2 extends LayoutInflaterFactory.AbsFactory2{
         return null;
     }
 
-    private class ViewImpl extends ContentView{
+    private class ViewImpl extends ContentView {
         public ViewImpl(Context context, AttributeSet attrs) {
             super(context, attrs);
         }
     }
 
 
-    private Constructor<?> getConstructor(Class<?> cls,Class<?> ... parameterTypes){
+    private Constructor<?> getConstructor(Class<?> cls, Class<?>... parameterTypes) {
         try {
             return cls.getConstructor(parameterTypes);
         } catch (NoSuchMethodException e) {
