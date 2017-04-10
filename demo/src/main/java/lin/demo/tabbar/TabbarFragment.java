@@ -8,9 +8,14 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import lin.core.ResFragment;
+import lin.core.TabBarItem;
 import lin.core.annotation.ResId;
 import lin.demo.R;
+import lin.demo.plugin.LinWeixinPlugin;
 
 /**
  * Created by lin on 28/12/2016.
@@ -30,7 +35,28 @@ public class TabbarFragment extends ResFragment {// implements MainContract.View
     public static TabbarFragment newInstance() {
         return new TabbarFragment();
     }
-
+    @Override
+    protected void onCreateView() {
+        TabBarItem item = (TabBarItem) this.getView().findViewById(R.id.tab_shouye_two);
+        if (item != null) {
+            item.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    shareWxStation();
+                }
+            });
+        }
+    }
+    private void shareWxStation() {
+        LinWeixinPlugin plugin = new LinWeixinPlugin(this.getContext());
+        Map<String, Object> args = new HashMap<String, Object>();
+        args.put("link", "http://ws.feicuibaba.com/?priceRate=undefined&userLevel=99&from=singlemessage");
+        args.put("desc", "保证A货，假一罚十！工厂货源，比市场价至少便宜50%，全场包邮。");
+        args.put("scene", "friend");
+        args.put("title", "翡翠货源平台");
+//        args.put("thumb", text);
+        plugin.shareLink(args);
+    }
 //    @Nullable
 //    @Override
 //    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

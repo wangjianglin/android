@@ -1,13 +1,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    xmlns:lin="http://schemas.android.com/apk/res-auto"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context="lin.demo.tabbar.TabbarActivity">
+                xmlns:lin="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                tools:context="lin.demo.tabbar.TabbarActivity">
 
     <!--<TextView android:text="@string/hello_world" android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content" />-->
+    <!--android:layout_height="wrap_content" />-->
     <!--ccn:tab_activate_background="#085e2c"-->
     <!--ccn:tab_background="#252525"-->
     <!--ccn:tab_item_theme="@layout/activity_tabbar_item_bar"-->
@@ -18,11 +21,11 @@
     <!--lin:tabbar_activate_background="#085e2c"-->
     <!--lin:tabbar_text_color="#333"-->
     <tabbar
-        lin:tabbar_background="@drawable/tabbar_background"
-        lin:tabbar_text_color="#0f0"
-        lin:tabbar_text_activate_color="#00f"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        lin:tabbar_background="@drawable/tabbar_background"
+        lin:tabbar_text_activate_color="#00f"
+        lin:tabbar_text_color="#0f0">
 
         <!-- 底部导航栏_首页 -->
 
@@ -30,37 +33,45 @@
             class="lin.demo.tabbar.Tab1"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            lin:tabbar_name="首页"
             lin:tabbar_icon="@drawable/nav_home_icon"
+            lin:tabbar_name="首页"
             lin:theme="@layout/lin_core_nav_main"/>
 
+        <tabbarItem
+            android:id="@+id/tab_shouye_two"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            lin:tabbar_activate_icon="@drawable/nav_home_activate"
+            lin:tabbar_icon="@drawable/nav_home_icon"
+            lin:tabbar_name="微站"
+            lin:theme="@layout/lin_core_nav_main"/>
         <!--<fragment-->
-            <!--class="lin.test.tabbar.Tab1"-->
-            <!--android:id="@+id/tab1"-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="fill_parent"-->
-            <!--ccn:tabbar_name="首页"-->
-            <!--ccn:tabbar_activate_icon="@drawable/nav_home_activate"-->
-            <!--ccn:tabbar_icon="@drawable/nav_home_icon"-->
-            <!--ccn:theme="@layout/lin_core_nav_main">-->
+        <!--class="lin.test.tabbar.Tab1"-->
+        <!--android:id="@+id/tab1"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="fill_parent"-->
+        <!--ccn:tabbar_name="首页"-->
+        <!--ccn:tabbar_activate_icon="@drawable/nav_home_activate"-->
+        <!--ccn:tabbar_icon="@drawable/nav_home_icon"-->
+        <!--ccn:theme="@layout/lin_core_nav_main">-->
 
         <!--</fragment>-->
 
         <!--<tabItem class="lin.test.tabbar.Tab1"></tabItem>-->
         <!--<lin.core.Navigation-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="fill_parent"-->
-            <!--ccn:tab_name="首页"-->
-            <!--ccn:tab_activate_icon="@drawable/nav_home_activate"-->
-            <!--ccn:tab_icon="@drawable/nav_home_icon"-->
-            <!--ccn:theme="@layout/lin_core_nav_main" >-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="fill_parent"-->
+        <!--ccn:tab_name="首页"-->
+        <!--ccn:tab_activate_icon="@drawable/nav_home_activate"-->
+        <!--ccn:tab_icon="@drawable/nav_home_icon"-->
+        <!--ccn:theme="@layout/lin_core_nav_main" >-->
 
-            <!--<lin.test.tabbar.TabItemView1-->
-                <!--android:layout_width="fill_parent"-->
-                <!--android:layout_height="fill_parent"-->
-                <!--ccn:nav_show_title="true"-->
-                <!--ccn:nav_title="null" >-->
-            <!--</lin.test.tabbar.TabItemView1>-->
+        <!--<lin.test.tabbar.TabItemView1-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="fill_parent"-->
+        <!--ccn:nav_show_title="true"-->
+        <!--ccn:nav_title="null" >-->
+        <!--</lin.test.tabbar.TabItemView1>-->
         <!--</lin.core.Navigation>-->
 
         <!-- 底部导航栏_首页 -->
@@ -73,7 +84,7 @@
             lin:tabbar_activate_icon="@drawable/nav_classify_activate"
             lin:tabbar_icon="@drawable/nav_classify_icon"
             lin:tabbar_name="分类"
-            lin:theme="@layout/lin_core_nav_main" >
+            lin:theme="@layout/lin_core_nav_main">
         </lin.demo.tabbar.TabItemView2>
 
         <!-- 底部导航栏_首页 -->
@@ -81,12 +92,12 @@
         <lin.demo.tabbar.TabItemView3
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            lin:nav_show="false"
+            lin:nav_title="@null"
             lin:tabbar_activate_icon="@drawable/nav_discovery_activate"
             lin:tabbar_icon="@drawable/nav_discovery_icon"
             lin:tabbar_name="淘货"
-            lin:theme="@layout/lin_core_nav_main"
-            lin:nav_show="false"
-            lin:nav_title="@null" >
+            lin:theme="@layout/lin_core_nav_main">
         </lin.demo.tabbar.TabItemView3>
 
 
@@ -95,24 +106,24 @@
         <lin.demo.tabbar.TabItemView4
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            lin:nav_show="false"
+            lin:nav_title="@null"
             lin:tabbar_activate_icon="@drawable/nav_cart_activate"
             lin:tabbar_icon="@drawable/nav_cart_icon"
             lin:tabbar_name="购物车"
-            lin:theme="@layout/lin_core_nav_main"
-            lin:nav_show="false"
-            lin:nav_title="@null" >
+            lin:theme="@layout/lin_core_nav_main">
         </lin.demo.tabbar.TabItemView4>
 
 
         <lin.demo.tabbar.TabItemView4
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            lin:nav_show="false"
+            lin:nav_title="@null"
             lin:tabbar_activate_icon="@drawable/nav_mine_activate"
             lin:tabbar_icon="@drawable/nav_mine_icon"
             lin:tabbar_name="我的"
-            lin:theme="@layout/lin_core_nav_main"
-            lin:nav_show="false"
-            lin:nav_title="@null" >
+            lin:theme="@layout/lin_core_nav_main">
         </lin.demo.tabbar.TabItemView4>
 
 
