@@ -162,7 +162,7 @@ public class Nav {
 	public static boolean pop(android.support.v4.app.Fragment fragment, Object ... args){
 		return popImpl(Nav.getNav(fragment),args);
 	}
-	public static boolean pop(String argsId, Object ... args){
+	public static boolean popToTagByArgsId(String argsId, Object ... args){
 		return popImpl(Nav.getNav(argsId),args);
 	}
 
