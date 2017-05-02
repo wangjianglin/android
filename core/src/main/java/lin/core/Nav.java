@@ -93,10 +93,10 @@ public class Nav {
 		}
 		Nav preNav = this;
 		while(preNav != null && preNav.preNav != null && !tag.equals(preNav.preNav.getTag())){
-			preNav.activity.onBackPressed();
+			preNav.activity.finish();
 			preNav = preNav.preNav;
 		}
-		preNav.activity.onBackPressed();
+		preNav.activity.finish();
 		if(preNav.result != null){
 			preNav.result.result(args);
 		}
