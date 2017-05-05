@@ -56,7 +56,7 @@ public class LocalStorage {
 	public static Object getItem(String name,Type type){
 		return getItemImpl(name,type);
 	}
-	public static Object getItemImpl(String name,Type type){
+	private static Object getItemImpl(String name,Type type){
 		String json = helper.getItemValue(name);
 		if(json == null){
 			return null;
