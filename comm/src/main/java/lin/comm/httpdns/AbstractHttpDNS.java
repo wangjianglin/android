@@ -70,10 +70,15 @@ public abstract class AbstractHttpDNS implements HttpDNS {
         return isExpiredIpAvailable;
     }
 
-    public void setPreResolveHosts(List<String> hosts){
-        for(String hostName : hosts){
-            getIpByHost(hostName,20000);
-        }
+    public void setPreResolveHosts(final List<String> hosts){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for(String hostName : hosts){
+                    getIpByHost(hostName,20000);
+                }
+            }
+        }).start();
     }
 
     protected abstract HostObject fetch(String hostName,int timeout);
