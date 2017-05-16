@@ -13,8 +13,8 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@ProcessorClass(ClickProcessor.class)
+@ProcessorClass(LongClickProcessor.class)
 public @interface LongClick {
-	int value() default 0;
-	String id() default "";
+	int[] value() default 0;
+	String[] id() default "";
 }

@@ -70,9 +70,18 @@ public class NavFragment  extends lin.core.ResFragment{
 //        return root;
 //    }
 
+    private static int tag = 0;
+    @Click(R.id.nav_frag_button_push)
+    private void pushclick(){
+        String tagStr = "tag"+tag++;
+        Nav nav = Nav.getNav(this).push(NavFragment.class,null);
+                nav.setTag(tagStr);
+                nav.setTitle(tagStr);
+    }
+
     @Click(R.id.nav_frag_button)
     private void click(){
-        Nav.getNav(this).pop();
+        Nav.getNav(this).popToTag("tag1");
     }
 
     @Override

@@ -14,6 +14,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -21,6 +22,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,6 +31,7 @@ import android.widget.RelativeLayout;
 import lin.comm.http.*;
 import lin.comm.http.Error;
 import lin.core.annotation.Click;
+import lin.core.annotation.LongClick;
 import lin.core.annotation.ResCls;
 import lin.core.annotation.ResId;
 import lin.core.annotation.Touch;
@@ -44,6 +47,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -84,30 +88,13 @@ public class ImagePicker extends ResView {
 	}
 	
 	
-	@Touch
-	public void touch(){
-		if(pager != null){
-			pager.requestDisallowInterceptTouchEvent(true);
-		}
-	}
-	
-//	@Override
-//	protected void onInited() {
-//		this.setOnTouchListener(new OnTouchListener() {
-//
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				touch();
-//				return true;
-//			}
-//		});
-//		HttpCommunicate.init(this.getContext());
-//
-//		setDotLayout();
-////		this.vedio = true;
-////		this.vedioUrl = "http://i.feicuibaba.com/test/2/33A26FEA-DCB8-4D0D-AC82-149CBDEFCF91.mp4";
-////		this.vedioImage = "http://i.feicuibaba.com/test/2/38984ED7-67E9-4B67-A06D-B87BD475E2BB.jpg_middle.jpg";
+//	@Touch
+//	public void touch(){
+//		if(pager != null){
+//			pager.requestDisallowInterceptTouchEvent(true);
+//		}
 //	}
+
 
 	/**
 	 *
@@ -170,24 +157,6 @@ public class ImagePicker extends ResView {
 		this.edited = attrArray.getBoolean(R.styleable.lin_images_picker_edit, true);
 		attrArray.recycle();
 	}
-//		
-//		ViewPager pager = (ViewPager) mRootView.findViewById(R.id.public_image_picker_pager);
-//		pager.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				Intent intent = new Intent(ImagePicker.this.getContext(),ImagePickerActivity.class);  
-//                /* 开启Pictures画面Type设定为image */  
-////                intent.setType("image/*");  
-////                /* 使用Intent.ACTION_GET_CONTENT这个Action */  
-////                intent.setAction(Intent.ACTION_GET_CONTENT);   
-//                /* 取得相片后返回本画面 */  
-//                ImagePicker.this.getActivity().startActivityForResult(intent, 1);
-//                  				
-//			}
-//			
-//		});
-//	}
 	
 	private void resetBackground(){
 		if(items == null || this.getBackground() == null){
@@ -202,17 +171,16 @@ public class ImagePicker extends ResView {
 	@ViewById(id="images_picker_pager")
 	private ViewPager pager;
 	private PagerAdapter pagerAdapter = null;
+	private OnTouchListener mOnTouchListener;
+	private OnClickListener mOnClickListener;
+	private OnLongClickListener mOnLongClickListener;
+	private int mSlop = 0;
 	@Override
 	protected void onInited() {
 
-		this.setOnTouchListener(new OnTouchListener() {
+		ViewConfiguration conf = ViewConfiguration.get(getContext());
+		mSlop = conf.getScaledTouchSlop();
 
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				touch();
-				return true;
-			}
-		});
 		HttpCommunicate.init(this.getContext());
 
 		setDotLayout();
@@ -235,18 +203,7 @@ public class ImagePicker extends ResView {
 				}
 				return row;
 			}
-//			@Override
-//			public void destroyItem(View container, int position, Object object) {
-//
-//				if(vedio){
-//					if(position == 0){
-//						((ViewPager)container).removeView(vedioView);
-//					}else{
-//						((ViewPager)container).removeView(items[position - 1]);
-//					}
-//				}
-//				((ViewPager)container).removeView(items[position]);
-//			}
+
 			@Override
 			public void destroyItem(ViewGroup container, int position, Object object) {
 				if(vedio){
@@ -259,22 +216,7 @@ public class ImagePicker extends ResView {
 					((ViewPager) container).removeView(items[position]);
 				}
 			}
-			
-//			@Override
-//			public Object instantiateItem(View container, int position) {
-//
-//				if(vedio){
-//					if(position == 0){
-//						((ViewPager)container).addView(vedioView);
-//						return vedioView;
-//					}else{
-//						((ViewPager)container).addView(items[position - 1]);
-//						return items[position - 1];
-//					}
-//				}
-//				((ViewPager)container).addView(items[position]);
-//				return items[position];
-//			}
+
 			@Override
 			public Object instantiateItem(ViewGroup container, int position) {
 				if(vedio){
@@ -291,17 +233,17 @@ public class ImagePicker extends ResView {
 				}
 			}
 		};
+		pager.requestDisallowInterceptTouchEvent(true);
 		pager.setAdapter(pagerAdapter);
+
 		pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			private int prePosition = 0;
 			@Override
 			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//				System.out.println("onPageScrolled("+position+","+positionOffset+","+positionOffsetPixels+")");
 			}
 
 			@Override
 			public void onPageSelected(int position) {
-//				System.out.println("onPageSelected("+position+")");
 				if(prePosition == 0 && vedioView != null){
 					vedioView.resetVedio();
 				}
@@ -310,7 +252,6 @@ public class ImagePicker extends ResView {
 
 			@Override
 			public void onPageScrollStateChanged(int state) {
-//				System.out.println("onPageScrollStateChanged("+state+")");
 			}
 		});
 		resetViews();
@@ -351,6 +292,81 @@ public class ImagePicker extends ResView {
 		setDotLayout();
 	}
 
+	private boolean isMotionDown = false;
+	private Date motionDownTime = null;
+	private float mMotionX = Float.MIN_VALUE;
+	private float mMotionY = Float.MIN_VALUE;
+
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent ev) {
+		if(fireOnTouchListener(ev)){
+			return true;
+		}
+		return super.dispatchTouchEvent(ev);
+	}
+
+	private boolean fireOnTouchListener(MotionEvent event){
+		if(mOnTouchListener != null){
+			if(mOnTouchListener.onTouch(ImagePicker.this,event)){
+				return true;
+			}
+		}
+		if(isMotionDown == false && event.getAction() == MotionEvent.ACTION_DOWN){
+			motionDownTime = new Date();
+			isMotionDown = true;
+			mMotionX = event.getX();
+			mMotionY = event.getY();
+		}
+		if(isMotionDown && event.getAction() == MotionEvent.ACTION_MOVE){
+			if(Math.abs(event.getX() - mMotionX) > 2*mSlop
+					|| Math.abs(event.getX() - mMotionX) > 2*mSlop) {
+				motionDownTime = null;
+				isMotionDown = false;
+				mMotionX = Float.MIN_VALUE;
+				mMotionY = Float.MIN_VALUE;
+			}
+		}
+		if(event.getAction() == MotionEvent.ACTION_CANCEL){
+			motionDownTime = null;
+			isMotionDown = false;
+		}
+
+
+		if(event.getAction() == MotionEvent.ACTION_UP && isMotionDown){
+			isMotionDown = false;
+			ViewConfiguration conf = ViewConfiguration.get(getContext());
+			int slop = conf.getScaledTouchSlop();
+
+			if(Math.abs(event.getX() - mMotionX) < slop
+					&& Math.abs(event.getX() - mMotionX) < slop) {
+				long t = new Date().getTime() - motionDownTime.getTime();
+				if(t < 15 * 1000) {
+					if (motionDownTime != null && t > 2 * 1000) {
+						motionDownTime = null;
+						fireOnLongClickListener();
+					} else {
+						fireOnClickListener();
+					}
+				}
+			}
+			mMotionX = Float.MIN_VALUE;
+			mMotionY = Float.MIN_VALUE;
+		}
+		return false;
+	}
+
+	private void fireOnClickListener(){
+		if(mOnClickListener != null){
+			mOnClickListener.onClick(this);
+		}
+	}
+
+	private void fireOnLongClickListener(){
+		if(mOnLongClickListener != null){
+			mOnLongClickListener.onLongClick(this);
+		}
+	}
+
 	private boolean edited;
 
 	private boolean fullScreen;
@@ -369,9 +385,6 @@ public class ImagePicker extends ResView {
 	
 	private boolean vedio;
 
-//	@property(readonly) NSArray * imagesForEdited;
-//
-//	@property(readonly) NSArray * images;
 	private String[] imagePaths;
 	public boolean isEdited() {
 		return edited;
@@ -476,7 +489,22 @@ public class ImagePicker extends ResView {
 		this.vedio = vedio;
 		this.resetViews();
 	}
-	
+
+	@Override
+	public void setOnTouchListener(OnTouchListener l) {
+		mOnTouchListener = l;
+	}
+
+	@Override
+	public void setOnClickListener(OnClickListener l) {
+		this.mOnClickListener = l;
+	}
+
+	@Override
+	public void setOnLongClickListener(@Nullable OnLongClickListener l) {
+		this.mOnLongClickListener = l;
+	}
+
 	@ResCls(R.class)
 	@ResId(id="lin_core_images_picker_vedio")
 	private class VideoItemView extends ResView implements SurfaceHolder.Callback,MediaPlayer.OnPreparedListener,MediaPlayer.OnCompletionListener {
@@ -489,7 +517,6 @@ public class ImagePicker extends ResView {
 		private ImageView imageView;
 
 		public void setImagePath(String imagePath) {
-//			this.imagePath = imagePath;
 			Images.setImage(imageView, imagePath);
 		}
 
@@ -498,10 +525,6 @@ public class ImagePicker extends ResView {
 
 		@ViewById(id="images_pick_vedio_fit_chart")
 		private FitChart fitChart;
-
-//		@ViewById(id="imagepicker_item_vedio_id")
-//		private VideoView videoView;
-
 
 		@ViewById(id="imagepicker_item_vedio_id")
 		private SurfaceView surfaceView;
@@ -527,12 +550,7 @@ public class ImagePicker extends ResView {
 			player.setOnCompletionListener(this);
 			holder = surfaceView.getHolder();
 
-//			player.setDisplay(holder);
-//			holder.setFixedSize(100, 100);
 			holder.addCallback(this);
-//			currDisplay = this.getActivity().getWindowManager().getDefaultDisplay();
-			//为了可以播放视频或者使用Camera预览，我们需要指定其Buffer类型    
-//			holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		}
 
 		@Click
@@ -556,28 +574,11 @@ public class ImagePicker extends ResView {
 			}
 			fitChart.setVisibility(View.VISIBLE);
 			loadingText.setVisibility(View.VISIBLE);
-//			surfaceView.setVisibility(View.VISIBLE);
 			addView.setVisibility(View.INVISIBLE);
 
-
-
-//			String vfile = "/storage/emulated/0/Android/data/lin.test/files/Download/videos/163537bbcd72c20f599a6c5c97512c0d.mp4";
-//			try {
-//
-//				player.setDataSource(vfile);
-//				player.prepare();
-//
-//				player.start();
-//
-//			} catch (Throwable e) {
-//				e.printStackTrace();
-//			}
-
-//			player.start();
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-//					final Uri uri = downloadvideo(vedioUrl);
 					final Uri uri = downloadvideoWithHttpClient(vedioUrl);
 					if(uri == null){
 						cacheVedioUri = Uri.parse(vedioUrl);
@@ -597,57 +598,11 @@ public class ImagePicker extends ResView {
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
-//							videoView.setVideoURI(uri);
-//							videoView.start();
-//							videoView.requestFocus();
 						}
 					});
 				}
 			}).start();
 
-//			if (videoView == null) {
-//				videoView = new VideoView(this.getContext());
-//				RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-//				lp.addRule(RelativeLayout.CENTER_IN_PARENT);
-//				videoView.setLayoutParams(lp);
-//				layout.addView(videoView);
-//			}
-//			videoView.setVisibility(View.VISIBLE);
-//			imageView.setVisibility(View.INVISIBLE);
-//			if (vedioUri != null){
-//				videoView.setVideoURI(vedioUri);
-//				videoView.start();
-////				videoView.requestFocus();
-//				return;
-//			}
-////			videoView.setVisibility(View.VISIBLE);
-////			Uri uri = Uri.parse(vedioUrl);
-//			//调用系统自带的播放器
-////			    Intent intent = new Intent(Intent.ACTION_VIEW);
-//////			    Log.v("URI:::::::::", uri.toString());
-////			    intent.setDataAndType(uri, "video/mp4");
-////			   this.getActivity(). startActivity(intent);
-////			videoView.setMediaController(new MediaController(this.getContext()));
-////			videoView.setVideoURI(uri);
-////			videoView.start();
-////			videoView.requestFocus();
-//			fitChart.setVisibility(View.VISIBLE);
-//			new Thread(new Runnable() {
-//				@Override
-//				public void run() {
-//					final Uri uri = downloadvideo(vedioUrl);
-//					vedioUri = uri;
-//					mHandler.post(new Runnable() {
-//						@Override
-//						public void run() {
-//							fitChart.setVisibility(View.GONE);
-//							videoView.setVideoURI(uri);
-//							videoView.start();
-//							videoView.requestFocus();
-//						}
-//					});
-//				}
-//			}).start();
 		}
 
 		public void resetVedio(){
@@ -667,10 +622,6 @@ public class ImagePicker extends ResView {
 				}
 			});
 		}
-//		@Override
-//		public void onResume() {
-//			resetVedio();
-//		}
 
 		public void onCompletion(MediaPlayer mp){
 			addView.setVisibility(View.VISIBLE);
@@ -701,24 +652,7 @@ public class ImagePicker extends ResView {
 			imageView.setVisibility(View.INVISIBLE);
 
 			player.start();
-//			if(vWidth > currDisplay.getWidth() || vHeight > currDisplay.getHeight()){
-//				//如果video的宽或者高超出了当前屏幕的大小，则要进行缩放    
-//				float wRatio = (float)vWidth/(float)currDisplay.getWidth();
-//				float hRatio = (float)vHeight/(float)currDisplay.getHeight();
-//
-//				//选择大的一个进行缩放    
-//				float ratio = Math.max(wRatio, hRatio);
-//
-//				vWidth = (int)Math.ceil((float)vWidth/ratio);
-//				vHeight = (int)Math.ceil((float)vHeight/ratio);
-//
-//				//设置surfaceView的布局参数    
-//				surfaceView.setLayoutParams(new LinearLayout.LayoutParams(vWidth, vHeight));
-//
-//				//然后开始播放视频    
-//
-//				player.start();
-//			}
+
 		}
 
 
@@ -771,9 +705,6 @@ public class ImagePicker extends ResView {
 				HttpCommunicate.download(vedioUrl, new ProgressResultListener() {
 					@Override
 					public void progress(final long progress, final long total) {
-//						System.out.println("=================================================");
-//						System.out.println("progress:"+progress+"\ttotal:"+total);
-//						System.out.println("=================================================");
 						mHandler.post(new Runnable() {
 							@Override
 							public void run() {
@@ -784,15 +715,12 @@ public class ImagePicker extends ResView {
 
 					@Override
 					public void result(Object obj, List<Error> warning) {
-//						System.out.println("=================================================");
-//						System.out.println("obj:"+obj);
-//						System.out.println("=================================================");
 						try {
 
-							File file = (File) obj;
+							FileInfo file = (FileInfo) obj;
 							byte[] bs = new byte[1024];
 							int count = 0;
-							InputStream _in = new FileInputStream(file);
+							InputStream _in = new FileInputStream(file.getFile());
 							OutputStream _out = new FileOutputStream(vedioFile);
 							while ((count = _in.read(bs)) != -1) {
 								_out.write(bs, 0, count);
@@ -804,15 +732,11 @@ public class ImagePicker extends ResView {
 
 					@Override
 					public void fault (Error error){
-//						System.out.println("=================================================");
-//						System.out.println("error:"+error.getStackTrace());
-//						System.out.println("=================================================");
 
 						}
 					}
 
 				).waitForEnd();
-//				System.out.println("****************************************");
 
 
 					return Uri.fromFile(vedioFile);
@@ -831,13 +755,12 @@ public class ImagePicker extends ResView {
 			int count = 0;
 			while(!procedureUri.complete){
 				if(queryStatus(this.getContext(), procedureUri.reference, DownloadManager.STATUS_FAILED) || count++ > 300){
-//					result.unregisterBroadcast();
+
 					try {
 						this.getContext().unregisterReceiver(procedureUri.receiver);
 					}catch (Throwable e){}
 					break;
 				}
-//				queryProgress(this.getContext(), reference);
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
@@ -868,39 +791,20 @@ public class ImagePicker extends ResView {
 			if(vedioFile.exists()){
 				return vedioFile;
 			}
-//			if(apkFile.exists()){
-//				if(callback != null){
-//					callback.procedure(Uri.fromFile(apkFile));
-//				}
-//				return null;
-//			}
-//			file.deleteOnExit();
+
 			file.mkdirs();
 
 			DownloadManager manager = (DownloadManager) this.getContext().getSystemService(Service.DOWNLOAD_SERVICE);
 
 
 			//设置下载地址
-//        DownloadManager.Request down = new DownloadManager.Request(
-//                Uri.parse("http://gdown.baidu.com/data/wisegame/fd84b7f6746f0b18/baiduyinyue_4802.apk"));
+
 			DownloadManager.Request down = new DownloadManager.Request(uri);
 
-//			ConnectivityManager connectivity = null;
-//			connectivity.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_MOBILE
-//			NetworkInfo.State s = NetworkInfo.State.CONNECTED;
 			// 设置允许使用的网络类型，这里是移动网络和wifi都可以
 			down.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE
 					| DownloadManager.Request.NETWORK_WIFI);
 
-			// 下载时，通知栏显示途中
-//        down.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
-//
-//        // 显示下载界面
-//        down.setVisibleInDownloadsUi(true);
-
-			// 设置下载后文件存放的位置
-//        down.setDestinationInExternalFilesDir(context,
-//                Environment.DIRECTORY_DOWNLOADS, apkName);
 			down.setDestinationUri(Uri.fromFile(vedioFile));
 
 
@@ -917,12 +821,7 @@ public class ImagePicker extends ResView {
 			this.getContext().registerReceiver(receiver, new IntentFilter(
 					DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 			callback.receiver = receiver;
-//        context.registerReceiver(receiver, null);
-//			DownloadResult result = new DownloadResult();
-//			result.context = context;
-//			result.broadcastReceiver = receiver;
-//			result.reference = reference;
-//			return result;
+
 			return null;
 		}
 	}
@@ -964,9 +863,7 @@ public class ImagePicker extends ResView {
 					DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
 
 				//获取下载的文件id
-//                long downId = intent.getLongExtra(
-//                        DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-//                  System.out.println("ok.");
+
 				uri = manager.getUriForDownloadedFile(downId);
 			}
 			if(callback != null){
@@ -975,16 +872,6 @@ public class ImagePicker extends ResView {
 				callback.procedure(null);
 			}
 			context.unregisterReceiver(this);
-//                cM
-//                Message message = new Message();
-//                message.what = DOWNLOAD_COMPLETE;
-//                message.obj = downId;
-////				cMessenger.send(message);
-			//自动安装apk
-//                installAPK(manager.getUriForDownloadedFile(downId));
-//
-//                //停止服务并关闭广播
-//                UpdateService.this.stopSelf();
 
 		}
 	}
@@ -999,17 +886,13 @@ public class ImagePicker extends ResView {
 		DownloadManager manager = (DownloadManager) context.getSystemService(Service.DOWNLOAD_SERVICE);
 		Cursor cursor = manager.query(new DownloadManager.Query().setFilterById(reference));//.setFilterByStatus(status));
 
-//		DownloadManager.COLUMN_TOTAL_SIZE_BYTES
-//		return cursor.getCount() > 0;
 
 		float progress = 0;
 		if (cursor != null && cursor.moveToFirst()) {
 			float far = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
 			float total = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
 			progress = far / total;
-//			bytesAndStatus[2] = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
 		}
-//		System.out.println("progress:"+progress);
 		return progress;
 	}
 }
