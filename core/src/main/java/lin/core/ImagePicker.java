@@ -789,10 +789,10 @@ public class ImagePicker extends ResView {
 //						System.out.println("=================================================");
 						try {
 
-							File file = (File) obj;
+							FileInfo file = (FileInfo) obj;
 							byte[] bs = new byte[1024];
 							int count = 0;
-							InputStream _in = new FileInputStream(file);
+							InputStream _in = new FileInputStream(file.getFile());
 							OutputStream _out = new FileOutputStream(vedioFile);
 							while ((count = _in.read(bs)) != -1) {
 								_out.write(bs, 0, count);
