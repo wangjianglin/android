@@ -174,6 +174,7 @@ public class ImagePicker extends ResView {
 	private OnTouchListener mOnTouchListener;
 	private OnClickListener mOnClickListener;
 	private OnLongClickListener mOnLongClickListener;
+	private int mPosition = 0;
 	private int mSlop = 0;
 	@Override
 	protected void onInited() {
@@ -248,6 +249,7 @@ public class ImagePicker extends ResView {
 					vedioView.resetVedio();
 				}
 				prePosition = position;
+				ImagePicker.this.mPosition = position;
 			}
 
 			@Override
@@ -488,6 +490,10 @@ public class ImagePicker extends ResView {
 		}
 		this.vedio = vedio;
 		this.resetViews();
+	}
+
+	public int getPosition() {
+		return mPosition;
 	}
 
 	@Override
