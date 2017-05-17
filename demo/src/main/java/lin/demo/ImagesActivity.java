@@ -1,6 +1,8 @@
 package lin.demo;
 
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
 
 import lin.core.ImagePicker;
 import lin.core.ViewActivity;
@@ -17,10 +19,32 @@ public class ImagesActivity extends ViewActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_images_view);
+        setContentView(R.layout.activity_images_picker);
 
         ImagePicker images = (ImagePicker) this.findViewById(R.id.imagePickerId);
 
+        images.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                System.out.println("=================== touch "+event.getAction()+" ===================");
+                return false;
+            }
+        });
+
+        images.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("=================== click ===================");
+            }
+        });
+
+        images.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                System.out.println("=================== long click ===================");
+                return false;
+            }
+        });
         images.setImagePaths(imagePaths);
         images.setEdited(false);
         images.setDotFlag(ImagePicker.DotFlag.DOWN_RIGHT);
