@@ -12,7 +12,7 @@
         android:id="@+id/imagePickerId"
         app:images_album="album name">
 
- 
+
     </lin.core.ImagePicker>
 
     <TextView
