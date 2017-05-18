@@ -8,6 +8,9 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by lin on 4/25/16.
@@ -20,7 +23,9 @@ public abstract class AbstractHttpDNS implements HttpDNS {
 
     private boolean isExpiredIpAvailable = true;
 
-    private class QueryHostTask implements Callable<String> {
+    private Lock lock = new ReentrantLock();
+
+    private class QueryHostTask implements Callable<HostObject> {
         private String hostName;
         private int timeout;
 //        private boolean isRequestRetried = false;
@@ -28,23 +33,24 @@ public abstract class AbstractHttpDNS implements HttpDNS {
         //timeout以毫秒为单位
         public QueryHostTask(String hostToQuery,int timeout) {
             this.hostName = hostToQuery;
+            this.timeout = timeout;
         }
 
         @Override
-        public String call() {
-            HostObject hostObject = fetch(this.hostName,this.timeout);
-            if(hostObject == null){
-                hostObject = new HostObject();
-                hostObject.setHostName(this.hostName);
-            }
-            if(hostObject.getTtl() <= 0){
-                hostObject.setTtl(120);
-            }
-            hostObject.setSessionMode(sessionMode);
-            hostObject.status(hostManager.get(hostName));
-            hostObject.setQueryTime(System.currentTimeMillis() / 1000);
-            hostManager.put(hostName, hostObject);
-            return hostObject.getIp();
+        public HostObject call() {
+            return fetch(this.hostName,this.timeout);
+//            if(hostObject == null){
+//                hostObject = new HostObject();
+//                hostObject.setHostName(this.hostName);
+//            }
+//            if(hostObject.getTtl() <= 0){
+//                hostObject.setTtl(120);
+//            }
+//            hostObject.setSessionMode(sessionMode);
+//            hostObject.status(hostManager.get(hostName));
+//            hostObject.setQueryTime(System.currentTimeMillis() / 1000);
+//            hostManager.put(hostName, hostObject);
+//            return hostObject.getIp();
 //            if(hostObject != null && hostObject.getIp() != null && !"".equals(hostObject.getIp())){
 //
 //            }
@@ -87,6 +93,21 @@ public abstract class AbstractHttpDNS implements HttpDNS {
         return getIpByHost(hostName,3000);
     }
 
+    private void pushHostObject(HostObject hostObject,String hostName){
+
+        if(hostObject == null){
+            hostObject = new HostObject();
+            hostObject.setHostName(hostName);
+        }
+        if(hostObject.getTtl() <= 0){
+            hostObject.setTtl(120);
+        }
+        hostObject.setSessionMode(sessionMode);
+        hostObject.status(hostManager.get(hostName));
+        hostObject.setQueryTime(System.currentTimeMillis() / 1000);
+        hostManager.put(hostName, hostObject);
+
+    }
     private String getIpByHost(String hostName,int timeout) {
         if (degradationFilter != null) {
             if (degradationFilter.shouldDegradeHttpDNS(hostName)) {
@@ -95,13 +116,24 @@ public abstract class AbstractHttpDNS implements HttpDNS {
         }
         HostObject host = hostManager.get(hostName);
         if (host == null || (host.isExpired() && !isExpiredIpAvailable())) {
-            Future<String> future = pool.submit(new QueryHostTask(hostName,timeout));
-            try {
-                return future.get();
-            } catch (Exception e) {
+            lock.lock();
+            host = hostManager.get(hostName);
+            if (host == null || (host.isExpired() && !isExpiredIpAvailable())) {
+                Future<HostObject> future = pool.submit(new QueryHostTask(hostName, timeout));
+                HostObject hostObject = null;
+                try {
+                    hostObject = future.get(2, TimeUnit.SECONDS);
+                } catch (Throwable e) {
+                }
+                pushHostObject(hostObject, hostName);
             }
+            lock.unlock();
+        }
+
+        host = hostManager.get(hostName);
+        if(host == null){
             return null;
-        } else if (host.isExpired()) {
+        }else if (host.isExpired()) {
             // 同步返回，异步更新
             host.setQueryTime(System.currentTimeMillis()/1000);
             pool.submit(new QueryHostTask(hostName,20000));
