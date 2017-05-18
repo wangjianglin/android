@@ -16,6 +16,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.ManagedHttpClientConnectionFactory;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.impl.conn.SystemDefaultDnsResolver;
+import org.apache.http.params.CoreConnectionPNames;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -30,22 +31,25 @@ import lin.comm.http.HttpCommunicateRequest;
  */
 public class HttpClientCommunicateImpl extends AbstractHttpCommunicateImpl{
 
-    private CloseableHttpClient http;
+//    private CloseableHttpClient http;
+    private CookieStore cookie = new BasicCookieStore();
+    private HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory;
+    private DnsResolver dnsResolver;
+    private Registry<ConnectionSocketFactory> socketFactoryRegistry;
 
     public HttpClientCommunicateImpl(String name, HttpCommunicate c) {
         super(name, c);
-        CookieStore cookie = new BasicCookieStore();
 
 //        HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory = new ManagedHttpClientConnectionFactory(
 //                8 * 1024, new DefaultHttpRequestWriterFactory(), new DefaultHttpResponseParserFactory());
 
-        HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory = new ManagedHttpClientConnectionFactory();
-        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+        connFactory = new ManagedHttpClientConnectionFactory();
+        socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
                 .register("http", PlainConnectionSocketFactory.getSocketFactory())
                 .register("https", SSLConnectionSocketFactory.getSocketFactory())
                 .build();
 
-        DnsResolver dnsResolver = new SystemDefaultDnsResolver() {
+        dnsResolver = new SystemDefaultDnsResolver() {
 
             @Override
             public InetAddress[] resolve(final String host) throws UnknownHostException {
@@ -65,21 +69,27 @@ public class HttpClientCommunicateImpl extends AbstractHttpCommunicateImpl{
 //        final Registry<ConnectionSocketFactory> socketFactoryRegistry,
 //        final HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory,
 //        final DnsResolver dnsResolver
-        http = HttpClients.custom().useSystemProperties()
-                .setDefaultCookieStore(cookie)
-                .setConnectionManager(new PoolingHttpClientConnectionManager(
-                        socketFactoryRegistry,connFactory,dnsResolver))
-                .build();
+
 
     }
 
     @Override
     protected HttpCommunicateRequest getRequest() {
+        CloseableHttpClient http = HttpClients.custom().useSystemProperties()
+                .setDefaultCookieStore(cookie)
+                .setConnectionManager(new PoolingHttpClientConnectionManager(
+                        socketFactoryRegistry,connFactory,dnsResolver))
+                .build();
         return new HttpClientRequest(http);
     }
 
     @Override
     protected HttpCommunicateDownloadFile downloadRequest() {
+        CloseableHttpClient http = HttpClients.custom().useSystemProperties()
+                .setDefaultCookieStore(cookie)
+                .setConnectionManager(new PoolingHttpClientConnectionManager(
+                        socketFactoryRegistry,connFactory,dnsResolver))
+                .build();
         return new DownloadFile(http,context);
     }
 

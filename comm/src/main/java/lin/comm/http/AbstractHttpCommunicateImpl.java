@@ -34,18 +34,18 @@ import lin.util.Action;
 public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl{
 
     protected Context context;
-    private int timeout = 10000;
+    private int mTimeout = 10000;
     private String name;
     private Map<String,String> defaultHeaders = new HashMap<String,String>();
     private HttpDNS httpDNS;
 
-    private boolean debug = false;
+    private boolean mDebug = false;
     /**
      * 通信 URL
      */
     private URL baseUri = null;
 
-    private HttpCommunicate.Params defaultParams = new HttpCommunicate.Params();
+//    private HttpCommunicate.Params defaultParams = new HttpCommunicate.Params();
 
     private static long cacheSize = 200 * 1024 * 1024;
 
@@ -82,12 +82,12 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
     @Override
     public int getTimeout() {
-        return timeout;
+        return mTimeout;
     }
 
     @Override
     public void setTimeout(int timeout) {
-        this.timeout = timeout;
+        this.mTimeout = timeout;
     }
     //	public HttpCommunicateImpl(){
 //	}
@@ -164,12 +164,12 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
     @Override
     public boolean isDebug() {
-        return debug;
+        return mDebug;
     }
 
     @Override
     public void setDebug(boolean debug) {
-        this.debug = debug;
+        this.mDebug = debug;
     }
 
     //		/**
@@ -280,24 +280,27 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
     @Override
     public HttpCommunicateResult<Object> request(final lin.comm.http.HttpPackage pack){
-        return request(pack,null,defaultParams);
+        return request(pack,null);
     }
 
-    @Override
-    public HttpCommunicateResult<Object> request(final lin.comm.http.HttpPackage pack, final ResultListener listener){
-        return request(pack,listener,defaultParams);
-    }
+//    @Override
+//    public HttpCommunicateResult<Object> request(final lin.comm.http.HttpPackage pack, final ResultListener listener){
+//        return request(pack,listener,defaultParams);
+//    }
 
     protected abstract HttpCommunicateRequest getRequest();
 
 
     @Override
-    //	public HttpCommunicateResult request(lin.client.http.TcpPackage pack,final ResultFunction result,final FaultFunction fault){
-    public HttpCommunicateResult<Object> request(final lin.comm.http.HttpPackage pack, final ResultListener listener, HttpCommunicate.Params params){
+//    	public HttpCommunicateResult request(lin.client.http.TcpPackage pack,final ResultFunction result,final FaultFunction fault){
+//    public HttpCommunicateResult<Object> request(final lin.comm.http.HttpPackage pack, final ResultListener listener, HttpCommunicate.Params params){
+    public HttpCommunicateResult<Object> request(final lin.comm.http.HttpPackage pack, final ResultListener listener){
 
-        if (params == null){
-            params = defaultParams;
-        }
+        HttpCommunicate.Params params = new HttpCommunicate.Params();
+
+        params.setDebug(this.isDebug(pack));
+        params.setMainThread(this.isMainThread(pack));
+        params.setTimeout(this.getTimeout(pack));
 
         this.fireRequestListener(pack);
 
@@ -439,9 +442,29 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 //        return httpHesult;
 //    }
 
+    private boolean isMainThread(HttpPackage pack){
+        if(pack.getCommParams() == null || pack.getCommParams().isMainThread() != null){
+            return pack.getCommParams().isMainThread();
+        }
+        return this.mMainThread;
+    }
+
+    protected boolean isDebug(HttpPackage pack){
+        if(pack.getCommParams() == null || pack.getCommParams().isDebug() != null){
+            return pack.getCommParams().isDebug();
+        }
+        return this.mDebug;
+    }
+
+    protected int getTimeout(HttpPackage pack){
+        if(pack.getCommParams() == null || pack.getCommParams().getTimeout() != null){
+            return pack.getCommParams().getTimeout();
+        }
+        return this.mTimeout;
+    }
     private boolean fireResult(final HttpCommunicateResult httpResult,final ResultListener listener,final Object obj,final List<Error> warning){
         if(listener != null){
-            if(this.mMainThread && httpResult.threadId != mHandler.getLooper().getThread().getId()){
+            if(this.isMainThread() && httpResult.threadId != mHandler.getLooper().getThread().getId()){
                 mHandler.post(new Runnable(){
 
                     @Override
@@ -476,7 +499,7 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 //		}
     private void fireFault(final HttpCommunicateResult httpResult,final ResultListener listener,final Error error){
         if(listener != null){
-            if(this.mMainThread && httpResult.threadId != mHandler.getLooper().getThread().getId()){
+            if(this.isMainThread() && httpResult.threadId != mHandler.getLooper().getThread().getId()){
                 mHandler.post(new Runnable(){
 
                     @Override
@@ -501,7 +524,7 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
     private void fireProgress(final HttpCommunicateResult httpResult,final ProgressResultListener listener,final long progress,final long total){
         if(listener != null){
 //			System.out.println("3 progress:"+progress+"\ttotal:"+total);
-            if(this.mMainThread && httpResult.threadId != mHandler.getLooper().getThread().getId()){
+            if(this.isMainThread() && httpResult.threadId != mHandler.getLooper().getThread().getId()){
                 mHandler.post(new Runnable(){
 
                     @Override
@@ -520,12 +543,12 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
     @Override
     public HttpCommunicateResult<FileInfo> download(String file){
-        return download(file,null,defaultParams);
+        return download(file,null);
     }
 
     @Override
     public HttpCommunicateResult<FileInfo> download(String file, final ResultListener listener){
-        return download(file,listener,defaultParams);
+        return download(file,listener);
     }
     @Override
     public HttpCommunicateResult<FileInfo> download(String file, final ResultListener listener, HttpCommunicate.Params params){
@@ -544,17 +567,23 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 //			result.getAutoResetEvent().set();
             return result;
         }
+        if(params == null){
+            params = new HttpCommunicate.Params();
+            params.setDebug(this.isDebug());
+            params.setMainThread(this.isMainThread());
+            params.setTimeout(this.getTimeout());
+        }
         return download(url, listener,params);
 
     }
 
     @Override
     public HttpCommunicateResult<FileInfo> download(URL file) {
-        return download(file,null,defaultParams);
+        return download(file,null);
     }
     @Override
     public HttpCommunicateResult<FileInfo> download(URL file, final ResultListener listener) {
-        return download(file,listener,defaultParams);
+        return download(file,listener,null);
     }
 
     protected abstract HttpCommunicateDownloadFile downloadRequest();
@@ -566,7 +595,11 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
     @Override
     public HttpCommunicateResult<FileInfo> download(final URL file, final ResultListener listener, HttpCommunicate.Params params){
         if (params == null){
-            params = defaultParams;
+            params = new HttpCommunicate.Params();
+
+            params.setDebug(this.isDebug());
+            params.setMainThread(this.isMainThread());
+            params.setTimeout(this.getTimeout());
         }
 
         ProgressResultListener pListener = null;

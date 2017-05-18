@@ -25,6 +25,7 @@ public class HttpClientRequest implements HttpCommunicateRequest {
 	private lin.comm.http.HttpPackage pack;
 	private ResultListener listener;
 	private HttpCommunicateImpl impl;
+	private HttpCommunicate.Params params;
 
 	HttpClientRequest(HttpClient http){
 		this.http = http;
@@ -64,13 +65,13 @@ public class HttpClientRequest implements HttpCommunicateRequest {
 	}
 
 	public void request(){
-		Runnable task = new HttpClientRequestRunnable(http,impl,pack,listener);
+		Runnable task = new HttpClientRequestRunnable(http,impl,pack,listener,params);
 		executor.execute(task);
 //		new Thread(task).start();
 	}
 
 	@Override
 	public void setParams(HttpCommunicate.Params params) {
-
+		this.params = params;
 	}
 }

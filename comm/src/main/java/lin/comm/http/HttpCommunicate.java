@@ -24,6 +24,7 @@ public class HttpCommunicate {
 	public static class Params{
 		private boolean mainThread = true;
 		private boolean debug = false;
+		private int timeout;
 
 		public boolean isDebug() {
 			return debug;
@@ -41,7 +42,13 @@ public class HttpCommunicate {
 			this.mainThread = mainThread;
 		}
 
+		public int getTimeout() {
+			return timeout;
+		}
 
+		public void setTimeout(int timeout) {
+			this.timeout = timeout;
+		}
 	}
 
 	public static void setHttpDNS(HttpDNS httpDNS){
@@ -301,9 +308,9 @@ public class HttpCommunicate {
 		return global().request(pack,listener);
 	}
 
-	public static HttpCommunicateResult<Object> request(lin.comm.http.HttpPackage pack, ResultListener listener, Params params){
-		return global().request(pack,listener,params);
-	}
+//	public static HttpCommunicateResult<Object> request(lin.comm.http.HttpPackage pack, ResultListener listener, Params params){
+//		return global().request(pack,listener,params);
+//	}
 	
 //	public static HttpCommunicateResult request(lin.client.http.TcpPackage pack,ResultFunction result){
 //		return global.request(pack,result,null);

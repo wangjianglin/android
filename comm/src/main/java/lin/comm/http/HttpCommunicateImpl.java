@@ -47,7 +47,7 @@ public interface HttpCommunicateImpl{
     HttpCommunicateResult<Object> request(HttpPackage pack);
 
     //	public HttpCommunicateResult request(lin.client.http.TcpPackage pack,final ResultFunction result,final FaultFunction fault){
-    HttpCommunicateResult<Object> request(HttpPackage pack, ResultListener listener, HttpCommunicate.Params params);
+//    HttpCommunicateResult<Object> request(HttpPackage pack, ResultListener listener, HttpCommunicate.Params params);
 
     HttpCommunicateResult<FileInfo> download(String file);
     HttpCommunicateResult<FileInfo> download(String file, ResultListener listener);

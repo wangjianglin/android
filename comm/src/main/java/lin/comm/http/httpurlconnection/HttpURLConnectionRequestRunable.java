@@ -27,12 +27,14 @@ class HttpURLConnectionRequestRunable implements Runnable {
     private ResultListener listener;
     private HttpCommunicateImpl impl;
     private SessionInfo sessionInfo;
+    private HttpCommunicate.Params params;
 
-    HttpURLConnectionRequestRunable(SessionInfo sessionInfo, HttpPackage pack,ResultListener listener,HttpCommunicateImpl impl){
+    HttpURLConnectionRequestRunable(SessionInfo sessionInfo, HttpPackage pack,ResultListener listener,HttpCommunicateImpl impl,HttpCommunicate.Params params){
         this.pack = pack;
         this.listener = listener;
         this.impl = impl;
         this.sessionInfo = sessionInfo;
+        this.params = params;
     }
     @Override
     public void run() {
@@ -77,8 +79,8 @@ class HttpURLConnectionRequestRunable implements Runnable {
         Map<String, Object> params = pack.getRequestHandle().getParams(pack,new HttpURLConnectionMessage(conn));
 
         conn.setRequestMethod(pack.getMethod().name());
-        conn.setConnectTimeout(impl.getTimeout());
-        conn.setReadTimeout(impl.getTimeout());
+        conn.setConnectTimeout(this.params.getTimeout());
+        conn.setReadTimeout(this.params.getTimeout());
 
 
         for (Map.Entry<String, String> item : impl.defaultHeaders().entrySet()) {

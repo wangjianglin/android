@@ -13,6 +13,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HTTP;
 
 import java.io.ByteArrayOutputStream;
@@ -36,12 +37,14 @@ public class HttpClientRequestRunnable implements Runnable{
 
     private HttpClient http;
     private ContentType contentType= ContentType.create(HTTP.PLAIN_TEXT_TYPE, HTTP.UTF_8);
+    private HttpCommunicate.Params params;
 
-    HttpClientRequestRunnable(HttpClient http,HttpCommunicateImpl impl,HttpPackage pack,ResultListener listener){
+    HttpClientRequestRunnable(HttpClient http, HttpCommunicateImpl impl, HttpPackage pack, ResultListener listener, HttpCommunicate.Params params){
         this.impl = impl;
         this.pack = pack;
         this.http = http;
         this.listener = listener;
+        this.params = params;
     }
 
     @Override
@@ -62,6 +65,11 @@ public class HttpClientRequestRunnable implements Runnable{
             }else{
                 request = post();
             }
+
+            //超时
+            http.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, params.getTimeout());
+            http.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, params.getTimeout());
+
             response = http.execute(request);
             HttpEntity entity = response.getEntity();
             InputStream _in = entity.getContent();

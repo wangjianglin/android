@@ -54,7 +54,7 @@ public class HttpURLConnectionRequest implements HttpCommunicateRequest {
 
     public void request(){
 
-        Runnable task = new HttpURLConnectionRequestRunable(sessionInfo,pack,listener,impl);
+        Runnable task = new HttpURLConnectionRequestRunable(sessionInfo,pack,listener,impl,params);
         //HttpURLConnection connection = HttpURLConnection
         executor.execute(task);
     }

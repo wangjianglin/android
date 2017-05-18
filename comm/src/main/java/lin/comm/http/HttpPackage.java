@@ -45,7 +45,8 @@ public abstract class HttpPackage {
 	private Type respType  = String.class;//{ get;protected set; }
 
 	private Map<String,String> headers = new HashMap<String, String>();
-    
+
+	private HttpCommParams commParams = new HttpCommParams();
     public HttpPackage(){
     	this.init();
     }
@@ -248,6 +249,14 @@ public abstract class HttpPackage {
 //	}
 //	protected void setVersion(Version version) {
 //		this.version = version;
+//	}
+
+	public HttpCommParams getCommParams() {
+		return commParams;
+	}
+
+//	public void setCommParams(HttpCommParams commParams) {
+//		this.commParams = commParams;
 //	}
 
 	public boolean isMultipart(){
