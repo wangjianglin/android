@@ -176,11 +176,13 @@ public class ImagePicker extends ResView {
 	private OnLongClickListener mOnLongClickListener;
 	private int mPosition = 0;
 	private int mSlop = 0;
+	private int mLongPressTimeout;
 	@Override
 	protected void onInited() {
 
 		ViewConfiguration conf = ViewConfiguration.get(getContext());
 		mSlop = conf.getScaledTouchSlop();
+		mLongPressTimeout = ViewConfiguration.getLongPressTimeout();
 
 		HttpCommunicate.init(this.getContext());
 
@@ -295,7 +297,7 @@ public class ImagePicker extends ResView {
 	}
 
 	private boolean isMotionDown = false;
-	private Date motionDownTime = null;
+	private long motionDownTime = 0;
 	private float mMotionX = Float.MIN_VALUE;
 	private float mMotionY = Float.MIN_VALUE;
 
@@ -314,22 +316,43 @@ public class ImagePicker extends ResView {
 			}
 		}
 		if(isMotionDown == false && event.getAction() == MotionEvent.ACTION_DOWN){
-			motionDownTime = new Date();
+			motionDownTime = event.getEventTime();
 			isMotionDown = true;
 			mMotionX = event.getX();
 			mMotionY = event.getY();
+
+			final MotionEvent e = MotionEvent.obtain(event.getDownTime(), event.getEventTime() + ViewConfiguration.getLongPressTimeout() + 10, MotionEvent.ACTION_UP, event.getX(), event.getY(), event.getMetaState());
+
+
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+					}
+
+					getHandler().post(new Runnable() {
+						@Override
+						public void run() {
+							fireOnTouchListener(e);
+						}
+					});
+
+				}
+			}).start();
 		}
 		if(isMotionDown && event.getAction() == MotionEvent.ACTION_MOVE){
 			if(Math.abs(event.getX() - mMotionX) > 2*mSlop
 					|| Math.abs(event.getX() - mMotionX) > 2*mSlop) {
-				motionDownTime = null;
+				motionDownTime = 0;
 				isMotionDown = false;
 				mMotionX = Float.MIN_VALUE;
 				mMotionY = Float.MIN_VALUE;
 			}
 		}
 		if(event.getAction() == MotionEvent.ACTION_CANCEL){
-			motionDownTime = null;
+			motionDownTime = 0;
 			isMotionDown = false;
 		}
 
@@ -341,10 +364,10 @@ public class ImagePicker extends ResView {
 
 			if(Math.abs(event.getX() - mMotionX) < slop
 					&& Math.abs(event.getX() - mMotionX) < slop) {
-				long t = new Date().getTime() - motionDownTime.getTime();
+				long t = event.getEventTime() - motionDownTime;
 				if(t < 15 * 1000) {
-					if (motionDownTime != null && t > 2 * 1000) {
-						motionDownTime = null;
+					if (motionDownTime != 0 && t > mLongPressTimeout) {
+						motionDownTime = 0;
 						fireOnLongClickListener();
 					} else {
 						fireOnClickListener();
