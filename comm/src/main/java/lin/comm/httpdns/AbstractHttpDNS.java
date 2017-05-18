@@ -39,22 +39,6 @@ public abstract class AbstractHttpDNS implements HttpDNS {
         @Override
         public HostObject call() {
             return fetch(this.hostName,this.timeout);
-//            if(hostObject == null){
-//                hostObject = new HostObject();
-//                hostObject.setHostName(this.hostName);
-//            }
-//            if(hostObject.getTtl() <= 0){
-//                hostObject.setTtl(120);
-//            }
-//            hostObject.setSessionMode(sessionMode);
-//            hostObject.status(hostManager.get(hostName));
-//            hostObject.setQueryTime(System.currentTimeMillis() / 1000);
-//            hostManager.put(hostName, hostObject);
-//            return hostObject.getIp();
-//            if(hostObject != null && hostObject.getIp() != null && !"".equals(hostObject.getIp())){
-//
-//            }
-//            return null;
         }
     }
 
