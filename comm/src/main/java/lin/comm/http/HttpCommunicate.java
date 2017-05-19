@@ -331,7 +331,7 @@ public class HttpCommunicate {
 	}
 	public static HttpCommunicateResult<FileInfo> download(String file,
 														   ResultListener listener) {
-		return global().download(file,listener);
+		return global().download(file,listener,null);
 	}
 
 	public static HttpCommunicateResult<FileInfo> download(String file,

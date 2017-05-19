@@ -543,12 +543,12 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
     @Override
     public HttpCommunicateResult<FileInfo> download(String file){
-        return download(file,null);
+        return download(file,null,null);
     }
 
     @Override
     public HttpCommunicateResult<FileInfo> download(String file, final ResultListener listener){
-        return download(file,listener);
+        return download(file,listener,null);
     }
     @Override
     public HttpCommunicateResult<FileInfo> download(String file, final ResultListener listener, HttpCommunicate.Params params){
@@ -579,7 +579,7 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
     @Override
     public HttpCommunicateResult<FileInfo> download(URL file) {
-        return download(file,null);
+        return download(file,null,null);
     }
     @Override
     public HttpCommunicateResult<FileInfo> download(URL file, final ResultListener listener) {
