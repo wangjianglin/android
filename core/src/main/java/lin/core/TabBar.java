@@ -32,10 +32,8 @@ public class TabBar extends ResView {
 	@ViewById(id = "lin_core_tabbar_bar_layout")
 	private LinearLayout barLayout;
 
-//	@ViewById(id="tabbar_main_bottom")
-//	private RelativeLayout tabbarMainBottom;
-
-	private List<android.support.v4.app.Fragment> tabItems = new ArrayList<android.support.v4.app.Fragment>();
+//	private List<android.support.v4.app.Fragment> tabItems = new ArrayList<android.support.v4.app.Fragment>();
+	private List<TabItemFrag> tabItems = new ArrayList<TabItemFrag>();
 	private List<TabBarItem> tabs = new ArrayList<TabBarItem>();
 
 	public TabBar(Context context) {
@@ -132,11 +130,15 @@ public class TabBar extends ResView {
 			barItem.setOnClickListener(new MyOnClickListener(tabs.size() - 1));
 		}
 		if (isSupportAppCompat()) {
+			android.support.v4.app.Fragment fragment = null;
 			if (item.getTag() instanceof android.support.v4.app.Fragment) {
-				tabItems.add((android.support.v4.app.Fragment) item.getTag());
+				fragment = (android.support.v4.app.Fragment) item.getTag();
 			} else {
-				tabItems.add(new ViewFragment(item));
+				fragment = new ViewFragment(item);
 			}
+			TabItemFrag itemFrag = new TabItemFrag();
+			itemFrag.fragment = fragment;
+			tabItems.add(itemFrag);
 		} else {//暂不对 android.app.Fragment 兼容
 
 		}
@@ -173,7 +175,15 @@ public class TabBar extends ResView {
 				FragmentManager fragmentManager = activity.getSupportFragmentManager();
 
 				FragmentTransaction transaction = fragmentManager.beginTransaction();
-				transaction.replace(R.id.lin_core_tabbar_content, tabItems.get(tabIndex));
+				if(tabItems.get(tabIndex).isAdd){
+					transaction.show(tabItems.get(tabIndex).fragment);
+				}else {
+					transaction.add(R.id.lin_core_tabbar_content, tabItems.get(tabIndex).fragment);
+					tabItems.get(tabIndex).isAdd = true;
+				}
+				if(preIndex != -1) {
+					transaction.hide(tabItems.get(preIndex).fragment);
+				}
 				transaction.commit();
 			} else {//暂不对 android.app.Fragment 兼容
 
@@ -268,6 +278,10 @@ public class TabBar extends ResView {
 		}
 	}
 
+	private class TabItemFrag{
+		private android.support.v4.app.Fragment fragment;
+		private boolean isAdd = false;
+	}
 }
 
 
