@@ -105,8 +105,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/form_row_height"
                     app:form_row_text="text"
-                    app:form_row_title="title1"
-                    />
+                    app:form_row_title="自定义图标Row"
+                    app:form_row_icon="@drawable/icon"
+                    app:form_row_accessory="false"/>
                 <lin.core.form.Row
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/form_row_height"

@@ -4,9 +4,11 @@ package lin.core.form;
 import android.content.Context;
 import android.databinding.BindingMethod;
 import android.databinding.BindingMethods;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -29,7 +31,9 @@ import lin.core.annotation.ViewById;
 @BindingMethods({
 		@BindingMethod(type = Row.class, attribute = "form_row_text", method = "setText"),//定义绑定的方法
 		@BindingMethod(type = Row.class, attribute = "form_row_title", method = "setTitle"),
-@BindingMethod(type = Row.class, attribute = "form_row_accessory", method = "setAccessory")//定义绑定的方法
+@BindingMethod(type = Row.class, attribute = "form_row_accessory", method = "setAccessory"),
+		@BindingMethod(type = Row.class, attribute = "form_row_icon", method = "setIcon"),
+//定义绑定的方法
 })
 public class Row extends ResView {
 
@@ -52,6 +56,8 @@ public class Row extends ResView {
 	private TextView textView;
 	@ViewById(id="lin_core_form_row_title")
 	private TextView titleView;
+    @ViewById(id="lin_core_form_row_icon")
+    private ImageView iconView;
 
 	@ViewById(id="lin_core_form_row_layout")
 	private ViewGroup layout;
@@ -64,6 +70,7 @@ public class Row extends ResView {
 		this.setTitle(attrs.getString(R.styleable.form,R.styleable.form_form_row_title));
 
 		this.setAccessory(attrs.getBoolean(R.styleable.form,R.styleable.form_form_row_accessory,true));
+        this.setIcon(attrs.getDrawable(R.styleable.form,R.styleable.form_form_row_icon));
 
 		if(this.getBackground() == null){
 			this.setBackgroundColor(0xffffffff);
@@ -74,6 +81,7 @@ public class Row extends ResView {
 	protected void addViewItem(View item, int index, ViewGroup.LayoutParams params) {
 		titleView.setVisibility(View.GONE);
 		textView.setVisibility(View.GONE);
+		iconView.setVisibility(GONE);
 		layout.addView(item,index,params);
 	}
 
@@ -86,6 +94,7 @@ public class Row extends ResView {
 	private CharSequence title;
 	private CharSequence text;
 	public boolean accessory;
+    private Drawable icon;
 	public CharSequence getTitle() {
 		return title;
 	}
@@ -119,11 +128,24 @@ public class Row extends ResView {
 		}
 	}
 
-	@Override
+    public Drawable getIcon() {
+        return icon;
+    }
+
+    public void setIcon(Drawable icon) {
+		if(icon!=null) {
+			this.icon = icon;
+            iconView.setVisibility(VISIBLE);
+			iconView.setImageDrawable(icon);
+		}
+    }
+
+    @Override
 	protected void genAttrs() {
 		this.addAttr(R.styleable.form,R.styleable.form_form_row_text, AttrType.String);
 		this.addAttr(R.styleable.form,R.styleable.form_form_row_title,AttrType.String);
 		this.addAttr(R.styleable.form,R.styleable.form_form_row_accessory,AttrType.Boolean);
+        this.addAttr(R.styleable.form,R.styleable.form_form_row_icon,AttrType.Drawable);
 	}
 
 	@Override
