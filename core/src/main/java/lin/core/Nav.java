@@ -55,7 +55,7 @@ public class Nav {
 	}
 
 
-	private static Map<String,Nav> navsMap = new HashMap<>();
+	private volatile static Map<String,Nav> navsMap = new java.util.concurrent.ConcurrentHashMap<>();
 
 
 	private static long seq = 1;

@@ -7,10 +7,20 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import lin.comm.http.*;
 import lin.comm.http.Error;
@@ -382,4 +392,33 @@ class HttpURLConnectionRequestRunable implements Runnable {
         return URLEncoder.encode(value, "UTF-8");
     }
 
+
+    static {
+        try {
+            TrustManager[] tm = { new X509TrustManager(){
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return new java.security.cert.X509Certificate[] {};
+                }
+
+                public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                    //Log.i(TAG, "checkClientTrusted");
+                }
+
+                public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                    //Log.i(TAG, "checkServerTrusted");
+                }
+            } };
+            SSLContext sslContext = null;
+                sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, tm, new java.security.SecureRandom());
+//        // 从上述SSLContext对象中得到SSLSocketFactory对象
+            SSLSocketFactory ssf = sslContext.getSocketFactory();
+
+            HttpsURLConnection.setDefaultSSLSocketFactory(ssf);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        }
+    }
 }

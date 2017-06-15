@@ -1,10 +1,8 @@
 package lin.core;
 
-import android.content.Context;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,46 +10,48 @@ import android.view.ViewGroup;
 import java.lang.reflect.Method;
 
 import lin.core.annotation.BindCls;
-import lin.core.annotation.OptionsMenu;
+import lin.core.annotation.ToolsBindCls;
+import lin.util.Tools;
 
 /**
  * Created by lin on 18/01/2017.
  */
-public class BindFragment <T extends ViewDataBinding> extends AbsFragment{
-    private Class<T> cls = null;
-    public BindFragment() {
+public class BindToolsFragment<V extends ViewDataBinding,T extends ViewDataBinding> extends BindFragment<V>{
+
+
+    private Class<T> mToolsCls;
+    private T mToolsBind;
+
+    public BindToolsFragment() {
         super();
     }
 
-    protected BindFragment(Class<T> cls) {
-        this.cls = cls;
+    protected BindToolsFragment(Class<V> cls) {
+        super(cls);
     }
 
+    protected BindToolsFragment(Class<V> cls,Class<T> toolsCls) {
+        super(cls);
+        this.mToolsCls = toolsCls;
+    }
 
-    private View mView;
-    @Nullable
+    protected T getToolsBind(){
+        return mToolsBind;
+    }
+
     @Override
-    final public View onCreateViewInternal(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return getFragmentView(inflater,container);
-    }
+    protected View onCreateToolsViewInternal(LayoutInflater inflater, @Nullable ViewGroup container) {
 
-    @Nullable
-    @Override
-    public View getView() {
-        return mView;
-    }
-
-    public View getFragmentView(LayoutInflater inflater,ViewGroup parent) {
-        if(cls == null){
-            BindCls bindCls = this.getClass().getAnnotation(BindCls.class);
+        if(mToolsCls == null){
+            ToolsBindCls bindCls = this.getClass().getAnnotation(ToolsBindCls.class);
             if(bindCls != null){
-                cls = (Class<T>) bindCls.value();
+                mToolsCls = (Class<T>) bindCls.value();
             }
         }
         try {
-            Method method = cls.getMethod("inflate", LayoutInflater.class, ViewGroup.class, boolean.class);
-            binding = (T) method.invoke(null,inflater,parent,false);
-            final View view = binding.getRoot();
+            Method method = mToolsCls.getMethod("inflate", LayoutInflater.class, ViewGroup.class, boolean.class);
+            mToolsBind = (T) method.invoke(null,inflater,container,false);
+            final View view = mToolsBind.getRoot();
 
 
             return view;
@@ -59,10 +59,5 @@ public class BindFragment <T extends ViewDataBinding> extends AbsFragment{
         }catch (Throwable e){
             throw new RuntimeException(e);
         }
-    }
-
-    private T binding;
-    public T getBinding(){
-        return binding;
     }
 }

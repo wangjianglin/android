@@ -8,8 +8,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import lin.core.annotation.ResId;
+import lin.core.annotation.ViewById;
 import lin.demo.R;
 
 /**
@@ -33,6 +35,14 @@ public class Tab1 extends ResFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.tasks_fragment_menu, menu);
+    }
+
+    @ViewById(R.id.tabbar_item_checkbox_text)
+    private TextView textView;
+
+    @Override
+    protected void onCreateView() {
+        textView.setText(this.getClass().getName());
     }
 
     @Override

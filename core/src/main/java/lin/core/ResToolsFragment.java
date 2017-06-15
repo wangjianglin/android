@@ -1,50 +1,63 @@
 package lin.core;
 
+import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import lin.core.annotation.OptionsMenu;
+import java.lang.reflect.Method;
+
+import lin.core.annotation.ToolsBindCls;
 
 
 /**
  * Created by lin on 30/12/2016.
  */
 
-//处理注解
-public class ResFragment extends AbsFragment {
+public class ResToolsFragment<T extends ViewDataBinding> extends ResFragment {
 
+    private Class<T> mToolsCls;
+    private T mToolsBind;
 
-    private int mResId = 0;
-
-    public ResFragment(){
+    public ResToolsFragment() {
+        super();
     }
 
-    protected ResFragment(int resId){
-        this.mResId = resId;
-    }
-    public LayoutInflater getLayoutInflater(Bundle savedInstanceState) {
-        return LayoutInflaterFactory.setFactory2(super.getLayoutInflater(savedInstanceState));
+    protected ResToolsFragment(int resId) {
+        super(resId);
     }
 
-    private View mView;
-    @Nullable
+    protected ResToolsFragment(int resId,Class<T> toolsCls) {
+        super(resId);
+        this.mToolsCls = toolsCls;
+    }
+
+    protected T getToolsBind(){
+        return mToolsBind;
+    }
+
     @Override
-    final public View onCreateViewInternal(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if(mResId != 0){
-            mView = inflater.inflate(mResId,container,false);
-        }else {
-            mView = inflater.inflate(Views.layoutId(this), container, false);
+    protected View onCreateToolsViewInternal(LayoutInflater inflater, @Nullable ViewGroup container) {
+
+        if(mToolsCls == null){
+            ToolsBindCls bindCls = this.getClass().getAnnotation(ToolsBindCls.class);
+            if(bindCls != null){
+                mToolsCls = (Class<T>) bindCls.value();
+            }
         }
-        return mView;
-    }
+        try {
+            Method method = mToolsCls.getMethod("inflate", LayoutInflater.class, ViewGroup.class, boolean.class);
+            mToolsBind = (T) method.invoke(null,inflater,container,false);
+            final View view = mToolsBind.getRoot();
 
-    @Nullable
-    @Override
-    public View getView() {
-        return mView;
-    }
 
+            return view;
+
+        }catch (Throwable e){
+            throw new RuntimeException(e);
+        }
+    }
 }
+

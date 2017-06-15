@@ -52,7 +52,8 @@ public class ViewActivity extends AppCompatActivity{
 			actionBar.show();
 		}
 	}
-	Toolbar toolbar = null;
+	private Toolbar toolbar = null;
+	protected ViewGroup toolsLayout = null;
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,6 +62,7 @@ public class ViewActivity extends AppCompatActivity{
 		if(this.getSupportActionBar() == null){
 			this.setContentViewById(R.layout.lin_core_act_tools);
 			toolbar = (Toolbar)this.findViewById(R.id.lin_core_act_tools_toolbar);
+			toolsLayout = (ViewGroup) this.findViewById(R.id.lin_core_act_tools_layout);
 //			fragmentStud = (ViewStub) this.findViewById(R.id.lin_core_act_tools_frame_stud);
 //			viewStud = (ViewStub)this.findViewById(R.id.lin_core_act_tools_view_stud);
 			this.setSupportActionBar(toolbar);

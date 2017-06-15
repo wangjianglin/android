@@ -20,6 +20,7 @@ import lin.demo.core.ViewHolderActivity;
 import lin.demo.core.ViewInheritActivity;
 import lin.demo.form.FormActivity;
 import lin.demo.gallery.GalleryActivity;
+import lin.demo.http.HttpActivity;
 import lin.demo.nav.NavActivity;
 import lin.demo.ptr.PtrDefaultActivity;
 import lin.demo.ptr.PtrListActivity;
@@ -81,7 +82,10 @@ public class MainPresenter extends AbsBasePresenter<MainContract.View> implement
 
                 new Object[]{"form","classic",FormActivity.class},
                 new Object[]{"event bus","classic",FormActivity.class},
-                new Object[]{"web view","crosss walk",new Intent(mView.getContext(),WebViewActivity.class)}
+                new Object[]{"web view","crosss walk",new Intent(mView.getContext(),WebViewActivity.class)},
+
+
+                new Object[]{"http","http",new Intent(mView.getContext(),HttpActivity.class)}
         };
 
         Data data = null;

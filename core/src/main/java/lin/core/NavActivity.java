@@ -56,7 +56,9 @@ public class NavActivity extends ViewActivity {
 		int layoutId = intent.getIntExtra("layout_id",0);
 		
 		nav = Nav.getNav(argsId);
-		nav.activity = this;
+		if(nav != null) {
+			nav.activity = this;
+		}
 
 		ActionBar actionBar = this.getSupportActionBar();
 //		if(actionBar == null) {
@@ -87,7 +89,9 @@ public class NavActivity extends ViewActivity {
 //		addNavView(view);
 		setObjectContent(view);
 
-		nav.init();
+		if(nav != null) {
+			nav.init();
+		}
 	}
 
 	private void setInfoWithView(Object navObj,View view){

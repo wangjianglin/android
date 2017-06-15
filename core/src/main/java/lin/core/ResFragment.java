@@ -38,8 +38,6 @@ public class ResFragment extends AbsFragment {
         }else {
             mView = inflater.inflate(Views.layoutId(this), container, false);
         }
-        Views.process(this);
-        lin.core.mvvm.Utils.processViewModel(this);
         return mView;
     }
 

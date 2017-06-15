@@ -6,4 +6,11 @@
     <item type="id" name="lin_core_act_view_layout"/>
     <item type="id" name="lin_core_act_tools_frame_stud"/>
     <item type="id" name="lin_core_act_tools_view_stud"/>
+
+    <item type="id" name="lin_core_act_tools_layout"/>
+
+    <declare-styleable name="act">
+
+        <attr name="act_tools_content" format="reference"/>
+    </declare-styleable>
 </resources>

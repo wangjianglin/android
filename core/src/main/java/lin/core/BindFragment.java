@@ -32,10 +32,7 @@ public class BindFragment <T extends ViewDataBinding> extends AbsFragment{
     @Nullable
     @Override
     final public View onCreateViewInternal(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mView = getFragmentView(inflater,container);
-        Views.process(this);
-        lin.core.mvvm.Utils.processViewModel(this);
-        return mView;
+        return getFragmentView(inflater,container);
     }
 
     @Nullable

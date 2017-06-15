@@ -24,6 +24,7 @@ import lin.core.annotation.MethodProcessor;
 import lin.core.annotation.ProcessorClass;
 import lin.core.annotation.ResCls;
 import lin.core.annotation.ResId;
+import lin.core.annotation.ToolsResId;
 
 /**
  * 
@@ -148,6 +149,15 @@ public class Views {
 		return view;
 	}
 
+	public static View loadToolsView(Object holder,Context context,ViewGroup root,boolean attachToRoot){
+
+		int resId = toolsLayoutId(holder,context);
+        if(resId <= 0){
+            return null;
+        }
+		return loadView(holder,context,root,resId,attachToRoot);
+	}
+
 	public static int layoutId(Object holder){
 		return layoutId(holder,null);
 	}
@@ -181,6 +191,36 @@ public class Views {
 		}
 		return resId;
 	}
+
+	public static int toolsLayoutId(Activity holder){
+		return toolsLayoutId(holder,holder.getApplicationContext());
+	}
+
+	public static int toolsLayoutId(View holder){
+		return toolsLayoutId(holder,holder.getContext());
+	}
+
+	public static int toolsLayoutId(android.support.v4.app.Fragment holder){
+		return toolsLayoutId(holder,holder.getContext());
+	}
+	public static int toolsLayoutId(Object holder,Context context){
+		int resId = 0;
+		ToolsResId ri = holder.getClass().getAnnotation(ToolsResId.class);
+		if(ri != null){
+			if(ri.value() != 0){
+				resId = ri.value();
+			}else if(!"".equals(ri.id())){
+				try{
+					Class<?> resCls = getResCls(holder,context);
+					Class<?> layoutClass = Class.forName(resCls.getName() + "$layout");
+					Field f = layoutClass.getDeclaredField(ri.id());
+					resId = f.getInt(null);
+				}catch(Exception e){}
+			}
+		}
+		return resId;
+	}
+
 	public static android.support.v4.app.Fragment genFragment(Context context, String clsName, ViewGroup container) {
 		try {
 			return genFragment(context,Class.forName(clsName),container);
@@ -247,6 +287,9 @@ public class Views {
 		process(activity,activity.getWindow().getDecorView());
 	}
 	public static void process(Object holder,View view){
+        if(view == null){
+            return;
+        }
 		Class<?> resCls = getResCls(holder,view.getContext());
 		processAnnotation(view,holder,resCls);
 	}

@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.TextView;
 
 import lin.core.ResView;
 import lin.core.annotation.ResId;
@@ -43,7 +44,13 @@ public class TabItemView2 extends ResView {
             checkBox.setChecked(false);
         }
     }
+    @ViewById(R.id.tabbar_item_checkbox_text)
+    private TextView textView;
 
+    @Override
+    protected void onInited() {
+        textView.setText(this.getClass().getName());
+    }
     @Override
     public void onWindowFocusChanged(boolean hasWindowFocus) {
         super.onWindowFocusChanged(hasWindowFocus);

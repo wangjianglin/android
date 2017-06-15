@@ -47,6 +47,9 @@ public class ImagesActivity extends ViewActivity {
         });
         images.setImagePaths(imagePaths);
         images.setEdited(false);
+
+        images.setVedioUrl("http://i.feicuibaba.com/upload/store/1393/333FF40C-5B5C-49D0-B558-EBFCC878ED72.mp4");
+        images.setVedio(true);
         images.setDotFlag(ImagePicker.DotFlag.DOWN_RIGHT);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
