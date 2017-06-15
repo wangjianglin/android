@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="data"
+            type="lin.demo.form.FormData"/>
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:fitsSystemWindows="true">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        </android.support.design.widget.AppBarLayout>
+
+        <lin.core.form.Form
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <lin.core.form.Section
+                app:form_section_header="ok"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <lin.core.form.SectionFooter
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="============"/>
+                </lin.core.form.SectionFooter>
+                <lin.core.form.Segue
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/form_row_height"
+                app:form_row_text="text"
+                app:form_row_title="title1"
+                    app:form_row_segue="@{data.segueClsStr}"
+                />
+                <lin.core.form.Text
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/form_row_height"
+                    app:form_row_text="@={data.rowText}"
+                    app:form_row_title="title2"
+                    app:form_row_text_hint="请输入。。。"
+                    app:form_row_text_navtitle="标题"
+                    />
+                <lin.core.form.Row
+                    android:layout_width="match_parent"
+                    android:visibility="gone"
+                    android:layout_height="@dimen/form_row_height"
+                    app:form_row_text="text"
+                    app:form_row_title="title3"
+                    />
+                <lin.core.form.Switch
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/form_row_height"
+                    app:form_row_switch="@={data.check}"
+                    app:form_row_title="title4"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="自定义1"/>
+                <lin.core.form.Row
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/form_row_height"
+                    app:form_row_text="text"
+                    app:form_row_title="title5"
+                    >
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_centerInParent="true"
+                        android:layout_alignParentRight="true"
+                        android:text="自定义2"/>
+                    </lin.core.form.Row>
+                <lin.core.form.Row
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/form_row_height"
+                    app:form_row_text="text"
+                    app:form_row_title="title6"
+                    />
+            </lin.core.form.Section>
+
+
+            <lin.core.form.Section
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <lin.core.form.Row
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/form_row_height"
+                    app:form_row_text="text"
+                    app:form_row_title="title1"
+                    />
+                <lin.core.form.Row
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/form_row_height"
+                    app:form_row_text="text"
+                    app:form_row_title="title2"
+                    />
+                <lin.core.form.Row
+                    android:layout_width="match_parent"
+                    android:visibility="invisible"
+                    android:layout_height="@dimen/form_row_height"
+                    app:form_row_text="text"
+                    app:form_row_title="title3"
+                    />
+                <lin.core.form.Row
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/form_row_height"
+                    app:form_row_text="text"
+                    app:form_row_title="title4"
+                    />
+                <lin.core.form.Row
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/form_row_height"
+                    app:form_row_text="text"
+                    app:form_row_title="title5"
+                    />
+                <lin.core.form.Row
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/form_row_height"
+                    app:form_row_text="text"
+                    app:form_row_title="title6"
+                    />
+            </lin.core.form.Section>
+        </lin.core.form.Form>
+
+    </LinearLayout>
+
+</layout>
