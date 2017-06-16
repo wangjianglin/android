@@ -63,7 +63,9 @@ public class Nav {
 	Nav(String argsId,CharSequence preArgsId){
 		this.argsId = argsId;
 		navsMap.put(argsId,this);
-		preNav = navsMap.get(preArgsId);
+		if(preArgsId != null && "".equals(preArgsId)) {
+			preNav = navsMap.get(preArgsId);
+		}
 	}
 
 	void init(){
