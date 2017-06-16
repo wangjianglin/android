@@ -29,21 +29,15 @@ public class ResFragment extends AbsFragment {
         return LayoutInflaterFactory.setFactory2(super.getLayoutInflater(savedInstanceState));
     }
 
-    private View mView;
     @Nullable
     @Override
     final public View onCreateViewInternal(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View mView;
         if(mResId != 0){
             mView = inflater.inflate(mResId,container,false);
         }else {
             mView = inflater.inflate(Views.layoutId(this), container, false);
         }
-        return mView;
-    }
-
-    @Nullable
-    @Override
-    public View getView() {
         return mView;
     }
 

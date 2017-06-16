@@ -34,7 +34,7 @@ public class ViewByIdProcessor implements FieldProcessor{
 		if(viewId > 0){
 			fview = view.findViewById(viewId);
 		}else{
-			fview = view;
+			return;
 		}
 
 		try{

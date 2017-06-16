@@ -22,6 +22,7 @@ public abstract class AbsFragment extends android.support.v4.app.Fragment {
 
 //    int[] value() default 0;
 //    String[] id() default "";
+    private View mView;
     public AbsFragment(){
         this.setHasOptionsMenu(this.defaultOptionsMenu());
     }
@@ -76,9 +77,9 @@ public abstract class AbsFragment extends android.support.v4.app.Fragment {
 //            return mView;
 //        }
 
-        View mView = this.onCreateViewInternal(inflater,container,savedInstanceState);
+        mView = this.onCreateViewInternal(inflater,container,savedInstanceState);
 
-        Views.process(this);
+        Views.process(this,mView);
         lin.core.mvvm.Utils.processViewModel(this);
 
         this.onCreateView();
@@ -107,7 +108,9 @@ public abstract class AbsFragment extends android.support.v4.app.Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public abstract View getView();
+    public View getView(){
+        return mView;
+    }
 
     protected void onCreateView(){}
 }

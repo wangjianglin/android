@@ -27,18 +27,10 @@ public class BindFragment <T extends ViewDataBinding> extends AbsFragment{
         this.cls = cls;
     }
 
-
-    private View mView;
     @Nullable
     @Override
     final public View onCreateViewInternal(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return getFragmentView(inflater,container);
-    }
-
-    @Nullable
-    @Override
-    public View getView() {
-        return mView;
     }
 
     public View getFragmentView(LayoutInflater inflater,ViewGroup parent) {

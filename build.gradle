@@ -115,7 +115,7 @@ def dateStr = new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss.SSS').format(n
 subprojects {
 
     group = 'lin'
-    version = '0.1.0.36'
+    version = prop.getProperty("version","0.0.0")
 
     if(project.name == 'demo'){
         apply plugin: 'com.android.application'
