@@ -54,7 +54,7 @@ public class CrashHandler {
 					CrashHandler.this.uncaughtException(thread, ex);
 				}catch (Throwable e){
 					try {
-						Log.crash(printStackTrace(e));
+						Log.crash(null,Utils.printStackTrace(e));
 					}catch (Throwable e1){e1.printStackTrace();}
 				}
 			}});
@@ -133,9 +133,9 @@ public class CrashHandler {
 		if(listener != null){
 			
 			Crash crash = new Crash();
-			crash.setStackTrace(printStackTrace(ex));
+			crash.setStackTrace(Utils.printStackTrace(ex));
 			crash.setDeviceInfo(Device.collectDeviceInfo(this.mContext));
-			crash.setThreadInfo(threadInfo(thread));
+			crash.setThreadInfo(Utils.threadInfo(thread));
 			listener.crash(crash);
 			return true;
 		}
@@ -147,46 +147,46 @@ public class CrashHandler {
 	 * @param ex
 	 * @return 返回的文件名称，便于将文件传送到服务器
 	 */
-	private String printStackTrace(Throwable ex){
-		if(ex == null){
-			return "";
-		}
-		Writer writer =new StringWriter();
-		PrintWriter printWriter = new PrintWriter(writer);
-		ex.printStackTrace(printWriter);
-		Throwable cause = ex.getCause();
-		while (cause != null ) {
-			printWriter.println();
-			cause.printStackTrace(printWriter);
-			cause = cause.getCause();
-		}
-		printWriter.close();
-		return writer.toString();
-	}
+//	private String printStackTrace(Throwable ex){
+//		if(ex == null){
+//			return "";
+//		}
+//		Writer writer =new StringWriter();
+//		PrintWriter printWriter = new PrintWriter(writer);
+//		ex.printStackTrace(printWriter);
+//		Throwable cause = ex.getCause();
+//		while (cause != null ) {
+//			printWriter.println();
+//			cause.printStackTrace(printWriter);
+//			cause = cause.getCause();
+//		}
+//		printWriter.close();
+//		return writer.toString();
+//	}
 	
-	private String threadInfo(Thread thread){
-		if(thread == null){
-			return null;
-		}
-		StringBuffer sb = new StringBuffer();
-		sb.append("name:");
-		sb.append(thread.getName());
-		
-		sb.append("\nid:");
-		sb.append(thread.getId());
-		
-		StackTraceElement[] elements = thread.getStackTrace();
-		if(elements != null){
-			for(int n=0;n<elements.length;n++){
-				sb.append('\n');
-				sb.append(elements[n].getClassName());
-				sb.append('.');
-				sb.append(elements[n].getMethodName());
-				sb.append(" line:");
-				sb.append(elements[n].getLineNumber());
-			}
-		}
-		return sb.toString();
-	}
-	
+//	private String threadInfo(Thread thread){
+//		if(thread == null){
+//			return null;
+//		}
+//		StringBuffer sb = new StringBuffer();
+//		sb.append("name:");
+//		sb.append(thread.getName());
+//
+//		sb.append("\nid:");
+//		sb.append(thread.getId());
+//
+//		StackTraceElement[] elements = thread.getStackTrace();
+//		if(elements != null){
+//			for(int n=0;n<elements.length;n++){
+//				sb.append('\n');
+//				sb.append(elements[n].getClassName());
+//				sb.append('.');
+//				sb.append(elements[n].getMethodName());
+//				sb.append(" line:");
+//				sb.append(elements[n].getLineNumber());
+//			}
+//		}
+//		return sb.toString();
+//	}
+
 }

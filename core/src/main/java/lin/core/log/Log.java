@@ -13,9 +13,12 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.provider.Settings;
 import lin.comm.http.HttpCommunicate;
+import lin.comm.tcp.Session;
 import lin.core.Crash;
 import lin.core.CrashHandler;
 import lin.core.CrashListener;
+import lin.core.Device;
+import lin.core.Utils;
 
 /**
  * 
@@ -30,24 +33,24 @@ public class Log {
 		this.tag = tag;
 	}
 	public void info(String info){
-		log(tag,info,"INFO");
+		info(tag,info);
 	}
 	
 	public void error(String error){
-		log(tag,error,"ERROR");
+		error(tag,error);
 	}
 	
 	public void warning(String warning){
-		log(tag,warning,"WARNING");
+		warning(tag,warning);
 	}
 	
 	public void debug(String debug){
-		log(tag,debug,"DEBUG");
+		debug(tag,debug);
 	}
 	
-//	public void crash(String crash){
-//		log(tag,crash,"CRASH");
-//	}
+	public void crash(String crash){
+		crash(tag,crash);
+	}
 	
 	public static void info(String tag,String info){
 		log(tag,info,"INFO");
@@ -65,8 +68,15 @@ public class Log {
 		log(tag,debug,"DEBUG");
 	}
 	
-	public static void crash(String crash){
-		log(null,crash,"CRASH");
+	public static void crash(String tag,String crash){
+		log(tag,crash,"CRASH");
+
+		Crash crashObj = new Crash();
+		crashObj.setStackTrace(crash);
+		crashObj.setDeviceInfo(Device.collectDeviceInfo(mContext));
+		crashObj.setThreadInfo(Utils.threadInfo(Thread.currentThread()));
+
+		Util.uploadCrash(mContext,crashObj,mExceptionUrl,mUuid,tag);
 	}
 	private static void log(String tag,String log,String level){
 		Message message = new Message();
@@ -192,12 +202,21 @@ public class Log {
 //	public static void setLogUpload(LogUpload logUpload){
 //		_logUpload = logUpload;
 //	}
-	
+
 	private static boolean isInit;
+	private static Context mContext;
+	private static String mExceptionUrl;
+	private static String mUuid;
+
+	public static void init(Context context,String logUrl,String exceptionUrl){
+		init(context,logUrl,exceptionUrl,"android");
+	}
 	public static synchronized void init(Context context,String logUrl,String exceptionUrl,String logPre){
 		if(isInit){
 			return;
 		}
+		mContext = context;
+		mExceptionUrl = exceptionUrl;
 		isInit = true;
 		Intent intent = new Intent(context,LogService.class);
 		
@@ -210,9 +229,9 @@ public class Log {
 	}
 	
 	private static void initLog(final Context context,final String exceptionUrl,final String pre){
-		
-		
-		final String uuid = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+
+		mUuid = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 //		Log.setLogUpload(new LogUpload(){
 //
 //			@Override
@@ -225,37 +244,41 @@ public class Log {
 		crashHandler.setCrashListener(new CrashListener() { // 设置异常捕获监听
 
 			@Override
-			public void crash(Crash crash) {
-				crashImpl(context,crash, exceptionUrl, uuid, pre);
+			public void crash(Crash crashObj) {
+				crashImpl(context,crashObj, exceptionUrl, mUuid, pre);
 			}
 		});
 	}
 	
-	private static void crashImpl(Context context,Crash crash,String exceptionUrl,String uuid,String pre) {
-		ExceptionPackage pack = new ExceptionPackage(exceptionUrl); // 初始化向服务器发送异常Action
-		pack.setDeviceInfo(crash.getDeviceInfo());// 获取设备信息
-		pack.setInfo(crash.getStackTrace() + "\n\nthread info:\n" + crash.getThreadInfo());// 获取异常堆栈
-		//pack.setUuid("android:"+Settings.Secure.getString(this.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID));
+	private static void crashImpl(Context context,Crash crashObj,String exceptionUrl,String uuid,String pre) {
 
-		if(pre != null){
-			pack.setUuid("["+pre+"]" + uuid);
-		}else{
-			pack.setUuid(uuid);
-		}
-
-		//写不进去，异步原因导致的
-		Log.crash(pack.getInfo());
-
-		if(isDebug(context)){
-			android.util.Log.e("CRASH",pack.getInfo());
-		}
-		HttpCommunicate.request(pack, null).waitForEnd();// 向服务器发送异常信息
+		crash(null,crashObj.getStackTrace());
+		Util.uploadCrash(context,crashObj, exceptionUrl, uuid, pre).waitForEnd();
 	}
+//		ExceptionPackage pack = new ExceptionPackage(exceptionUrl); // 初始化向服务器发送异常Action
+//		pack.setDeviceInfo(crash.getDeviceInfo());// 获取设备信息
+//		pack.setInfo(crash.getStackTrace() + "\n\nthread info:\n" + crash.getThreadInfo());// 获取异常堆栈
+//		//pack.setUuid("android:"+Settings.Secure.getString(this.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID));
+//
+//		if(pre != null){
+//			pack.setUuid("["+pre+"]" + uuid);
+//		}else{
+//			pack.setUuid(uuid);
+//		}
+//
+//		//写不进去，异步原因导致的
+//		Log.crash(pack.getInfo());
+//
+//		if(isDebug(context)){
+//			android.util.Log.e("CRASH",pack.getInfo());
+//		}
+//		HttpCommunicate.request(pack, null).waitForEnd();// 向服务器发送异常信息
+//	}
 
-	private static boolean isDebug(Context context){
-		ApplicationInfo appInfo = context
-				.getApplicationInfo();
-		return (appInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
-	}
+//	private static boolean isDebug(Context context){
+//		ApplicationInfo appInfo = context
+//				.getApplicationInfo();
+//		return (appInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+//	}
 
 }
