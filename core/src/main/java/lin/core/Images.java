@@ -46,10 +46,28 @@ public class Images {
 
 	private static ImageLoader imageLoader;
 	private static Context mContext;
-	public static void init(Context context){
+
+	public static void init(Context context,ImageLoaderConfiguration config){
+		if(mContext != null){
+			return;
+		}
 		mContext = context;
+		ImageLoader.getInstance().init(config);
+
+		imageLoader = ImageLoader.getInstance();
+
+	}
+
+	public static void cleanCache(){
+		if(imageLoader != null){
+			imageLoader.clearDiskCache();
+			imageLoader.clearMemoryCache();
+		}
+	}
+	public static void init(Context context){
+
 		DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-				.cacheInMemory(true)
+//				.cacheInMemory(true)
 				.cacheOnDisk(true)
 				.bitmapConfig(Bitmap.Config.RGB_565)
 				.imageScaleType(ImageScaleType.IN_SAMPLE_INT)// 或 imageScaleType(ImageScaleType.EXACTLY)
@@ -57,12 +75,12 @@ public class Images {
 
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
 				.diskCacheSize(Integer.MAX_VALUE)
-				.memoryCacheSizePercentage(60)
+//				.memoryCacheSizePercentage(20*1024*1024)
+//				.memoryCacheSize(20*1024*1024)
 				.defaultDisplayImageOptions(defaultOptions)
 				.build();
-		ImageLoader.getInstance().init(config);
-		
-		imageLoader = ImageLoader.getInstance();
+
+		init(context,config);
 	}
 	public static interface OnImageComplete{
 		void onComplete(ImageView imageView);
