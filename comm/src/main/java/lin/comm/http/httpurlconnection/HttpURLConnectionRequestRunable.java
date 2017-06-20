@@ -50,17 +50,12 @@ class HttpURLConnectionRequestRunable implements Runnable {
     public void run() {
 
         try {
-//            URL url = new URL(HttpUtils.uri(impl, pack));
             runImpl(HttpUtils.uri(impl, pack), false, null);
         } catch (Throwable e) {
             lin.comm.http.Error error = new Error(-2,
                     "未知错误",
                     e.getMessage(),
                     lin.util.Utils.printStackTrace(e));
-//            error.setCode(-2);
-//            error.setMessage("未知错误");
-//            error.setCause(e.getMessage());
-//            error.setStackTrace(lin.util.Utils.printStackTrace(e));
 
             HttpUtils.fireFault(listener, error);
             return;
@@ -70,8 +65,7 @@ class HttpURLConnectionRequestRunable implements Runnable {
 
     private void runImpl(String urlString, boolean redirect, List<String> urls) throws Throwable {
 
-//                URL url = new URL(HttpUtils.uri(impl,pack));
-//                URL url = HttpUtils.u
+
         if (pack.getMethod() != HttpMethod.POST && pack.isMultipart()) {
             throw new RuntimeException("Multipart必须采用post请求！");
         }
@@ -80,7 +74,7 @@ class HttpURLConnectionRequestRunable implements Runnable {
             String paramsString = generParams(pack.getParams());
             urlString = addGetParams(urlString, paramsString);
         }
-//        HttpURLConnection conn = (HttpURLConnection) new URL(urlString).openConnection();
+
         HttpURLConnection conn = Utils.open(urlString,this.impl.getHttpDNS());
 
         conn.setRequestProperty("accept", "*/*");
@@ -96,10 +90,7 @@ class HttpURLConnectionRequestRunable implements Runnable {
         for (Map.Entry<String, String> item : impl.defaultHeaders().entrySet()) {
             conn.setRequestProperty(item.getKey(), item.getValue());
         }
-//        conn.setRequestProperty(Constants.HTTP_COMM_PROTOCOL, "");
-//        if (impl.isDebug()) {
-//            conn.setRequestProperty(Constants.HTTP_COMM_PROTOCOL_DEBUG, "");
-//        }
+
         for (Map.Entry<String, String> item : pack.getHeaders().entrySet()){
             conn.setRequestProperty(item.getKey(), item.getValue());
         }
@@ -159,8 +150,6 @@ class HttpURLConnectionRequestRunable implements Runnable {
             return;
         }
 
-//                OutputStream _out = conn.getOutputStream();
-
         readData(conn);
 
         conn.disconnect();
@@ -202,9 +191,6 @@ class HttpURLConnectionRequestRunable implements Runnable {
         printWriter.flush();
     }
 
-//            private void setGetParams(HttpURLConnection conn,Map<String,Object> params){
-//
-//            }
 
     private String addGetParams(String urlString, String params) throws Throwable {
         if (urlString.indexOf('?') == -1) {
@@ -236,29 +222,9 @@ class HttpURLConnectionRequestRunable implements Runnable {
         return sBuffer.toString();
     }
 
-//    private String generGetParams(Map<String, Object> params) throws Throwable {
-//
-//        if (params == null) {
-//            return "";
-//        }
-//        StringBuffer sBuffer = new StringBuffer();
-//        for (Map.Entry<String, Object> item : params.entrySet()) {
-//            sBuffer.append(item.getKey());
-//            sBuffer.append("=");
-//            if (item.getValue() != null) {
-//                sBuffer.append(item.getValue().toString());
-//            }
-//            sBuffer.append("&");
-//        }
-//        if (sBuffer.length() > 0) {
-//            sBuffer.deleteCharAt(sBuffer.length() - 1);
-//        }
-////                return sBuffer.toString();
-//        return URLEncoder.encode(sBuffer.toString(), "utf-8");
-//    }
 
     private void setMultipartParams(HttpURLConnection conn, Map<String, Object> params) throws Throwable {
-//        conn.setRequestMethod("POST");
+
         conn.setRequestProperty("Content-Type",
                 "multipart/form-data; boundary=" + boundary);
 
@@ -279,7 +245,7 @@ class HttpURLConnectionRequestRunable implements Runnable {
                 if(fileValue.getLength() < 0){
                     isLength = false;
                 }
-//                length += fileValue.getLength();
+
                 length += boundaryBytes.length + cdBytes.length + item.getKey().length() + fnBytes.length + fileValue.getFileName().length()+cdlfBytes.length
                         + ctBytes.length + fileValue.getMimeType().length() + lfBytes.length + fileValue.getLength() + lfBytes.length;
             }else{
@@ -326,15 +292,13 @@ class HttpURLConnectionRequestRunable implements Runnable {
     private void writeStringParams(OutputStream out,Map<String,String> params) throws Exception {
 
         for (Map.Entry<String,String> item : params.entrySet()) {
-//            out.write(("--" + boundary + "\r\n").getBytes());
+
             out.write(boundaryBytes);
-//            out.write("Content-Disposition: form-data; name=\"" + item.getKey()
-//                    + "\"\r\n");
+
             out.write(cdBytes);
             out.write(item.getKey().getBytes());
             out.write(cdlfBytes);
-//            out.write("\r\n");
-//            out.write(item.getValue() + "\r\n");
+
             out.write(item.getValue().getBytes());
             out.write(lfBytes);
         }
@@ -344,35 +308,24 @@ class HttpURLConnectionRequestRunable implements Runnable {
 
         for (Map.Entry<String,FileParamInfo> item : params.entrySet()) {
 
-//            length += boundaryBytes.length + cdBytes.length + item.getKey().length() + fnBytes.length + item.getValue().getFileName().length()+cdlfBytes.length
-//                    + ctBytes.length + item.getValue().getMimeType().length() + lfBytes.length + item.getValue().getLength() + lfBytes.length;
-//            ds.writeBytes("--" + boundary + "\r\n");
             out.write(boundaryBytes);
-//            ds.writeBytes("Content-Disposition: form-data; name=\"" + item.getKey()
-//                    + "\"; filename=\"" + encode(item.getValue().getFileName()) + "\"\r\n");
             out.write(cdBytes);
             out.write(item.getKey().getBytes());
             out.write(fnBytes);
             out.write(encode(item.getValue().getFileName()).getBytes());
             out.write(cdlfBytes);
 
-
-//            ds.writeBytes("Content-Type: " + item.getValue().getMimeType() + "\r\n");
-
             out.write(ctBytes);
             out.write(encode(item.getValue().getMimeType()).getBytes());
             out.write(lfBytes);
 
-//            ds.writeBytes("\r\n");
             out.write(lfBytes);
-            //ds.write(getBytes(value));
             InputStream _in = item.getValue().getFile();
-            //_in.
+
             int count = 0;
             while ((count = _in.read(buffer)) != -1){
                 out.write(buffer,0,count);
             }
-//            out.write("\r\n".getBytes());
             out.write(lfBytes);
             out.flush();
         }
@@ -380,11 +333,6 @@ class HttpURLConnectionRequestRunable implements Runnable {
 
     //添加结尾数据
     private void paramsEnd(OutputStream out) throws Throwable {
-//        ds.writeBytes("--" + boundary + "--" + "\r\n");
-//        ds.writeBytes("\r\n");
-//        out.write(("--" + boundary + "--" + "\r\n\r\n").getBytes());
-//        out.write(boundaryBytes);
-//        out.write(lfBytes);
         out.write(endBytes);
     }
 

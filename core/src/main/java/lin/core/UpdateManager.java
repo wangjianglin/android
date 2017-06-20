@@ -31,12 +31,8 @@ import lin.util.Procedure;
  */
 public class UpdateManager {
 
-	
-//	private int flag = 0;//0不需要更新，1、必须更新，2、非必须更新
-//	private UpdateInfo updateInfo;
 	public static UpdateInfo updateInfo(Context context,String versionUrl){
 		try {
-//			URL url = new URL("https://www.feicuibaba.com/buyers/buyers.php?version=true&android=true");
 			URL url = new URL(versionUrl);
 			InputStream _in = url.openConnection().getInputStream();
 			ByteArrayOutputStream _out = new ByteArrayOutputStream();
@@ -47,36 +43,19 @@ public class UpdateManager {
 			}
 			final String updateInfoString = _out.toString();
 			UpdateInfo updateInfo = parseUpdateInfo(updateInfoString);
-			int[] updateVersions = updateInfo.versions;
+
 			PackageManager packageManager = context.getPackageManager();
 
 			updateInfo.appVersion = packageManager.getPackageInfo(context.getPackageName(), 0).versionName;
-			int[] appVersions = parseVersion(updateInfo.appVersion);
-			updateInfo.appVersions = appVersions;
 
-			if(updateVersions == null || appVersions == null){
+			updateInfo.flag = compareVersion(updateInfo.version,updateInfo.appVersion);
+			
+	        if(updateInfo.flag <= 0){
 				return null;
 			}
-			
-	        
-			int flag = 0;
-	        if (updateVersions[0] > appVersions[0]) {
-	            flag = 1;
-	        }else if(updateVersions[0] == appVersions[0]){
-	            if (updateVersions[1] > appVersions[1]) {
-	                flag = 1;
-	            }else if(updateVersions[1] == appVersions[1]){
-	                if (updateVersions[2] > appVersions[2]) {
-	                    flag = 2;
-	                }
-	            }
-	        }
-	        updateInfo.flag = flag;
-	        if (flag == 0) {
-	            return null;
-	        }
+
 	        final SharedPreferences preference = context.getSharedPreferences("", 0);
-	        if (flag == 2 && preference.getBoolean("isupdateofversion", false) && preference.getString("isupdateofversion_version","").equals(updateInfo.version)) {
+	        if (updateInfo.flag == 3 && preference.getBoolean("isupdateofversion", false) && preference.getString("isupdateofversion_version","").equals(updateInfo.version)) {
 	            return null;
 	        }
 
@@ -86,10 +65,40 @@ public class UpdateManager {
 		}
 		return null;
 	}
+
+	private static int compareVersion(String ver1,String ver2){
+		int[] vers1 = parseVersion(ver1);
+		if(vers1 == null){
+			return -2;
+		}
+
+		int[] vers2 = parseVersion(ver2);
+
+		if(vers2 == null){
+			return -2;
+		}
+
+		int flag = -1;
+		if (vers1[0] > vers2[0]) {
+			flag = 1;
+		}else if(vers1[0] == vers2[0]){
+			if (vers1[1] > vers2[1]) {
+				flag = 2;
+			}else if(vers1[1] == vers2[1]){
+				if (vers1[2] > vers2[2]) {
+					flag = 3;
+				}else if (vers1[2] == vers2[2]){
+					flag = 0;
+				}
+			}
+		}
+
+		return flag;
+	}
 	
 	private static UpdateInfo parseUpdateInfo(String info){
 		UpdateInfo updateInfo = lin.util.JsonUtil.deserialize(info, UpdateInfo.class);
-		updateInfo.versions = parseVersion(updateInfo.version);
+//		updateInfo.versions = parseVersion(updateInfo.version);
 		return updateInfo;
 	}
 	private static int[] parseVersion(String v){
@@ -105,11 +114,11 @@ public class UpdateManager {
 	}
 	
 	public static class UpdateInfo{
-		private int flag;
+		private int flag;//0不需要更新，1/2、必须更新，3、非必须更新
 		private String version;
-		private int[] versions;
+//		private int[] versions;
 		private String appVersion;
-		private int[] appVersions;
+//		private int[] appVersions;
 		private String message;
 		public String getVersion() {
 			return version;
@@ -123,9 +132,9 @@ public class UpdateManager {
 		public int getFlag() {
 			return flag;
 		}
-		public int[] getVersions() {
-			return versions;
-		}
+//		public int[] getVersions() {
+//			return versions;
+//		}
 		public void setVersion(String version) {
 			this.version = version;
 		}
@@ -205,7 +214,7 @@ public class UpdateManager {
 					PackageManager.GET_ACTIVITIES);
 			String packageName = info.packageName;
 			String version = info.versionName;
-			if (packageName.equals(context.getPackageName()) && version.equals(updateInfo.version)) {
+			if (packageName.equals(context.getPackageName()) && compareVersion(version,updateInfo.version) >= 0) {
 				result = true;
 			}
 		} catch (Throwable e) {

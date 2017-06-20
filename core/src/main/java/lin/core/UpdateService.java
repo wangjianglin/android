@@ -283,7 +283,7 @@ public class UpdateService extends Service {
 			}
 		});
 		// 稍后更新
-		if(flag == 2){
+		if(flag == 3){
 			builder.setNegativeButton("稍等更新", new OnClickListener()
 			{
 				@Override

@@ -1,6 +1,7 @@
 package lin.comm.http.httpclient;
 
 import org.apache.http.client.CookieStore;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.DnsResolver;
@@ -31,66 +32,21 @@ import lin.comm.http.HttpCommunicateRequest;
  */
 public class HttpClientCommunicateImpl extends AbstractHttpCommunicateImpl{
 
-//    private CloseableHttpClient http;
-    private CookieStore cookie = new BasicCookieStore();
-    private HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory;
-    private DnsResolver dnsResolver;
-    private Registry<ConnectionSocketFactory> socketFactoryRegistry;
+    private CookieStore mCookie = new BasicCookieStore();
 
     public HttpClientCommunicateImpl(String name, HttpCommunicate c) {
         super(name, c);
-
-//        HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory = new ManagedHttpClientConnectionFactory(
-//                8 * 1024, new DefaultHttpRequestWriterFactory(), new DefaultHttpResponseParserFactory());
-
-        connFactory = new ManagedHttpClientConnectionFactory();
-        socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
-                .register("http", PlainConnectionSocketFactory.getSocketFactory())
-                .register("https", SSLConnectionSocketFactory.getSocketFactory())
-                .build();
-
-        dnsResolver = new SystemDefaultDnsResolver() {
-
-            @Override
-            public InetAddress[] resolve(final String host) throws UnknownHostException {
-                String destIp = null;
-                if(HttpClientCommunicateImpl.this.getHttpDNS() != null){
-                    destIp = HttpClientCommunicateImpl.this.getHttpDNS().getIpByHost(host);
-                }
-                if (destIp != null) {
-                    return InetAddress.getAllByName(destIp);
-                }else {
-                    return super.resolve(host);
-                }
-            }
-
-        };
-
-//        final Registry<ConnectionSocketFactory> socketFactoryRegistry,
-//        final HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory,
-//        final DnsResolver dnsResolver
-
-
     }
 
     @Override
     protected HttpCommunicateRequest getRequest() {
-        CloseableHttpClient http = HttpClients.custom().useSystemProperties()
-                .setDefaultCookieStore(cookie)
-                .setConnectionManager(new PoolingHttpClientConnectionManager(
-                        socketFactoryRegistry,connFactory,dnsResolver))
-                .build();
-        return new HttpClientRequest(http);
+        return new HttpClientRequest(mCookie);
     }
 
     @Override
     protected HttpCommunicateDownloadFile downloadRequest() {
-        CloseableHttpClient http = HttpClients.custom().useSystemProperties()
-                .setDefaultCookieStore(cookie)
-                .setConnectionManager(new PoolingHttpClientConnectionManager(
-                        socketFactoryRegistry,connFactory,dnsResolver))
-                .build();
-        return new DownloadFile(http,context);
+
+        return new DownloadFile(mCookie,context);
     }
 
     @Override

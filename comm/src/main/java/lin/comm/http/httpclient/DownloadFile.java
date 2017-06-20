@@ -12,14 +12,28 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.DnsResolver;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.ManagedHttpClientConnectionFactory;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.impl.conn.SystemDefaultDnsResolver;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.Date;
 
 import lin.comm.http.FileInfo;
@@ -38,25 +52,62 @@ class DownloadFile implements HttpCommunicateDownloadFile {
 
     private static final int DOWNLOAD_SIZE = 800 * 1024;
 
-    private HttpClient http;
-
     private ProgressResultListener listener;
 
-    private Context context;
+    private Context mContext;
     private HttpCommunicate.Params params;
     private HttpCommunicateImpl impl;
 
     private HttpGet get;
+    private CookieStore mCookie;
 
-    DownloadFile(HttpClient http,Context context){
-        this.http = http;
-        this.context = context;
+    DownloadFile(CookieStore cookie, Context context){
+        this.mCookie = cookie;
+        this.mContext = context;
+
     }
 
-//    public void download(String url) {
-//        HttpGet get = new HttpGet(url);
-//        downloadImpl(get);
-//    }
+
+    private HttpClient genHttp(){
+
+        ManagedHttpClientConnectionFactory connFactory = new ManagedHttpClientConnectionFactory();
+        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+                .register("http", PlainConnectionSocketFactory.getSocketFactory())
+                .register("https", SSLConnectionSocketFactory.getSocketFactory())
+                .build();
+
+        DnsResolver dnsResolver = new SystemDefaultDnsResolver() {
+
+            @Override
+            public InetAddress[] resolve(final String host) throws UnknownHostException {
+                String destIp = null;
+                if(impl.getHttpDNS() != null){
+                    destIp = impl.getHttpDNS().getIpByHost(host);
+                }
+                if (destIp != null) {
+                    return InetAddress.getAllByName(destIp);
+                }else {
+                    return super.resolve(host);
+                }
+            }
+
+        };
+
+        RequestConfig defaultRequestConfig = RequestConfig.custom()
+                .setSocketTimeout(params.getTimeout())
+                .setConnectTimeout(params.getTimeout())
+                .setConnectionRequestTimeout(params.getTimeout())
+                .setStaleConnectionCheckEnabled(true)
+                .build();
+
+        return HttpClients.custom().useSystemProperties()
+                .setDefaultCookieStore(mCookie)
+                .setDefaultRequestConfig(defaultRequestConfig)
+                .setConnectionManager(new PoolingHttpClientConnectionManager(
+                        socketFactoryRegistry,connFactory,dnsResolver))
+//				.setSSLSocketFactory(SSLConnectionSocketFactory.getSocketFactory())
+                .build();
+    }
 
 
     @Override
@@ -64,6 +115,8 @@ class DownloadFile implements HttpCommunicateDownloadFile {
 
         try{
             HttpGet get = new HttpGet(url.toString());
+
+            HttpClient http = genHttp();
             HttpResponse response = http.execute(get);
 
             if(response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
@@ -150,10 +203,10 @@ class DownloadFile implements HttpCommunicateDownloadFile {
 
         String md5s = lin.util.MD5.digest(get.getURI().toString());
 
-        File path = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS + "/cache");
+        File path = mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS + "/cache");
 
         if (path == null) {
-            path = new File(context.getCacheDir() + "/" + Environment.DIRECTORY_DOWNLOADS + "/cache");
+            path = new File(mContext.getCacheDir() + "/" + Environment.DIRECTORY_DOWNLOADS + "/cache");
         }
 
         String cacheFileName = path.getAbsoluteFile() + "/download-cache-" + md5s;
@@ -211,6 +264,7 @@ class DownloadFile implements HttpCommunicateDownloadFile {
             get.setHeader("Range", "bytes=" + start + "-" + (start + DOWNLOAD_SIZE - 1));
         }
 
+        HttpClient http = genHttp();
         HttpResponse response = http.execute(get);
 
 //        if (statusCode == HttpStatus.SC_OK) {

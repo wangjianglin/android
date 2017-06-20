@@ -214,6 +214,9 @@ subprojects {
 
         doFirst {
 
+            if(project.name == 'demo'){
+                return
+            }
             //configuration = configurations.archives
             repositories.mavenDeployer {
 //            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }

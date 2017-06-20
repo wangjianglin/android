@@ -1,5 +1,7 @@
 package lin.comm.http.httpclient;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -10,8 +12,20 @@ import lin.comm.http.HttpCommunicateRequest;
 import lin.comm.http.HttpPackage;
 import lin.comm.http.ResultListener;
 
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.DnsResolver;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.ManagedHttpClientConnectionFactory;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.impl.conn.SystemDefaultDnsResolver;
 
 
 /**
@@ -26,17 +40,11 @@ public class HttpClientRequest implements HttpCommunicateRequest {
 	private ResultListener listener;
 	private HttpCommunicateImpl impl;
 	private HttpCommunicate.Params params;
+	private CookieStore mCookie;
 
-	HttpClientRequest(HttpClient http){
-		this.http = http;
+	HttpClientRequest(CookieStore cookie){
+		this.mCookie = cookie;
 	}
-	
-//	public HttpClientRequest(HttpCommunicateImpl impl,lin.client.http.HttpPackage pack,ResultListener listener, HttpCommunicateResult result,HttpClient http){
-//		this.impl = impl;
-//		this.pack = pack;
-//		this.listener = listener;
-//		this.http = http;
-//	}
 	
 	private HttpPost post = null;
 	public void abort(){
@@ -47,7 +55,7 @@ public class HttpClientRequest implements HttpCommunicateRequest {
 	private static ThreadPoolExecutor executor = new ThreadPoolExecutor(20, 50, 10,
 			TimeUnit.MINUTES, new ArrayBlockingQueue<Runnable>(3000),
 			new ThreadPoolExecutor.CallerRunsPolicy());
-	private HttpClient http;
+	private CloseableHttpClient http;
 
 	@Override
 	public void setPackage(HttpPackage pack) {
@@ -65,6 +73,44 @@ public class HttpClientRequest implements HttpCommunicateRequest {
 	}
 
 	public void request(){
+
+		ManagedHttpClientConnectionFactory connFactory = new ManagedHttpClientConnectionFactory();
+		Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+				.register("http", PlainConnectionSocketFactory.getSocketFactory())
+				.register("https", SSLConnectionSocketFactory.getSocketFactory())
+				.build();
+
+		DnsResolver dnsResolver = new SystemDefaultDnsResolver() {
+
+			@Override
+			public InetAddress[] resolve(final String host) throws UnknownHostException {
+				String destIp = null;
+                if(impl.getHttpDNS() != null){
+                    destIp = impl.getHttpDNS().getIpByHost(host);
+                }
+                if (destIp != null) {
+                    return InetAddress.getAllByName(destIp);
+                }else {
+				return super.resolve(host);
+                }
+			}
+
+		};
+
+		RequestConfig defaultRequestConfig = RequestConfig.custom()
+				.setSocketTimeout(params.getTimeout())
+				.setConnectTimeout(params.getTimeout())
+				.setConnectionRequestTimeout(params.getTimeout())
+				.setStaleConnectionCheckEnabled(true)
+				.build();
+
+		CloseableHttpClient http = HttpClients.custom().useSystemProperties()
+				.setDefaultCookieStore(mCookie)
+				.setDefaultRequestConfig(defaultRequestConfig)
+				.setConnectionManager(new PoolingHttpClientConnectionManager(
+						socketFactoryRegistry,connFactory,dnsResolver))
+//				.setSSLSocketFactory(SSLConnectionSocketFactory.getSocketFactory())
+				.build();
 		Runnable task = new HttpClientRequestRunnable(http,impl,pack,listener,params);
 		executor.execute(task);
 //		new Thread(task).start();
@@ -75,3 +121,4 @@ public class HttpClientRequest implements HttpCommunicateRequest {
 		this.params = params;
 	}
 }
+

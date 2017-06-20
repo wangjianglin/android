@@ -17,9 +17,6 @@ import lin.comm.http.ResultListener;
  */
 public class HttpURLConnectionRequest implements HttpCommunicateRequest {
 
-    //HttpURLConnection
-
-    private String cookie;
     private lin.comm.http.HttpPackage pack;
     private ResultListener listener;
     private HttpCommunicateImpl impl;
@@ -32,9 +29,6 @@ public class HttpURLConnectionRequest implements HttpCommunicateRequest {
 
     HttpURLConnectionRequest(SessionInfo sessionInfo){
         this.sessionInfo = sessionInfo;
-//        this.impl = impl;
-//        this.pack = pack;
-//        this.listener = listener;
     }
 
     @Override
@@ -55,7 +49,6 @@ public class HttpURLConnectionRequest implements HttpCommunicateRequest {
     public void request(){
 
         Runnable task = new HttpURLConnectionRequestRunable(sessionInfo,pack,listener,impl,params);
-        //HttpURLConnection connection = HttpURLConnection
         executor.execute(task);
     }
 

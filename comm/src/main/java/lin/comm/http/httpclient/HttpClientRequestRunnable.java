@@ -13,7 +13,6 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HTTP;
 
 import java.io.ByteArrayOutputStream;
@@ -25,7 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import lin.comm.http.*;
+import lin.comm.http.HttpCommunicate;
+import lin.comm.http.HttpCommunicateImpl;
+import lin.comm.http.HttpMethod;
+import lin.comm.http.HttpPackage;
+import lin.comm.http.HttpUtils;
+import lin.comm.http.ResultListener;
+
 
 /**
  * Created by lin on 1/11/16.
@@ -54,21 +59,12 @@ public class HttpClientRequestRunnable implements Runnable{
         try {
             //HTTP请求
 
-//						HttpConnectionParams.setSoTimeout(http.getParams(), 60000);
-//						post.set
-//						http.getConnectionManager().
-//						http.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 6000);
-
             HttpRequestBase request = null;
             if(pack.getMethod() == HttpMethod.GET){
                 request = get();
             }else{
                 request = post();
             }
-
-            //超时
-            http.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, params.getTimeout());
-            http.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, params.getTimeout());
 
             response = http.execute(request);
             HttpEntity entity = response.getEntity();
@@ -84,10 +80,6 @@ public class HttpClientRequestRunnable implements Runnable{
                     "未知错误",
                     e.getMessage(),
                     lin.util.Utils.printStackTrace(e));
-//						error.setCode(-2);
-//						error.setMessage("未知错误");
-//						error.setCause(e.getMessage());
-//						error.setStackTrace(lin.util.Utils.printStackTrace(e));
 
             HttpUtils.fireFault(listener, error);
             return;
@@ -115,14 +107,9 @@ public class HttpClientRequestRunnable implements Runnable{
     }
     private HttpRequestBase post(){
         HttpPost post = new HttpPost(HttpUtils.uri(impl, pack));
-//        for (Map.Entry<String,String> item : impl.defaultHeaders().entrySet()){
-//            post.addHeader(item.getKey(),item.getValue());
-//        }
+
         addHeaders(this.pack,post);
-//        post.addHeader(Constants.HTTP_COMM_PROTOCOL, "");
-//        if(impl.isDebug()){
-//            post.addHeader(Constants.HTTP_COMM_PROTOCOL_DEBUG, "");
-//        }
+
         Map<String,Object> postParams = pack.getRequestHandle().getParams(pack,new HttpClientMessage(post));
         if(postParams != null){
             if(pack.isMultipart()){
@@ -159,7 +146,6 @@ public class HttpClientRequestRunnable implements Runnable{
     }
 
     private String addGetParams(String url, String params) {
-//        String urlString = url.toString();
         if (url.indexOf('?') == -1) {
             url += "?" + params;
         } else {
