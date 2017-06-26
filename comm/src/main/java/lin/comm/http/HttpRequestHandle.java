@@ -9,8 +9,10 @@ import java.util.Map;
  *
  */
 public interface HttpRequestHandle {
-	
+
+    public void preprocess(HttpPackage pack,HttpCommunicate.Params params);
+
 	Map<String,Object> getParams(HttpPackage pack,HttpMessage httpMessage);
 
-    void response(HttpPackage pack, byte[] bytes, ResultListener listener);
+    void response(HttpPackage pack,HttpClientResponse response, byte[] bytes, ResultListener listener);
 }

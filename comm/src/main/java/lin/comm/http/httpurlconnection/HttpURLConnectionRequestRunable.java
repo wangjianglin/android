@@ -49,8 +49,9 @@ class HttpURLConnectionRequestRunable implements Runnable {
     @Override
     public void run() {
 
+        HttpClientResponse response = new HttpClientResponse();
         try {
-            runImpl(HttpUtils.uri(impl, pack), false, null);
+            runImpl(response,HttpUtils.uri(impl, pack), false, null);
         } catch (Throwable e) {
             lin.comm.http.Error error = new Error(-2,
                     "未知错误",
@@ -60,10 +61,22 @@ class HttpURLConnectionRequestRunable implements Runnable {
             HttpUtils.fireFault(listener, error);
             return;
         }
-        pack.getRequestHandle().response(pack, buffer, listener);
+        pack.getRequestHandle().response(pack,response, buffer, listener);
     }
 
-    private void runImpl(String urlString, boolean redirect, List<String> urls) throws Throwable {
+    private void runImpl(HttpClientResponse response,String urlString, boolean redirect, List<String> urls) throws Throwable {
+        HttpURLConnection conn = null;
+        try {
+            conn = runImplReturnConn(response, urlString, redirect, urls);
+        }finally {
+            if(conn != null){
+                conn.disconnect();
+            }
+        }
+    }
+
+
+    private HttpURLConnection runImplReturnConn(HttpClientResponse response,String urlString, boolean redirect, List<String> urls) throws Throwable {
 
 
         if (pack.getMethod() != HttpMethod.POST && pack.isMultipart()) {
@@ -77,8 +90,8 @@ class HttpURLConnectionRequestRunable implements Runnable {
 
         HttpURLConnection conn = Utils.open(urlString,this.impl.getHttpDNS());
 
-        conn.setRequestProperty("accept", "*/*");
-        conn.setRequestProperty("Connection", "Keep-Alive");//conn.setRequestProperty("Connection", "close");
+//        conn.setRequestProperty("accept", "*/*");
+//        conn.setRequestProperty("Connection", "Keep-Alive");//conn.setRequestProperty("Connection", "close");
 
         Map<String, Object> params = pack.getRequestHandle().getParams(pack,new HttpURLConnectionMessage(conn));
 
@@ -91,7 +104,7 @@ class HttpURLConnectionRequestRunable implements Runnable {
             conn.setRequestProperty(item.getKey(), item.getValue());
         }
 
-        for (Map.Entry<String, String> item : pack.getHeaders().entrySet()){
+        for (Map.Entry<String, String> item : this.params.headers().entrySet()){
             conn.setRequestProperty(item.getKey(), item.getValue());
         }
 
@@ -146,20 +159,32 @@ class HttpURLConnectionRequestRunable implements Runnable {
             if (urls.contains(urlString)) {
                 throw new RuntimeException();
             }
-            runImpl(urlString, true, urls);
-            return;
+            runImpl(response,urlString, true, urls);
+            return conn;
         }
 
-        readData(conn);
+        response.setStatusCode(statusCode);
 
-        conn.disconnect();
+        for(Map.Entry<String,List<String>> item : conn.getHeaderFields().entrySet()){
+            response.addHeader(item.getKey(),item.getValue());
+        }
+
+        readData(conn,statusCode != 200);
+
+        return conn;
     }
 
-    private void readData(HttpURLConnection conn) throws Throwable {
+    private void readData(HttpURLConnection conn,boolean error) throws Throwable {
         int count = 0;
 
         ByteArrayOutputStream _out = new ByteArrayOutputStream();
-        InputStream _in = conn.getInputStream();
+        InputStream _in = null;
+        if(error) {
+            _in = conn.getErrorStream();
+        }else{
+            _in = conn.getInputStream();
+        }
+
         while ((count = _in.read(buffer)) != -1) {
             _out.write(buffer, 0, count);
         }
@@ -193,6 +218,9 @@ class HttpURLConnectionRequestRunable implements Runnable {
 
 
     private String addGetParams(String urlString, String params) throws Throwable {
+        if(params == null || "".equals(params)){
+            return urlString;
+        }
         if (urlString.indexOf('?') == -1) {
             urlString += "?" + params;
         } else {
@@ -212,6 +240,7 @@ class HttpURLConnectionRequestRunable implements Runnable {
             sBuffer.append("=");
             if (item.getValue() != null) {
                 sBuffer.append(encode(item.getValue().toString()));
+//                sBuffer.append(item.getValue());
 
             }
             sBuffer.append("&");
@@ -337,7 +366,7 @@ class HttpURLConnectionRequestRunable implements Runnable {
     }
 
     private String encode(String value) throws UnsupportedEncodingException {
-        return URLEncoder.encode(value, "UTF-8");
+        return URLEncoder.encode(value, "utf-8");
     }
 
 

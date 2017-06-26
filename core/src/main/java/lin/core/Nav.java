@@ -49,14 +49,12 @@ public class Nav {
 	private Object[] args;
 	private Result result;
 
-
 	public Object[] getArgs(){
 		return this.args;
 	}
 
-
-	private volatile static Map<String,Nav> navsMap = new java.util.concurrent.ConcurrentHashMap<>();
-
+	//private volatile static Map<String,Nav> navsMap = new java.util.concurrent.ConcurrentHashMap<>();
+	private volatile static Map<String,Nav> navsMap = new HashMap<>();
 
 	private static long seq = 1;
 

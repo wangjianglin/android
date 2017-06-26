@@ -13,7 +13,7 @@ public class NormalHttpRequestHandle  extends AbstractHttpRequestHandle{
 
     @SuppressWarnings("unchecked")
     @Override
-    public void response(HttpPackage pack, byte[] bytes, ResultListener listener) {
+    public void response(HttpPackage pack,HttpClientResponse response, byte[] bytes, ResultListener listener) {
 
         Object obj = null;
         List<Error> warning = null;

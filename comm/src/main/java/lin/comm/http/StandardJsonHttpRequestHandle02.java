@@ -4,6 +4,7 @@ import java.util.List;
 
 import lin.comm.Constants;
 import lin.util.JsonUtil;
+import lin.util.Utils;
 import lin.util.reflect.PropertyOperator;
 
 
@@ -14,7 +15,7 @@ import lin.util.reflect.PropertyOperator;
  *
  *
  */
-public class StandardJsonHttpRequestHandle extends AbstractHttpRequestHandle{
+public class StandardJsonHttpRequestHandle02 extends AbstractHttpRequestHandle{
 
 	public static class ResultData<T>{
 		private long code;
@@ -82,51 +83,80 @@ public class StandardJsonHttpRequestHandle extends AbstractHttpRequestHandle{
 	}
 
 	public void preprocess(HttpPackage pack,HttpCommunicate.Params params){
-		params.addHeader(Constants.HTTP_COMM_PROTOCOL,"0.1");
+		params.addHeader(Constants.HTTP_COMM_PROTOCOL,"0.2");
 
 		if(params.isDebug()){
 			params.addHeader(Constants.HTTP_COMM_PROTOCOL_DEBUG,"");
 		}
 	}
 
+	public void error(HttpPackage pack, byte[] bytes, ResultListener listener){
+		Error error = null;
+		try {
+			String resp = new String(bytes, "utf-8");
+			ResultData resultData = JsonUtil.deserialize(resp, new JsonUtil.GeneralType(ResultData.class, pack.getRespType()));
+
+			error = new Error(resultData.code,
+					resultData.getMessage(),
+					resultData.getCause(),
+					resultData.getStackTrace());
+			error.setWarning(resultData.warning);
+		}catch (Throwable e){
+			error = new Error(-5,"",e.getMessage(), Utils.printStackTrace(e));
+		}
+		listener.fault(error);
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public void response(HttpPackage pack, HttpClientResponse response, byte[] bytes, ResultListener listener) {
-		
+	public void response(HttpPackage pack,HttpClientResponse response, byte[] bytes, ResultListener listener) {
+
+		if (response.getStatusCode() == 200) {
+			if(response.getHeader(Constants.HTTP_COMM_WITH_WARNING) != null) {
+				resultWithWarning(pack, bytes, listener);
+			}else{
+				result(pack, bytes, listener);
+			}
+		}else if(response.getStatusCode() == 600) {
+			error(pack, bytes, listener);
+		}else{
+			listener.fault(new Error(-4,"未知错误","",""));
+		}
+	}
+
+	public void resultWithWarning(HttpPackage pack, byte[] bytes, ResultListener listener) {
+
 		Object obj = null;
 		List<Error> warning = null;
 		Error error = null;
 		try{
 			String resp = new String(bytes,"utf-8");
-//			obj = lin.util.JsonUtil.deserialize(resp, pack.getRespType());
-//			obj  = lin.util.json.JSONUtil.deserialize(resp);
-//			ResultData resultData = (ResultData) lin.util.json.JSONUtil.deserialize(obj,ResultData.class);
-			@SuppressWarnings("rawtypes")
+
 			ResultData resultData = JsonUtil.deserialize(resp, new JsonUtil.GeneralType(ResultData.class, pack.getRespType()));
-			///ResultData resltData = (ResultData) ad.util.json.JSONUtil.deserialize(resp, ResultData.class);
-			if(resultData.code <0){
-//				error = new Error();
-//				error.setCode(resultData.code);
-//				error.setCause(resultData.cause);
-//				error.setMessage(resultData.message);
-//				error.setStackTrace(resultData.stackTrace);
-				error = new Error(resultData.code,
-						resultData.getMessage(),
-						resultData.getCause(),
-						resultData.getStackTrace());
-//				PropertyOperator.copy(resultData, error);
-			}else{
-//				Map<String,Object> map = (Map<String, Object>) obj;
-				//obj = lin.util.json.JSONUtil.deserialize(map.get("result"), pack.getRespType());
-//				Object obj2 = resultData.getResult();
-				obj = resultData.getResult();
-				warning = resultData.getWarning();
-			}
+
+			obj = resultData.getResult();
+			warning = resultData.getWarning();
+
 		}catch(Throwable e){
-			e.printStackTrace();
-			error = new Error(-1,null,null,null);
-//			error.setCode(-1);
-			//return;
+			error = new Error(-1,null,null,lin.util.Utils.printStackTrace(e));
+		}
+		if(error != null){
+			HttpUtils.fireFault(listener, error);
+		}else{
+			HttpUtils.fireResult(listener,obj,warning);
+		}
+	}
+
+	public void result(HttpPackage pack, byte[] bytes, ResultListener listener){
+
+		Object obj = null;
+		List<Error> warning = null;
+		Error error = null;
+		try{
+			String resp = new String(bytes,"utf-8");
+			obj = JsonUtil.deserialize(resp, pack.getRespType());
+		}catch(Throwable e){
+			error = new Error(-1,null,null,lin.util.Utils.printStackTrace(e));
 		}
 		if(error != null){
 			HttpUtils.fireFault(listener, error);

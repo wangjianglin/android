@@ -290,11 +290,24 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
     protected abstract HttpCommunicateRequest getRequest();
 
+    private void processPackHttpHeaders(HttpPackage pack, HttpCommunicate.Params params){
+        pack.getRequestHandle().preprocess(pack,params);
+
+        Map<String,String> headers = pack.getHeaders();
+        if(headers == null || headers.size() == 0){
+            return;
+        }
+        for(Map.Entry<String,String> item : headers.entrySet()){
+            params.addHeader(item.getKey(),item.getValue());
+        }
+    }
 
     @Override
 //    	public HttpCommunicateResult request(lin.client.http.TcpPackage pack,final ResultFunction result,final FaultFunction fault){
 //    public HttpCommunicateResult<Object> request(final lin.comm.http.HttpPackage pack, final ResultListener listener, HttpCommunicate.Params params){
     public HttpCommunicateResult<Object> request(final lin.comm.http.HttpPackage pack, final ResultListener listener){
+
+        this.fireRequestListener(pack);
 
         HttpCommunicate.Params params = new HttpCommunicate.Params();
 
@@ -302,7 +315,7 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
         params.setMainThread(this.isMainThread(pack));
         params.setTimeout(this.getTimeout(pack));
 
-        this.fireRequestListener(pack);
+        processPackHttpHeaders(pack,params);
 
         final HttpCommunicateResult<Object> httpHesult = new HttpCommunicateResult<Object>();
 

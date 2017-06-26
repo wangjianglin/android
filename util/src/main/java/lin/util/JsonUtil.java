@@ -139,10 +139,15 @@ public static <T> T deserialize(String json,Type type){
 			return;
 		}
 
-		if(type.isPrimitive() || Number.class.isAssignableFrom(type) || String.class.isAssignableFrom(type)){
+		if(type.isPrimitive()
+				|| type.isEnum()
+				|| Number.class.isAssignableFrom(type)
+				|| String.class.isAssignableFrom(type)
+				|| Boolean.class.isAssignableFrom(type)){
 			map.put(pre, obj+"");
 			return;
 		}
+
 		//如果是一个对象
 		if(obj instanceof Map){
 			@SuppressWarnings("unchecked")

@@ -32,7 +32,7 @@ public class HttpURLConnectionCommunicateImpl extends AbstractHttpCommunicateImp
 
 	@Override
 	public void newSession() {
-
+		sessionInfo = new SessionInfo();
 	}
 
 }

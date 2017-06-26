@@ -1,5 +1,7 @@
 package lin.comm.http;
 
+import java.util.List;
+
 /**
  * 
  * @author 王江林
@@ -36,6 +38,13 @@ public class Error {
 	 * 错误类型,0、由后台业务逻辑错误产生，1、后台请求前置验证不通过产生的错误，2、HTTP请求由于网络方面的原因产生的错误
 	 */
 	private int type = 3;
+
+	private List<Error> warning;
+
+	/**
+	 * @hide
+	 */
+	Error(){}
 
 	public Error(long code,String message,String cause,String stackTrace){
 		this.code = code;
@@ -100,5 +109,12 @@ public class Error {
 	void setType(int type) {
 		this.type = type;
 	}
-	
+
+	public List<Error> getWarning() {
+		return warning;
+	}
+
+	void setWarning(List<Error> warning) {
+		this.warning = warning;
+	}
 }

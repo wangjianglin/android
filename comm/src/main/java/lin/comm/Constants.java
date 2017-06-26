@@ -43,9 +43,10 @@ public class Constants {
 	//private static final String RESPONSE_CODING = "__response_coding__";
 
 	public static final String HTTP_COMM_PROTOCOL = "__http_comm_protocol__";
+	public static final String HTTP_COMM_WITH_WARNING = "__http_comm_with_warning__";
 	public static final String HTTP_COMM_PROTOCOL_DEBUG = "__http_comm_protocol_debug__";
 	public static final String HTTP_COMM_PROTOCOL_VERSION = "/__http_comm_protocol__/__version__";
-	public static final String HTTP_VERSION = "0.1";
+	public static final String HTTP_VERSION = "0.2";
 	
 //	public static final String DEFAULT_LOCATION = "/WEB-INF/content/";
 //	public static final String LOCATION_PARAM = "location";

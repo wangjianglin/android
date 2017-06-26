@@ -10,6 +10,9 @@ import java.util.Map;
  *
  */
 public abstract class AbstractHttpRequestHandle implements HttpRequestHandle{
+
+	@Override
+	public void preprocess(HttpPackage pack,HttpCommunicate.Params params){}
 	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, Object> getParams(HttpPackage pack,HttpMessage httpMessage) {

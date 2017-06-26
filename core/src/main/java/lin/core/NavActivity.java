@@ -96,6 +96,9 @@ public class NavActivity extends ViewActivity {
 
 	private void setInfoWithView(Object navObj,View view){
 
+		if(nav == null){
+			return;
+		}
 		if(view != null) {
 			if (view.getLayoutParams() instanceof ContentView.LayoutParams) {
 				ContentView.LayoutParams lp = (ContentView.LayoutParams) view.getLayoutParams();
@@ -171,7 +174,7 @@ public class NavActivity extends ViewActivity {
 	}
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
-		if(keyCode == KeyEvent.KEYCODE_BACK){
+		if(keyCode == KeyEvent.KEYCODE_BACK && nav != null){
 			if(isBackKeyDown) {
 				nav.pop();
 			}
@@ -183,7 +186,9 @@ public class NavActivity extends ViewActivity {
 
 	@Override
 	public boolean onSupportNavigateUp() {
-		nav.pop();
+		if(nav != null) {
+			nav.pop();
+		}
 		return true;
 	}
 

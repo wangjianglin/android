@@ -9,5 +9,5 @@ package lin.comm.http;
 public enum HttpCommunicateType {
 
 //	GET,POST,DELETE,PUT,HEADER
-	HttpURLConnection,HttpClient
+	HttpURLConnection,HttpClient,Volley
 }

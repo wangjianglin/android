@@ -16,6 +16,7 @@ import lin.util.reflect.PropertyOperator;
  */
 public class EncryptJsonHttpRequestHandle implements HttpRequestHandle {
 
+
 	public static class ResultData<T>{
 		private long code;
 		private long sequeueid;// { get; set; }
@@ -80,6 +81,12 @@ public class EncryptJsonHttpRequestHandle implements HttpRequestHandle {
 			this.result = result;
 		}
 	}
+
+	@Override
+	public void preprocess(HttpPackage pack, HttpCommunicate.Params params) {
+		
+	}
+
 	@Override
 	public Map<String, Object> getParams(HttpPackage pack,HttpMessage httpMessage) {
 		httpMessage.addHeader(Constants.HTTP_COMM_PROTOCOL, Constants.HTTP_VERSION);
@@ -150,7 +157,7 @@ public class EncryptJsonHttpRequestHandle implements HttpRequestHandle {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void response(HttpPackage pack, byte[] bytes, ResultListener listener) {
+	public void response(HttpPackage pack,HttpClientResponse response, byte[] bytes, ResultListener listener) {
 		//System.out.println("result:"+resp);
 //		jsonParam = URLDecoder.decode(jsonParam, "utf-8");
 		//jsonParam = jsonParam;

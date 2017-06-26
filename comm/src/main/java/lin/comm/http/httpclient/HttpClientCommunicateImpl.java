@@ -51,6 +51,6 @@ public class HttpClientCommunicateImpl extends AbstractHttpCommunicateImpl{
 
     @Override
     public void newSession() {
-
+        mCookie = new BasicCookieStore();
     }
 }

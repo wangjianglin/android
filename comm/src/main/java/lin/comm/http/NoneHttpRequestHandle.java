@@ -12,12 +12,17 @@ import java.util.Map;
 public class NoneHttpRequestHandle implements HttpRequestHandle {
 
 	@Override
+	public void preprocess(HttpPackage pack, HttpCommunicate.Params params) {
+
+	}
+
+	@Override
 	public Map<String, Object> getParams(HttpPackage pack,HttpMessage httpMessage) {
 		return null;
 	}
 
 	@Override
-	public void response(HttpPackage pack, byte[] bytes, ResultListener listener) {
+	public void response(HttpPackage pack,HttpClientResponse response, byte[] bytes, ResultListener listener) {
 		
 	}
 

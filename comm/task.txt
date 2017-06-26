@@ -32,3 +32,5 @@ HttpPackage 加入请求与响应编码注解
 8、改进下载api，支持设置http头，建HttpDownloadPackage类
 
 https://www.feicuibaba.com/proxy/proxy-channel.apk.php?channel=own  不能用httpdns
+
+http get 中文乱码

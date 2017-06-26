@@ -11,6 +11,7 @@ import java.util.Map;
 
 import lin.comm.http.httpclient.HttpClientCommunicateImpl;
 import lin.comm.http.httpurlconnection.HttpURLConnectionCommunicateImpl;
+import lin.comm.http.volley.AndroidVolleyCommunicateImpl;
 import lin.comm.httpdns.HttpDNS;
 
 /**
@@ -25,6 +26,22 @@ public class HttpCommunicate {
 		private boolean mainThread = true;
 		private boolean debug = false;
 		private int timeout;
+
+
+		private Map<String,String> mHeaders = new HashMap<>();
+
+		public void addHeader(String name,String value){
+			mHeaders.put(name,value);
+		}
+
+		public void removeHeader(String name){
+			mHeaders.remove(name);
+		}
+
+		public Map<String,String> headers(){
+			return new HashMap<>(mHeaders);
+		}
+
 
 		public boolean isDebug() {
 			return debug;
@@ -140,15 +157,17 @@ public class HttpCommunicate {
 			if (impl == null || impl.get() == null) {
 //				HttpCommunicateImpl himpl = new HttpCommunicateImpl(name,_tmp);
 				HttpCommunicateImpl himpl =null;
-				if(type == HttpCommunicateType.HttpURLConnection){
-					himpl = new HttpURLConnectionCommunicateImpl(name,_tmp);
-				}else{
+				if(type == HttpCommunicateType.Volley){
+					himpl = new AndroidVolleyCommunicateImpl(name,_tmp);
+				}else if(type == HttpCommunicateType.HttpClient){
 					himpl = new HttpClientCommunicateImpl(name,_tmp);
+				}else{
+					himpl = new HttpURLConnectionCommunicateImpl(name,_tmp);
 				}
 				impl = new SoftReference<HttpCommunicateImpl>(himpl);
 				himpl.addHttpRequestListener(globalListner);
-				if(context != null) {
-					himpl.init(context);
+				if(mContext != null) {
+					himpl.init(mContext);
 				}
 				impls.put(name, impl);
 			}
@@ -363,9 +382,12 @@ public class HttpCommunicate {
 		global().removeHeader(name);
 	}
 
-	private static Context context;
+	private static Context mContext;
 	public static void init(Context context){
-		HttpCommunicate.context = context;
+		if(mContext != null){
+			return;
+		}
+		HttpCommunicate.mContext = context;
 		synchronized (impls) {
 			for (SoftReference<HttpCommunicateImpl> impl : impls.values()){
 				HttpCommunicateImpl himpl = impl.get();

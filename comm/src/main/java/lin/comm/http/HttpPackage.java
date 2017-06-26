@@ -23,7 +23,7 @@ import lin.comm.http.annotation.HttpParamName;
  */
 public abstract class HttpPackage {
 	public static final HttpRequestHandle JSON = new EncryptJsonHttpRequestHandle();
-	public static final HttpRequestHandle STANDARD_JSON = new StandardJsonHttpRequestHandle();
+	public static final HttpRequestHandle STANDARD_JSON = new StandardJsonHttpRequestHandle02();
 	public static final HttpRequestHandle NONE = new NoneHttpRequestHandle();
 	public static final HttpRequestHandle NORMAL = new NormalHttpRequestHandle();
 
@@ -168,13 +168,17 @@ public abstract class HttpPackage {
     			
     			paramValue = f.get(this);
 				if(paramValue == null){
-					params.put(paramName,"");
+//					params.put(paramName,"");
 					continue;
 				}
-    			if(paramValue instanceof String || paramValue.getClass().isPrimitive()){// || paramValue instanceof ContentBody){
+    			if(paramValue instanceof String
+						|| paramValue.getClass().isEnum()
+						|| paramValue.getClass().isPrimitive()
+						|| Number.class.isAssignableFrom(paramValue.getClass())){// || paramValue instanceof ContentBody){
     				params.put(paramName, paramValue);
     				continue;
     			}
+
     			fileInfo = f.getAnnotation(HttpFileInfo.class);
     			if(fileInfo != null){
     				fileName = fileInfo.name();

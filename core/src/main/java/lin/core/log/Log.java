@@ -51,6 +51,10 @@ public class Log {
 	public void crash(String crash){
 		crash(tag,crash);
 	}
+
+	public void crash(Throwable e){
+		crash(tag,lin.util.Utils.printStackTrace(e));
+	}
 	
 	public static void info(String tag,String info){
 		log(tag,info,"INFO");
@@ -67,7 +71,10 @@ public class Log {
 	public static void debug(String tag,String debug){
 		log(tag,debug,"DEBUG");
 	}
-	
+
+	public static void crash(String tag,Throwable e){
+		crash(tag,lin.util.Utils.printStackTrace(e));
+	}
 	public static void crash(String tag,String crash){
 		log(tag,crash,"CRASH");
 

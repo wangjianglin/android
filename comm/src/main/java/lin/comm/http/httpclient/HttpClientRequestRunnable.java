@@ -1,5 +1,6 @@
 package lin.comm.http.httpclient;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import lin.comm.http.HttpClientResponse;
 import lin.comm.http.HttpCommunicate;
 import lin.comm.http.HttpCommunicateImpl;
 import lin.comm.http.HttpMethod;
@@ -54,11 +56,10 @@ public class HttpClientRequestRunnable implements Runnable{
 
     @Override
     public void run() {
-        HttpResponse response;
         ByteArrayOutputStream _out = new ByteArrayOutputStream();
+        HttpClientResponse httpClientResponse = new HttpClientResponse();
         try {
             //HTTP请求
-
             HttpRequestBase request = null;
             if(pack.getMethod() == HttpMethod.GET){
                 request = get();
@@ -66,7 +67,8 @@ public class HttpClientRequestRunnable implements Runnable{
                 request = post();
             }
 
-            response = http.execute(request);
+            HttpResponse response = http.execute(request);
+            httpClientResponse.setStatusCode(response.getStatusLine().getStatusCode());
             HttpEntity entity = response.getEntity();
             InputStream _in = entity.getContent();
             byte bs[] = new byte[4096];
@@ -75,6 +77,10 @@ public class HttpClientRequestRunnable implements Runnable{
                 _out.write(bs, 0, count);
             }
             _in.close();
+
+            for(Header header : response.getAllHeaders()){
+                httpClientResponse.addHeader(header.getName(),header.getValue());
+            }
         } catch (Throwable e) {
             lin.comm.http.Error error = new lin.comm.http.Error(-2,
                     "未知错误",
@@ -84,14 +90,14 @@ public class HttpClientRequestRunnable implements Runnable{
             HttpUtils.fireFault(listener, error);
             return;
         }
-        pack.getRequestHandle().response(pack, _out.toByteArray(), listener);
+        pack.getRequestHandle().response(pack,httpClientResponse, _out.toByteArray(), listener);
     }
 
     private void addHeaders(HttpPackage pack,HttpRequestBase request){
         for (Map.Entry<String,String> item : impl.defaultHeaders().entrySet()){
             request.addHeader(item.getKey(),item.getValue());
         }
-        for (Map.Entry<String,String> item : pack.getHeaders().entrySet()){
+        for (Map.Entry<String,String> item : params.headers().entrySet()){
             request.removeHeaders(item.getKey());
             request.addHeader(item.getKey(),item.getValue());
         }

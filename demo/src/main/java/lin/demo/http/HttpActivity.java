@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.List;
 
 import lin.comm.http.Error;
+import lin.comm.http.ExceptionPackage;
 import lin.comm.http.HttpCommunicate;
 import lin.comm.http.ResultListener;
 import lin.comm.http.TestPackage;
@@ -32,16 +33,21 @@ public class HttpActivity extends ViewActivity {
 
         setContentView(R.layout.activity_http);
 
-
-        TestPackage pack = new TestPackage();
+        ExceptionPackage pack = new ExceptionPackage();
+        pack.setWarning(true);
+//        TestPackage pack = new TestPackage();
 
         pack.setData("测试数据！");
 
+//        ExceptionPackage pack = new ExceptionPackage();
+
         try {
-            HttpCommunicate.setCommUrl(new URL("https://s.feicuibaba.com"));
+            //HttpCommunicate.setCommUrl(new URL("http://www.feicuibaba.com:8080"));
+            HttpCommunicate.setCommUrl(new URL("http://192.168.0.102:8080/fcbb_b2b2c"));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+        HttpCommunicate.setDebug(true);
 
         HttpCommunicate.request(pack, new ResultListener() {
             @Override
