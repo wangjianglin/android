@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import lin.util.ByteUtils;
+import lin.util.Bytes;
 
 
 class CommunicateRecv
@@ -194,7 +194,7 @@ class CommunicateRecv
 //                        }else{
 //                            pack.setState(PackageState.RESPONSE);
 //                        }
-                        sequeue = ByteUtils.readLong(sequeueBytes,1);
+                        sequeue = Bytes.readLong(sequeueBytes,1);
                         pack.setSequeue(sequeue);
                         initStatue.action();
 

@@ -1,7 +1,7 @@
 package lin.comm.tcp;
 
 import lin.comm.tcp.annotation.ProtocolParserType;
-import lin.util.ByteUtils;
+import lin.util.Bytes;
 
 
 @ProtocolParserType(1)
@@ -20,7 +20,7 @@ public class CommandProtocolParser_010 extends AbstractProtocolParser
 
         CommandTcpPackage pack = null;
         try {
-            int command = ByteUtils.readInt(buffer,3);
+            int command = Bytes.readInt(buffer,3);
 //            pack = (CommandTcpPackage) commands.get(command).newInstance();
             if (state == PackageState.REQUEST){
                 pack = CommandPackageManager.newRequestInstance(command);

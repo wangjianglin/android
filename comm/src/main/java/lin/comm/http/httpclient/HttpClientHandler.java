@@ -5,63 +5,109 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.DnsResolver;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.ManagedHttpClientConnectionFactory;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.impl.conn.SystemDefaultDnsResolver;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
 import java.net.URLEncoder;
+import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import lin.comm.http.AbstractHttpCommunicateHandler;
 import lin.comm.http.HttpClientResponse;
+import lin.comm.http.HttpClientResponseImpl;
 import lin.comm.http.HttpCommunicate;
 import lin.comm.http.HttpCommunicateImpl;
 import lin.comm.http.HttpMethod;
 import lin.comm.http.HttpPackage;
 import lin.comm.http.HttpUtils;
 import lin.comm.http.ResultListener;
+import lin.comm.http.httpurlconnection.HttpURLConnectionCommunicateImpl;
 
 
 /**
  * Created by lin on 1/11/16.
  */
-public class HttpClientRequestRunnable implements Runnable{
-    private final ResultListener listener;
-    private HttpCommunicateImpl impl;
-    private HttpPackage pack;
+public class HttpClientHandler extends AbstractHttpCommunicateHandler<HttpURLConnectionCommunicateImpl> {
 
-    private HttpClient http;
     private ContentType contentType= ContentType.create(HTTP.PLAIN_TEXT_TYPE, HTTP.UTF_8);
-    private HttpCommunicate.Params params;
 
-    HttpClientRequestRunnable(HttpClient http, HttpCommunicateImpl impl, HttpPackage pack, ResultListener listener, HttpCommunicate.Params params){
-        this.impl = impl;
-        this.pack = pack;
-        this.http = http;
-        this.listener = listener;
-        this.params = params;
+    HttpClientHandler(){
     }
 
+    private HttpClient genHttp(){
+        		ManagedHttpClientConnectionFactory connFactory = new ManagedHttpClientConnectionFactory();
+		Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+				.register("http", PlainConnectionSocketFactory.getSocketFactory())
+				.register("https", SSLConnectionSocketFactory.getSocketFactory())
+				.build();
+
+		DnsResolver dnsResolver = new SystemDefaultDnsResolver() {
+
+			@Override
+			public InetAddress[] resolve(final String host) throws UnknownHostException {
+				String destIp = null;
+                if(mImpl.getHttpDNS() != null){
+                    destIp = mImpl.getHttpDNS().getIpByHost(host);
+                }
+                if (destIp != null) {
+                    return InetAddress.getAllByName(destIp);
+                }else {
+				return super.resolve(host);
+                }
+			}
+
+		};
+
+		RequestConfig defaultRequestConfig = RequestConfig.custom()
+				.setSocketTimeout(mParams.getTimeout())
+				.setConnectTimeout(mParams.getTimeout())
+				.setConnectionRequestTimeout(mParams.getTimeout())
+				.setStaleConnectionCheckEnabled(true)
+				.build();
+
+		return HttpClients.custom().useSystemProperties()
+//				.setDefaultCookieStore(mCookie)
+				.setDefaultRequestConfig(defaultRequestConfig)
+				.setConnectionManager(new PoolingHttpClientConnectionManager(
+						socketFactoryRegistry,connFactory,dnsResolver))
+//				.setSSLSocketFactory(SSLConnectionSocketFactory.getSocketFactory())
+				.build();
+    }
     @Override
-    public void run() {
+    public void process(Listener listener) {
+        HttpClient http = genHttp();
         ByteArrayOutputStream _out = new ByteArrayOutputStream();
-        HttpClientResponse httpClientResponse = new HttpClientResponse();
+        HttpClientResponseImpl httpClientResponse = new HttpClientResponseImpl();
         try {
             //HTTP请求
             HttpRequestBase request = null;
-            if(pack.getMethod() == HttpMethod.GET){
+            if(mPack.getMethod() == HttpMethod.GET){
                 request = get();
             }else{
                 request = post();
@@ -87,38 +133,41 @@ public class HttpClientRequestRunnable implements Runnable{
                     e.getMessage(),
                     lin.util.Utils.printStackTrace(e));
 
-            HttpUtils.fireFault(listener, error);
-            return;
+            httpClientResponse.setStatusCode(700);
+//            HttpUtils.fireFault(listener, error);
+//            return;
         }
-        pack.getRequestHandle().response(pack,httpClientResponse, _out.toByteArray(), listener);
+        httpClientResponse.setData(_out.toByteArray());
+//        pack.getRequestHandle().response(pack,httpClientResponse, listener);
+        listener.response(httpClientResponse);
     }
 
     private void addHeaders(HttpPackage pack,HttpRequestBase request){
-        for (Map.Entry<String,String> item : impl.defaultHeaders().entrySet()){
+        for (Map.Entry<String,String> item : mImpl.defaultHeaders().entrySet()){
             request.addHeader(item.getKey(),item.getValue());
         }
-        for (Map.Entry<String,String> item : params.headers().entrySet()){
+        for (Map.Entry<String,String> item : mParams.headers().entrySet()){
             request.removeHeaders(item.getKey());
             request.addHeader(item.getKey(),item.getValue());
         }
     }
     private HttpRequestBase get() throws Throwable {
-        String url = HttpUtils.uri(impl, pack);
-        url = addGetParams(url,generParams(pack.getParams()));
+        String url = HttpUtils.uri(mImpl, mPack);
+        url = addGetParams(url,generParams(mPack.getParams()));
         HttpGet get = new HttpGet(url);
 
-        addHeaders(this.pack,get);
+        addHeaders(this.mPack,get);
 
         return get;
     }
     private HttpRequestBase post(){
-        HttpPost post = new HttpPost(HttpUtils.uri(impl, pack));
+        HttpPost post = new HttpPost(HttpUtils.uri(mImpl, mPack));
 
-        addHeaders(this.pack,post);
+        addHeaders(this.mPack,post);
 
-        Map<String,Object> postParams = pack.getRequestHandle().getParams(pack,new HttpClientMessage(post));
+        Map<String,Object> postParams = mPack.getRequestHandle().getParams(mPack);
         if(postParams != null){
-            if(pack.isMultipart()){
+            if(mPack.isMultipart()){
                 MultipartEntityBuilder builder = MultipartEntityBuilder.create();
                 builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
                 builder.setCharset(Charset.forName("UTF-8"));
@@ -183,5 +232,10 @@ public class HttpClientRequestRunnable implements Runnable{
 
     private String encode(String value) throws UnsupportedEncodingException {
         return URLEncoder.encode(value, "UTF-8");
+    }
+
+    @Override
+    public void abort() {
+
     }
 }

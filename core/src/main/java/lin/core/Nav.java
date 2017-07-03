@@ -1,5 +1,7 @@
 package lin.core;
 
+import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.util.Date;
 import java.util.HashMap;
@@ -54,15 +56,18 @@ public class Nav {
 	}
 
 	//private volatile static Map<String,Nav> navsMap = new java.util.concurrent.ConcurrentHashMap<>();
-	private volatile static Map<String,Nav> navsMap = new HashMap<>();
+	private volatile static Map<String,SoftReference<Nav>> navsMap = new HashMap<>();
 
 	private static long seq = 1;
 
 	Nav(String argsId,CharSequence preArgsId){
 		this.argsId = argsId;
-		navsMap.put(argsId,this);
+		navsMap.put(argsId,new SoftReference<Nav>(this));
 		if(preArgsId != null && "".equals(preArgsId)) {
-			preNav = navsMap.get(preArgsId);
+			SoftReference<Nav> value = navsMap.get(preArgsId);
+			if(value != null) {
+				preNav = value.get();
+			}
 		}
 	}
 
@@ -84,6 +89,17 @@ public class Nav {
 		if(result != null){
 			result.result(args);
 		}
+
+		this.removeNav();
+	}
+	private void removeNav(){
+		this.remove(this);
+		System.out.println("remove argsid:"+this.argsId);
+	}
+	private void remove(Nav nav){
+		if(nav.argsId != null && "".equals(nav.argsId)) {
+			navsMap.remove(nav.argsId);
+		}
 	}
 
 	public void popToTag(String tag,Object ... args){
@@ -94,12 +110,14 @@ public class Nav {
 		Nav preNav = this;
 		while(preNav != null && preNav.preNav != null && !tag.equals(preNav.preNav.getTag())){
 			preNav.activity.finish();
+			remove(preNav);
 			preNav = preNav.preNav;
 		}
 		preNav.activity.finish();
 		if(preNav.result != null){
 			preNav.result.result(args);
 		}
+		remove(preNav);
 	}
 	
 	public void popToRoot(Object ... args){
@@ -107,12 +125,14 @@ public class Nav {
 		Nav preNav = this;
 		while(preNav != null && preNav.preNav != null){
 			preNav.activity.finish();
+			remove(preNav);
 			preNav = preNav.preNav;
 		}
 		preNav.activity.finish();
 		if(preNav.result != null){
 			preNav.result.result(args);
 		}
+		remove(preNav);
 	}
 
 	public static Nav push(Activity activity, int layoutId, Result result, Object ... args) {
@@ -128,6 +148,7 @@ public class Nav {
 		
 		String argsId = "args_id_" + new Date().getTime() + ":" + seq++ + ":" + Math.round(1000);
 
+		System.out.println("argsId 1:"+argsId);
 		intent.setAction(argsId);
 
 		if(viewCls != null) {
@@ -203,7 +224,8 @@ public class Nav {
 	 */
 	public static Nav getNav(android.view.View view) {
 		if (view == null) {
-			return null;
+			throw new RuntimeException("view is null");
+//			return null;
 		}
 		Context context = view.getContext();
 		return getNav(context);
@@ -213,17 +235,28 @@ public class Nav {
 		if(context instanceof NavActivity){
 			return ((NavActivity) context).getNav();
 		}
-		return null;
+		throw new RuntimeException("content not NavActivity");
+//		return null;
 	}
 	public static Nav getNav(android.support.v4.app.Fragment fragment){
 		if(fragment == null){
-			return null;
+			throw new RuntimeException("fragment is null");
+//			return null;
 		}
 		return getNav(fragment.getContext());
 	}
 
 	static Nav getNav(String argsId){
-		return navsMap.get(argsId);
+		SoftReference<Nav> value = navsMap.get(argsId);
+		if(value == null){
+			throw new RuntimeException("nav release");
+//			return null;
+		}
+		Nav nav = value.get();
+		if(nav == null){
+			throw new RuntimeException("not nav value");
+		}
+		return nav;
 	}
 
 	public interface Result{

@@ -1,4 +1,4 @@
-package lin.comm.http.httpurlconnection;
+package lin.comm.http.volley;
 
 /**
  * Created by lin on 1/29/16.

@@ -12,7 +12,7 @@ import lin.comm.http.annotation.HttpParamName;
  */
 @HttpPackageMethod(HttpMethod.POST)
 @HttpPackageUrl("/core/comm/ex.action")
-public class ExceptionPackage extends HttpPackage{
+public class ExceptionPackage extends HttpPackage<String>{
 
     @HttpParamName
     private String data;// { get; set; }

@@ -5,19 +5,17 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.pm.ApplicationInfo;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.provider.Settings;
-import lin.comm.http.HttpCommunicate;
-import lin.comm.tcp.Session;
+
 import lin.core.Crash;
 import lin.core.CrashHandler;
 import lin.core.CrashListener;
-import lin.core.Device;
+import lin.util.DeviceUtil;
 import lin.core.Utils;
 
 /**
@@ -80,7 +78,7 @@ public class Log {
 
 		Crash crashObj = new Crash();
 		crashObj.setStackTrace(crash);
-		crashObj.setDeviceInfo(Device.collectDeviceInfo(mContext));
+		crashObj.setDeviceInfo(DeviceUtil.collectDeviceInfo(mContext));
 		crashObj.setThreadInfo(Utils.threadInfo(Thread.currentThread()));
 
 		Util.uploadCrash(mContext,crashObj,mExceptionUrl,mUuid,tag);

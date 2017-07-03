@@ -31,7 +31,7 @@ import lin.comm.http.ProgressResultListener;
 /**
  * Created by lin on 9/24/15.
  */
-class DownloadFile implements HttpCommunicateDownloadFile {
+public class DownloadFile implements HttpCommunicateDownloadFile {
 
     private static final int DOWNLOAD_SIZE = 800 * 1024;
 
@@ -41,7 +41,7 @@ class DownloadFile implements HttpCommunicateDownloadFile {
     private HttpCommunicate.Params params;
     private Context context;
 
-    DownloadFile(Context context){
+    public DownloadFile(Context context){
         this.context = context;
     }
 

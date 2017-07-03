@@ -321,9 +321,9 @@ public class MainActivity extends Activity {
                 @Override
                 public void run() {
                     while (true) {
-                        impl.request(pack, new ResultListener() {
+                        impl.request(pack, new ResultListener<String>() {
                             @Override
-                            public void result(Object obj, List<Error> warning) {
+                            public void result(String obj, List<Error> warning) {
                                 System.out.println("obj:" + obj);
                             }
 

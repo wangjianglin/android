@@ -6,10 +6,14 @@ package lin.comm.http;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 
 
-import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
+import java.net.HttpCookie;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,51 +37,54 @@ import lin.util.Action;
  */
 public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl{
 
-    protected Context context;
+
+    private static ThreadPoolExecutor mExecutor = new ThreadPoolExecutor(10, 50, 15,
+            TimeUnit.MINUTES, new ArrayBlockingQueue<Runnable>(3000),
+            new ThreadPoolExecutor.CallerRunsPolicy());
+
+    protected Context mContext;
     private int mTimeout = 10000;
-    private String name;
-    private Map<String,String> defaultHeaders = new HashMap<String,String>();
-    private HttpDNS httpDNS;
+    private String mName;
+    private Map<String,String> mDefaultHeaders = new HashMap<String,String>();
+    private HttpDNS mHttpDNS;
+
+    private SessionInfo mSessionInfo;
 
     private boolean mDebug = false;
     /**
      * 通信 URL
      */
-    private URL baseUri = null;
-
-//    private HttpCommunicate.Params defaultParams = new HttpCommunicate.Params();
+    private URL mBaseUrl = null;
 
     private static long cacheSize = 200 * 1024 * 1024;
 
     private boolean mMainThread = false;
 
-    //HttpCommunicateImpl(){}
     protected AbstractHttpCommunicateImpl(String name,HttpCommunicate c) {
         if(c == null){
             throw new RuntimeException();
         }
-        this.name = name;
-        //创建HttpClientBuilder
-//        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
-//        //HttpClient
-//        http = httpClientBuilder.build();
-//        CookieStore cookie = new BasicCookieStore();
-//        http = HttpClients.custom().useSystemProperties()
-//                .setDefaultCookieStore(cookie)
-//                .build();
+        this.mName = name;
+        mSessionInfo = new SessionInfo();
+
+        if(Looper.myLooper() == null || Looper.myLooper() == Looper.getMainLooper()){
+            mHandler = gHandler;
+        }else{
+            mHandler = new Handler();
+        }
     }
 
 
     @Override
     public void init(Context context){
-        if(this.context == null && context != null) {
-            this.context = context;
+        if(this.mContext == null && context != null) {
+            this.mContext = context;
             CacheDownloadFile.init(context);
         }
     }
 
     public Context getContext(){
-        return this.context;
+        return this.mContext;
     }
 
     @Override
@@ -89,18 +96,15 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
     public void setTimeout(int timeout) {
         this.mTimeout = timeout;
     }
-    //	public HttpCommunicateImpl(){
-//	}
-
 
     @Override
     public HttpDNS getHttpDNS() {
-        return httpDNS;
+        return mHttpDNS;
     }
 
     @Override
     public void setHttpDNS(HttpDNS httpDNS) {
-        this.httpDNS = httpDNS;
+        this.mHttpDNS = httpDNS;
     }
 
     @Override
@@ -114,22 +118,22 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
     }
 
     public Map<String,String> defaultHeaders(){
-        return this.defaultHeaders;
+        return this.mDefaultHeaders;
     }
     @Override
     public void addHeader(String name, String value){
-        defaultHeaders.put(name,value);
+        mDefaultHeaders.put(name,value);
     }
 
 
     @Override
     public void removeHeader(String name){
-        defaultHeaders.remove(name);
+        mDefaultHeaders.remove(name);
     }
 
     @Override
     public String getName(){
-        return name;
+        return mName;
     }
 
 
@@ -143,13 +147,13 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
         String uriString = url.toString();
         if(uriString.endsWith("/")){
             try {
-                baseUri = new URL(uriString.substring(0, uriString.length() - 1));
+                mBaseUrl = new URL(uriString.substring(0, uriString.length() - 1));
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
         }else{
             try {
-                baseUri = new URL(uriString);
+                mBaseUrl = new URL(uriString);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -159,7 +163,7 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
     @Override
     public URL getCommUrl(){
-        return baseUri;
+        return mBaseUrl;
     }
 
     @Override
@@ -194,27 +198,20 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 //			credentialsProvider = credsProvider;
 //		}
 
-    private List<SoftReference<HttpRequestListener>> listeners = new ArrayList<SoftReference<HttpRequestListener>>();
+    private List<HttpRequestListener> mListeners = new ArrayList<HttpRequestListener>();
 
     @Override
     public void addHttpRequestListener(HttpRequestListener listener){
-        SoftReference<HttpRequestListener> slistener = new SoftReference<HttpRequestListener>(listener);
-        listeners.add(slistener);
+        mListeners.add(listener);
     }
 
     @Override
     public void removeHttpRequestListener(HttpRequestListener listener){
-        for(SoftReference<HttpRequestListener> item : listeners){
-            if(item.get() == listener){
-                listeners.remove(item);
-                break;
-            }
-        }
+        mListeners.remove(listener);
     }
 
     private void fireRequestResultListener(HttpPackage pack,Object obj, List<lin.comm.http.Error> warning){
-        for(SoftReference<HttpRequestListener> item : listeners){
-            HttpRequestListener listener = item.get();
+        for(HttpRequestListener listener : mListeners){
             if(listener != null){
                 listener.requestComplete(this, pack, obj, warning);
             }
@@ -222,8 +219,7 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
     }
 
     private void fireRequestFaultListener(HttpPackage pack,Error error){
-        for(SoftReference<HttpRequestListener> item : listeners){
-            HttpRequestListener listener = item.get();
+        for(HttpRequestListener listener : mListeners){
             if(listener != null){
                 listener.requestFault(this, pack, error);
             }
@@ -231,51 +227,12 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
     }
 
     private void fireRequestListener(HttpPackage pack){
-        for(SoftReference<HttpRequestListener> item : listeners){
-            HttpRequestListener listener = item.get();
+        for(HttpRequestListener listener : mListeners){
             if(listener != null){
                 listener.request(this, pack);
             }
         }
     }
-
-//    private CookieStore cookieStore = new BasicCookieStore();
-//    CookieStore getCookieStore(){
-//        return cookieStore;
-//    }
-
-
-//    @Override
-//    public void newSession(){
-//        cookieStore = new BasicCookieStore();
-//    }
-
-//	public HttpCommunicateResult request(lin.client.http.TcpPackage pack,ResultListener listener){
-//		if(listener != null){
-//			return request(pack,listener::result,listener::fault);
-//		}
-//		return request(pack,null,null);
-//	}
-
-//	public HttpCommunicateResult request(lin.client.http.TcpPackage pack,ResultFunction result){
-//		return request(pack,result,null);
-//	}
-
-//	private CloseableHttpClient http;// = HttpClients.createDefault();
-//	private DefaultHttpClient http = new DefaultHttpClient();
-
-    //Java调用
-//	loseableHttpClient httpclient = HttpClients.custom()
-//            .setDefaultCookieStore(cookies)
-//            .build();
-//Android修改为
-
-//    private CloseableHttpClient http;// = HttpClients.custom().useSystemProperties()
-//            .setDefaultCookieStore(cookies)
-//            .build();
-
-
-    //	private AndroidHTTPClient c = AndroidHttpClient.newInstance("");
 
 
     @Override
@@ -283,14 +240,36 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
         return request(pack,null);
     }
 
-//    @Override
-//    public HttpCommunicateResult<Object> request(final lin.comm.http.HttpPackage pack, final ResultListener listener){
-//        return request(pack,listener,defaultParams);
-//    }
+//    protected abstract HttpCommunicateRequest getRequest();
 
-    protected abstract HttpCommunicateRequest getRequest();
+    protected abstract HttpCommunicateHandler getHandler();
 
-    private void processPackHttpHeaders(HttpPackage pack, HttpCommunicate.Params params){
+    private void processPackHttpHeaders(HttpPackage pack, HttpCommunicate.Params params) {
+        if (mSessionInfo.mCookieStore != null) {
+            List<HttpCookie> cookies = mSessionInfo.mCookieStore.getCookies();
+//            try {
+//                cookies = mSessionInfo.mCookieStore.get(this.getCommUrl().toURI());
+//            } catch (URISyntaxException e) {
+//            }
+            if(cookies != null && cookies.size() > 0) {
+
+                StringBuffer buffer = new StringBuffer();
+                for(HttpCookie cookie : cookies){
+                    if(cookie.hasExpired()){
+                        continue;
+                    }
+                    buffer.append(cookie.toString());
+                    buffer.append(';');
+                }
+                if(buffer.length() > 0){
+                    buffer.deleteCharAt(buffer.length()-1);
+                }
+                params.addHeader("Cookie", buffer.toString());
+            }
+        }
+        if(pack == null){
+            return;
+        }
         pack.getRequestHandle().preprocess(pack,params);
 
         Map<String,String> headers = pack.getHeaders();
@@ -305,7 +284,7 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
     @Override
 //    	public HttpCommunicateResult request(lin.client.http.TcpPackage pack,final ResultFunction result,final FaultFunction fault){
 //    public HttpCommunicateResult<Object> request(final lin.comm.http.HttpPackage pack, final ResultListener listener, HttpCommunicate.Params params){
-    public HttpCommunicateResult<Object> request(final lin.comm.http.HttpPackage pack, final ResultListener listener){
+    public <T> HttpCommunicateResult<T> request(final lin.comm.http.HttpPackage<T> pack, final ResultListener<T> listener){
 
         this.fireRequestListener(pack);
 
@@ -317,16 +296,14 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
         processPackHttpHeaders(pack,params);
 
-        final HttpCommunicateResult<Object> httpHesult = new HttpCommunicateResult<Object>();
+        final HttpCommunicateResult<T> httpHesult = new HttpCommunicateResult<T>();
 
-        HttpCommunicateRequest request = this.getRequest();
+//        HttpCommunicateRequest request = this.getRequest();
 
-        //		final AutoResetEvent set = new AutoResetEvent(false);
-//        HttpURLConnectionRequest request = new HttpURLConnectionRequest(this,pack, new ResultListener() {
-        ResultListener listenerImpl = new ResultListener() {
+        final ResultListener listenerImpl = new ResultListener<T>() {
 
             @Override
-            public void result(final Object obj, final List<Error> warning) {
+            public void result(final T obj, final List<Error> warning) {
                 lin.util.thread.ActionExecute.execute(new Action() {
                     @Override
                     public void action() {
@@ -349,11 +326,6 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
                 });
             }
-
-            //			@Override
-            //			public void progress(long count, long total) {
-            //				//HttpUtils.fireProgress(ProgressFunction,count,total);
-            //			}
 
             @Override
             public void fault(final Error error) {
@@ -378,82 +350,47 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
             }
         };//);
 
-        request.setPackage(pack);
-        request.setImpl(this);
-        request.setListener(listenerImpl);
-        request.setParams(params);
+//        request.setPackage(pack);
+//        request.setImpl(this);
+//        request.setListener(listenerImpl);
+//        request.setParams(params);
 
-        httpHesult.request = request;
-        //		httpHesult.set = set;
-        request.request();
+        final HttpCommunicateHandler handler = this.getHandler();
+
+        handler.setPackage(pack);
+        handler.setImpl(this);
+        handler.setParams(params);
+
+        mExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                handler.process(new HttpCommunicateHandler.Listener() {
+                    @Override
+                    public void response(HttpClientResponse response) {
+                        String cookieStr = response.getHeader("Set-Cookie");
+
+                        if(cookieStr != null && !"".equals(cookieStr)) {
+
+                            URI uri = null;
+                            try {
+                                uri = mBaseUrl.toURI();
+                            } catch (URISyntaxException e) {
+                            }
+                            for(HttpCookie cookie : HttpCookie.parse(cookieStr)){
+                                mSessionInfo.mCookieStore.add(uri,cookie);
+                            }
+                        }
+                        pack.getRequestHandle().response(pack,response,listenerImpl);
+                    }
+                });
+            }
+        });
+
+        httpHesult.request = handler;
+
         return httpHesult;
     }
 
-//    public HttpCommunicateResult request2(final lin.client.http.HttpPackage pack,final ResultListener listener){
-//
-//        this.fireRequestListener(pack);
-//
-//        final HttpCommunicateResult httpHesult = new HttpCommunicateResult();
-////		final AutoResetEvent set = new AutoResetEvent(false);
-//        HttpRequest request = new HttpRequest(this,pack, new ResultListener() {
-//
-//            @Override
-//            public void result(final Object obj, final List<Error> warning) {
-//                lin.util.thread.ActionExecute.execute(new Action() {
-//                    @Override
-//                    public void action() {
-//                        httpHesult.setResult(true,obj);
-//                        fireResult(httpHesult,listener, obj, warning);
-//                    }
-////					}, new Action() {
-////
-////						@Override
-////						public void action() {
-////
-////							set.set();
-////						}
-//                },new Action(){
-//
-//                    @Override
-//                    public void action() {
-//                        fireRequestResultListener(pack, obj, warning);
-//                    }
-//
-//                });
-//            }
-//
-////			@Override
-////			public void progress(long count, long total) {
-////				//HttpUtils.fireProgress(ProgressFunction,count,total);
-////			}
-//
-//            @Override
-//            public void fault(final Error error) {
-//                lin.util.thread.ActionExecute.execute(new Action() {
-//                    @Override
-//                    public void action() {
-//                        httpHesult.setResult(false,null);
-//                        fireFault(httpHesult,listener,error);
-//                    }
-////				}, new Action() {
-////
-////					@Override
-////					public void action() {
-////						set.set();
-////					}
-//                },new Action(){
-//
-//                    @Override
-//                    public void action() {
-//                        fireRequestFaultListener(pack, error);
-//                    }});
-//            }
-//        },httpHesult,http);
-//        httpHesult.request = request;
-////		httpHesult.set = set;
-//        request.request();
-//        return httpHesult;
-//    }
 
     private boolean isMainThread(HttpPackage pack){
         if(pack.getCommParams() == null || pack.getCommParams().isMainThread() != null){
@@ -505,11 +442,7 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
         }
         return true;
     }
-    //	private void fireProgress(HttpCommunicateResult httpHesult,ResultListener listener,long count,long total){
-//			if(listener != null){
-//				listener.progress(count, total);
-//			}
-//		}
+
     private void fireFault(final HttpCommunicateResult httpResult,final ResultListener listener,final Error error){
         if(listener != null){
             if(this.isMainThread() && httpResult.threadId != mHandler.getLooper().getThread().getId()){
@@ -550,9 +483,6 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
         }
     }
 
-//	public HttpCommunicateResult upload(File file,ResultListener listener){
-//		return null;
-//	}
 
     @Override
     public HttpCommunicateResult<FileInfo> download(String file){
@@ -602,9 +532,6 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
     protected abstract HttpCommunicateDownloadFile downloadRequest();
 
 
-    private static ThreadPoolExecutor downloadExecutor = new ThreadPoolExecutor(2, 5, 10,
-            TimeUnit.MINUTES, new ArrayBlockingQueue<Runnable>(3000),
-            new ThreadPoolExecutor.CallerRunsPolicy());
     @Override
     public HttpCommunicateResult<FileInfo> download(final URL file, final ResultListener listener, HttpCommunicate.Params params){
         if (params == null){
@@ -614,6 +541,8 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
             params.setMainThread(this.isMainThread());
             params.setTimeout(this.getTimeout());
         }
+
+        processPackHttpHeaders(null,params);
 
         ProgressResultListener pListener = null;
         if(listener instanceof ProgressResultListener) {
@@ -628,10 +557,10 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
         final HttpCommunicateDownloadFile request = this.downloadRequest();
 
-        final ProgressResultListener listenerImpl = new ProgressResultListener(){
+        final ProgressResultListener listenerImpl = new ProgressResultListener<FileInfo>(){
 //            private boolean isDeleteFile = false;
             @Override
-            public void result(final Object obj,final List<Error> warning) {
+            public void result(final FileInfo obj,final List<Error> warning) {
                 lin.util.thread.ActionExecute.execute(new Action() {
                     @Override
                     public void action() {
@@ -746,7 +675,7 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
                 notDownloadUrls.put(url, task);
             } else {
                 downloadUrls.put(url, true);
-                downloadExecutor.execute(task);
+                mExecutor.execute(task);
             }
         }finally {
             lock.unlock();
@@ -758,7 +687,7 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
         try{
 
             if(notDownloadUrls.containsKey(url)){
-                downloadExecutor.execute(notDownloadUrls.remove(url));
+                mExecutor.execute(notDownloadUrls.remove(url));
             }
             downloadUrls.remove(url);
         }finally {
@@ -771,12 +700,18 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
         return mMainThread;
     }
 
-    private Handler mHandler = new Handler();
+    private Handler mHandler = null;//new Handler();
+    private static Handler gHandler = new Handler();
 
     public void setMainThread(boolean mainThread) {
         this.mMainThread = mainThread;
     }
 
+
+    @Override
+    public void newSession() {
+        mSessionInfo = new SessionInfo();
+    }
 //    protected Error error(long code,String message,String cause,String stackTrace){
 //        Error error = new Error();
 //        error.setCode(code);

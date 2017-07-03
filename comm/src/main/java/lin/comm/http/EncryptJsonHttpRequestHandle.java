@@ -84,12 +84,12 @@ public class EncryptJsonHttpRequestHandle implements HttpRequestHandle {
 
 	@Override
 	public void preprocess(HttpPackage pack, HttpCommunicate.Params params) {
-		
+		params.addHeader(Constants.HTTP_COMM_PROTOCOL, Constants.HTTP_VERSION);
 	}
 
 	@Override
-	public Map<String, Object> getParams(HttpPackage pack,HttpMessage httpMessage) {
-		httpMessage.addHeader(Constants.HTTP_COMM_PROTOCOL, Constants.HTTP_VERSION);
+	public Map<String, Object> getParams(HttpPackage pack) {
+//		httpMessage.addHeader(Constants.HTTP_COMM_PROTOCOL, Constants.HTTP_VERSION);
 		StringBuilder sb = new StringBuilder();
         sb.append('{');
         sb.append("\"location\":");
@@ -157,7 +157,7 @@ public class EncryptJsonHttpRequestHandle implements HttpRequestHandle {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void response(HttpPackage pack,HttpClientResponse response, byte[] bytes, ResultListener listener) {
+	public void response(HttpPackage pack,HttpClientResponse response, ResultListener listener) {
 		//System.out.println("result:"+resp);
 //		jsonParam = URLDecoder.decode(jsonParam, "utf-8");
 		//jsonParam = jsonParam;
@@ -165,7 +165,7 @@ public class EncryptJsonHttpRequestHandle implements HttpRequestHandle {
 		String resp = null;
 		try {
 //			byte[] tmpBs = Base64.getDecoder().decode(resp);
-			resp = new String(bytes,"accsic");
+			resp = new String(response.getData(),"accsic");
 			resp = lin.util.Base64.decode(resp,"utf-8");
 		} catch (Throwable e1) {
 			e1.printStackTrace();

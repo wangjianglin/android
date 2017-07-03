@@ -13,7 +13,8 @@ import lin.comm.http.HttpCommunicateType;
 import lin.comm.httpdns.AliHttpDNS;
 import lin.comm.httpdns.HttpDNS;
 import lin.core.Images;
-import lin.core.LocalStorage;
+import lin.util.LocalStorage;
+import lin.core.log.Log;
 
 public class DemoApplication extends Application {
 
@@ -22,10 +23,16 @@ public class DemoApplication extends Application {
         super.onCreate();
 
         LocalStorage.init(this);
+        HttpCommunicate.setType(HttpCommunicateType.HttpURLConnection);
         HttpCommunicate.init(this);
 
-        HttpCommunicate.setType(HttpCommunicateType.HttpClient);
-        HttpCommunicate.setHttpDNS(new AliHttpDNS("172280"));
+        HttpCommunicate.setHttpDNS(new AliHttpDNS(this,"172280"){
+            @Override
+            public String getIpByHost(String hostName) {
+                return super.getIpByHost(hostName);
+//                return "120.25.147.21";
+            }
+        });
         HttpCommunicate.getHttpDNS().setDegradationFilter(new HttpDNS.DegradationFilter() {
             @Override
             public boolean shouldDegradeHttpDNS(String hostName) {
@@ -44,7 +51,7 @@ public class DemoApplication extends Application {
         }
         Images.init(this);
         System.out.println("app pid:" + android.os.Process.myPid());
-//        Log.init(this, "http://192.168.1.66:8080/fcbb_b2b2c/exception/addLog.action", "http://192.168.1.66:8080/fcbb_b2b2c/exception/add.action", "[ccn android]");
+        Log.init(this, "http://192.168.1.66:8080/fcbb_b2b2c/exception/addLog.action", "http://192.168.1.66:8080/fcbb_b2b2c/exception/add.action", "[ccn android]");
 
 //        Log.info("info","test");
 

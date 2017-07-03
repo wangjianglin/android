@@ -21,8 +21,9 @@ import android.os.Message;
 import android.os.Messenger;
 import android.provider.Settings;
 import lin.comm.http.HttpCommunicate;
-import lin.core.Device;
-import lin.core.LocalStorage;
+import lin.util.DeviceUtil;
+import lin.util.LocalStorage;
+import lin.util.LocalStorageImpl;
 import lin.util.JsonUtil;
 
 /**
@@ -51,6 +52,9 @@ public class LogService extends Service{
 	@Override
 	public IBinder onBind(Intent intent) {
 		if(!isInitLog){
+
+			LocalStorage.init(this.getApplicationContext());
+			mLocalStorage = LocalStorage.get("log_file");
 			isInitLog = true;
 			if(intent.hasExtra(LOG_URL)){
 				logUrl = intent.getStringExtra(LOG_URL);
@@ -152,6 +156,8 @@ public class LogService extends Service{
 	private static File logFile = null;
 	private static PrintStream _out;
 	private static String logFileName = null;
+
+	private LocalStorageImpl mLocalStorage;
 	private static void createLogFile(Context context,Date date){
 		String fileName = format.format(date);
 		
@@ -182,7 +188,7 @@ public class LogService extends Service{
 		}
          if(logFile.length() == 0){
         	 _out.println("device info:");
-        	 _out.println(Device.collectDeviceInfo(context));
+        	 _out.println(DeviceUtil.collectDeviceInfo(context));
         	 _out.println();
          }
 	}
@@ -242,10 +248,8 @@ public class LogService extends Service{
         File[] files = path.listFiles();
 //        Message message = null;
         
-        LocalStorage.init(context);
-        
         @SuppressWarnings("unchecked")
-		List<String> list = (List<String>) LocalStorage.getItem(LOG_FILE_UPLOAD_SITUATION,new JsonUtil.GeneralType(List.class, String.class));
+		List<String> list = (List<String>) mLocalStorage.getItem(LOG_FILE_UPLOAD_SITUATION,new JsonUtil.GeneralType(List.class, String.class));
         if(list == null){
         	list = new ArrayList<String>();
         }
@@ -275,7 +279,7 @@ public class LogService extends Service{
 					file.delete();
 				}
 
-				LocalStorage.setItem(LOG_FILE_UPLOAD_SITUATION, list);
+				mLocalStorage.setItem(LOG_FILE_UPLOAD_SITUATION, list);
 //        	message = new Message();
 //        	message.what = UPLOAD_LOG;
 //        	message.obj = Uri.fromFile(file);
@@ -290,7 +294,7 @@ public class LogService extends Service{
 
 			}
 		}
-        LocalStorage.setItem(LOG_FILE_UPLOAD_SITUATION,newList);
+		mLocalStorage.setItem(LOG_FILE_UPLOAD_SITUATION,newList);
 	}
 	
 	

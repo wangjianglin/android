@@ -7,7 +7,7 @@ package lin.util;
  *
  * 各种数据类型与byte之间进行转换
  */
-public class ByteUtils {
+public class Bytes {
 
     public static void writeByte(byte[] dest, byte value) {
         dest[0] = value;

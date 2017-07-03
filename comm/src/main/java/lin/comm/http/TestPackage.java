@@ -10,9 +10,9 @@ import lin.comm.http.annotation.HttpParamName;
  * @date Mar 8, 2015 10:24:08 PM
  *
  */
-@HttpPackageMethod(HttpMethod.GET)
+@HttpPackageMethod(HttpMethod.POST)
 @HttpPackageUrl("/core/comm/test.action")
-public class TestPackage extends HttpPackage{
+public class TestPackage extends HttpPackage<String>{
 
 	
 //	 @Override

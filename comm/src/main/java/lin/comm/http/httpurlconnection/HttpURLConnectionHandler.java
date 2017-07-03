@@ -1,26 +1,17 @@
 package lin.comm.http.httpurlconnection;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 import lin.comm.http.*;
 import lin.comm.http.Error;
@@ -29,42 +20,38 @@ import lin.comm.http.Error;
 /**
  * Created by lin on 1/8/16.
  */
-class HttpURLConnectionRequestRunable implements Runnable {
+class HttpURLConnectionHandler extends AbstractHttpCommunicateHandler<HttpURLConnectionCommunicateImpl> {
 
     private byte[] buffer = new byte[4096];
 
-    private HttpPackage pack;
-    private ResultListener listener;
-    private HttpCommunicateImpl impl;
-    private SessionInfo sessionInfo;
-    private HttpCommunicate.Params params;
-
-    HttpURLConnectionRequestRunable(SessionInfo sessionInfo, HttpPackage pack,ResultListener listener,HttpCommunicateImpl impl,HttpCommunicate.Params params){
-        this.pack = pack;
-        this.listener = listener;
-        this.impl = impl;
-        this.sessionInfo = sessionInfo;
-        this.params = params;
+    HttpURLConnectionHandler(){
     }
-    @Override
-    public void run() {
 
-        HttpClientResponse response = new HttpClientResponse();
+    @Override
+    public void process(Listener listener) {
+
+        HttpClientResponseImpl response = new HttpClientResponseImpl();
         try {
-            runImpl(response,HttpUtils.uri(impl, pack), false, null);
-        } catch (Throwable e) {
+            runImpl(response, HttpUtils.uri(mImpl, mPack), false, null);
+        }catch (UnsupportedEncodingException e){
+        }catch (IOException e) {
+            response.setStatusCode(700);
+            response.setMessage(lin.util.Utils.printStackTrace(e));
+        }catch (Throwable e) {
             lin.comm.http.Error error = new Error(-2,
                     "未知错误",
                     e.getMessage(),
                     lin.util.Utils.printStackTrace(e));
 
-            HttpUtils.fireFault(listener, error);
-            return;
+            response.setStatusCode(800);
+            response.setMessage(lin.util.Utils.printStackTrace(e));
+
         }
-        pack.getRequestHandle().response(pack,response, buffer, listener);
+        response.setData(buffer);
+        listener.response(response);
     }
 
-    private void runImpl(HttpClientResponse response,String urlString, boolean redirect, List<String> urls) throws Throwable {
+    private void runImpl(HttpClientResponseImpl response,String urlString, boolean redirect, List<String> urls) throws IOException {
         HttpURLConnection conn = null;
         try {
             conn = runImplReturnConn(response, urlString, redirect, urls);
@@ -76,35 +63,32 @@ class HttpURLConnectionRequestRunable implements Runnable {
     }
 
 
-    private HttpURLConnection runImplReturnConn(HttpClientResponse response,String urlString, boolean redirect, List<String> urls) throws Throwable {
+    private HttpURLConnection runImplReturnConn(HttpClientResponseImpl response,String urlString, boolean redirect, List<String> urls) throws IOException {
 
 
-        if (pack.getMethod() != HttpMethod.POST && pack.isMultipart()) {
+        if (mPack.getMethod() != HttpMethod.POST && mPack.isMultipart()) {
             throw new RuntimeException("Multipart必须采用post请求！");
         }
 
-        if (pack.getMethod() == HttpMethod.GET) {
-            String paramsString = generParams(pack.getParams());
+        if (mPack.getMethod() == HttpMethod.GET) {
+            String paramsString = generParams(mPack.getParams());
             urlString = addGetParams(urlString, paramsString);
         }
 
-        HttpURLConnection conn = Utils.open(urlString,this.impl.getHttpDNS());
+        HttpURLConnection conn = Utils.open(urlString,this.mImpl.getHttpDNS());
 
-//        conn.setRequestProperty("accept", "*/*");
-//        conn.setRequestProperty("Connection", "Keep-Alive");//conn.setRequestProperty("Connection", "close");
+        Map<String, Object> params = mPack.getRequestHandle().getParams(mPack);
 
-        Map<String, Object> params = pack.getRequestHandle().getParams(pack,new HttpURLConnectionMessage(conn));
-
-        conn.setRequestMethod(pack.getMethod().name());
-        conn.setConnectTimeout(this.params.getTimeout());
-        conn.setReadTimeout(this.params.getTimeout());
+        conn.setRequestMethod(mPack.getMethod().name());
+        conn.setConnectTimeout(this.mParams.getTimeout());
+        conn.setReadTimeout(this.mParams.getTimeout());
 
 
-        for (Map.Entry<String, String> item : impl.defaultHeaders().entrySet()) {
+        for (Map.Entry<String, String> item : mImpl.defaultHeaders().entrySet()) {
             conn.setRequestProperty(item.getKey(), item.getValue());
         }
 
-        for (Map.Entry<String, String> item : this.params.headers().entrySet()){
+        for (Map.Entry<String, String> item : this.mParams.headers().entrySet()){
             conn.setRequestProperty(item.getKey(), item.getValue());
         }
 
@@ -119,17 +103,15 @@ class HttpURLConnectionRequestRunable implements Runnable {
 //                conn.setRequestMethod("POST");
 
 
-        if (sessionInfo.cookie != null && sessionInfo.cookie.length() > 0) {
-            conn.setRequestProperty("Cookie", sessionInfo.cookie);
-        }
+
 
         // 设置是否向httpUrlConnection输出，因为这个是post请求，参数要放在
 // http正文内，因此需要设为true, 默认情况下是false;
-        if (pack.getMethod() != HttpMethod.GET) {
+        if (mPack.getMethod() != HttpMethod.GET) {
             if (params != null && !params.isEmpty()) {
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
-                if (pack.isMultipart()) {
+                if (mPack.isMultipart()) {
                     setMultipartParams(conn,params);
                 } else {
                     setPostParams(conn, params);
@@ -174,7 +156,7 @@ class HttpURLConnectionRequestRunable implements Runnable {
         return conn;
     }
 
-    private void readData(HttpURLConnection conn,boolean error) throws Throwable {
+    private void readData(HttpURLConnection conn,boolean error) throws IOException {
         int count = 0;
 
         ByteArrayOutputStream _out = new ByteArrayOutputStream();
@@ -189,17 +171,11 @@ class HttpURLConnectionRequestRunable implements Runnable {
             _out.write(buffer, 0, count);
         }
 
-        String cookie = conn.getHeaderField("set-cookie");
-
-        if(cookie != null && !"".equals(cookie)) {
-            sessionInfo.cookie = cookie;
-        }
-
         buffer = _out.toByteArray();
         _in.close();
     }
 
-    private void setPostParams(HttpURLConnection conn, Map<String, Object> params) throws Throwable {
+    private void setPostParams(HttpURLConnection conn, Map<String, Object> params) throws IOException {
         conn.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
 
         String paramsString = generParams(params);
@@ -217,7 +193,7 @@ class HttpURLConnectionRequestRunable implements Runnable {
     }
 
 
-    private String addGetParams(String urlString, String params) throws Throwable {
+    private String addGetParams(String urlString, String params) {
         if(params == null || "".equals(params)){
             return urlString;
         }
@@ -229,7 +205,7 @@ class HttpURLConnectionRequestRunable implements Runnable {
         return urlString;
     }
 
-    private String generParams(Map<String, Object> params) throws Throwable {
+    private String generParams(Map<String, Object> params) throws UnsupportedEncodingException {
 
         if (params == null) {
             return "";
@@ -252,7 +228,7 @@ class HttpURLConnectionRequestRunable implements Runnable {
     }
 
 
-    private void setMultipartParams(HttpURLConnection conn, Map<String, Object> params) throws Throwable {
+    private void setMultipartParams(HttpURLConnection conn, Map<String, Object> params) throws IOException {
 
         conn.setRequestProperty("Content-Type",
                 "multipart/form-data; boundary=" + boundary);
@@ -318,7 +294,7 @@ class HttpURLConnectionRequestRunable implements Runnable {
     private static byte[] endBytes = ("--" + boundary + "--" + "\r\n\r\n").getBytes();
 
     //普通字符串数据
-    private void writeStringParams(OutputStream out,Map<String,String> params) throws Exception {
+    private void writeStringParams(OutputStream out,Map<String,String> params) throws IOException {
 
         for (Map.Entry<String,String> item : params.entrySet()) {
 
@@ -333,7 +309,7 @@ class HttpURLConnectionRequestRunable implements Runnable {
         }
     }
     //文件数据
-    private void writeFileParams(OutputStream out,Map<String,FileParamInfo> params) throws Throwable {
+    private void writeFileParams(OutputStream out,Map<String,FileParamInfo> params) throws IOException {
 
         for (Map.Entry<String,FileParamInfo> item : params.entrySet()) {
 
@@ -361,7 +337,7 @@ class HttpURLConnectionRequestRunable implements Runnable {
     }
 
     //添加结尾数据
-    private void paramsEnd(OutputStream out) throws Throwable {
+    private void paramsEnd(OutputStream out) throws IOException {
         out.write(endBytes);
     }
 
@@ -369,33 +345,8 @@ class HttpURLConnectionRequestRunable implements Runnable {
         return URLEncoder.encode(value, "utf-8");
     }
 
+    @Override
+    public void abort() {
 
-    static {
-        try {
-            TrustManager[] tm = { new X509TrustManager(){
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return new java.security.cert.X509Certificate[] {};
-                }
-
-                public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                    //Log.i(TAG, "checkClientTrusted");
-                }
-
-                public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                    //Log.i(TAG, "checkServerTrusted");
-                }
-            } };
-            SSLContext sslContext = null;
-                sslContext = SSLContext.getInstance("SSL");
-            sslContext.init(null, tm, new java.security.SecureRandom());
-//        // 从上述SSLContext对象中得到SSLSocketFactory对象
-            SSLSocketFactory ssf = sslContext.getSocketFactory();
-
-            HttpsURLConnection.setDefaultSSLSocketFactory(ssf);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        }
     }
 }

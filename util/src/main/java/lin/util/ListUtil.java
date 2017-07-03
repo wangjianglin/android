@@ -9,7 +9,7 @@ import java.util.List;
  * @date Jun 29, 2015 3:15:45 PM
  *
  */
-public class Lists {
+public class ListUtil {
 
 	public interface Equals<T>{
 		boolean isEquals(T a,T b);

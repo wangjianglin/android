@@ -36,6 +36,8 @@ public class Constants {
 	 * 客户端请求数据的编码参数方式
 	 */
 	public static final String HTTP_REQUEST_CODING = "__request_coding__";
+
+	public static final String DEFAULT_CONTENT_CHARSET = "utf-8";
 	
 	/**
 	 * 客户端要求响应数据的编码方式，默认为utf-8

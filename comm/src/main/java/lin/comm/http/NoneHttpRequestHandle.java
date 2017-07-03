@@ -17,12 +17,12 @@ public class NoneHttpRequestHandle implements HttpRequestHandle {
 	}
 
 	@Override
-	public Map<String, Object> getParams(HttpPackage pack,HttpMessage httpMessage) {
+	public Map<String, Object> getParams(HttpPackage pack) {
 		return null;
 	}
 
 	@Override
-	public void response(HttpPackage pack,HttpClientResponse response, byte[] bytes, ResultListener listener) {
+	public void response(HttpPackage pack,HttpClientResponse response, ResultListener listener) {
 		
 	}
 

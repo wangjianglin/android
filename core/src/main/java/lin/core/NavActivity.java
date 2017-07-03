@@ -32,6 +32,9 @@ public class NavActivity extends ViewActivity {
 
 	private Nav nav;
 	public Nav getNav(){
+		if(nav == null){
+			throw new RuntimeException("nav is null in activity");
+		}
 		return nav;
 	}
 
@@ -54,7 +57,8 @@ public class NavActivity extends ViewActivity {
 		String argsId = intent.getAction();
 		String className = intent.getStringExtra("cls");
 		int layoutId = intent.getIntExtra("layout_id",0);
-		
+
+		System.out.println("argsId 2:"+argsId);
 		nav = Nav.getNav(argsId);
 		if(nav != null) {
 			nav.activity = this;

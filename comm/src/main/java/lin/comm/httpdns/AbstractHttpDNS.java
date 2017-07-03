@@ -1,5 +1,7 @@
 package lin.comm.httpdns;
 
+import android.content.Context;
+
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -11,6 +13,10 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import lin.util.JsonUtil;
+import lin.util.LocalStorage;
+import lin.util.LocalStorageImpl;
 
 /**
  * Created by lin on 4/25/16.
@@ -38,8 +44,10 @@ public abstract class AbstractHttpDNS implements HttpDNS {
 
         @Override
         public HostObject call() {
-            return fetch(this.hostName,this.timeout);
+            HostObject hostObject = fetch(this.hostName,this.timeout);
+            return pushHostObject(hostObject,this.hostName);
         }
+
     }
 
     private ConcurrentMap<String, HostObject> hostManager = new ConcurrentHashMap<String, HostObject>();
@@ -47,8 +55,10 @@ public abstract class AbstractHttpDNS implements HttpDNS {
     private ExecutorService pool = Executors.newFixedThreadPool(MAX_THREAD_NUM);
     private DegradationFilter degradationFilter = null;
 
-    public AbstractHttpDNS() {
-
+    private LocalStorageImpl mHttpDnsStoreage = null;
+    public AbstractHttpDNS(Context context) {
+        LocalStorage.init(context);
+        mHttpDnsStoreage = LocalStorage.get("http_dns");
     }
 
     // 是否允许过期的IP返回
@@ -73,11 +83,7 @@ public abstract class AbstractHttpDNS implements HttpDNS {
 
     protected abstract HostObject fetch(String hostName,int timeout);
 
-    public String getIpByHost(String hostName) {
-        return getIpByHost(hostName,3000);
-    }
-
-    private void pushHostObject(HostObject hostObject,String hostName){
+    private HostObject pushHostObject(HostObject hostObject,String hostName){
 
         if(hostObject == null){
             hostObject = new HostObject();
@@ -90,8 +96,42 @@ public abstract class AbstractHttpDNS implements HttpDNS {
         hostObject.status(hostManager.get(hostName));
         hostObject.setQueryTime(System.currentTimeMillis() / 1000);
         hostManager.put(hostName, hostObject);
-
+        mHttpDnsStoreage.setItem(hostName,JsonUtil.serialize(hostObject));
+        return hostObject;
     }
+
+    private HostObject fetchWithCache(String hostName,int timeout){
+        String hostObjectStr = mHttpDnsStoreage.getItem(hostName);
+//        HostObject.prase(hostObjectStr)
+
+        HostObject hostObject = null;
+
+        try{
+            hostObject = JsonUtil.deserialize(hostObjectStr,HostObject.class);
+        }catch (Throwable e){}
+
+        Future<HostObject> future = pool.submit(new QueryHostTask(hostName, timeout));
+
+        if(hostObject != null){
+            hostManager.put(hostName, hostObject);
+            if(System.currentTimeMillis() / 1000 - hostObject.getQueryTime() > 86400) {
+                mHttpDnsStoreage.remove(hostName);
+            }
+            return hostObject;
+        }
+
+        try {
+            hostObject = future.get(2, TimeUnit.MINUTES);
+        } catch (Throwable e) {
+        }
+        return pushHostObject(hostObject, hostName);
+    }
+
+
+    public String getIpByHost(String hostName) {
+        return getIpByHost(hostName,3000);
+    }
+
     private String getIpByHost(String hostName,int timeout) {
         if (degradationFilter != null) {
             if (degradationFilter.shouldDegradeHttpDNS(hostName)) {
@@ -103,13 +143,14 @@ public abstract class AbstractHttpDNS implements HttpDNS {
             lock.lock();
             host = hostManager.get(hostName);
             if (host == null || (host.isExpired() && !isExpiredIpAvailable())) {
-                Future<HostObject> future = pool.submit(new QueryHostTask(hostName, timeout));
-                HostObject hostObject = null;
-                try {
-                    hostObject = future.get(2, TimeUnit.SECONDS);
-                } catch (Throwable e) {
-                }
-                pushHostObject(hostObject, hostName);
+                fetchWithCache(hostName, timeout);
+//                Future<HostObject> future = pool.submit(new QueryHostTask(hostName, timeout));
+//                HostObject hostObject = null;
+//                try {
+//                    hostObject = future.get(2, TimeUnit.SECONDS);
+//                } catch (Throwable e) {
+//                }
+//                pushHostObject(hostObject, hostName);
             }
             lock.unlock();
         }

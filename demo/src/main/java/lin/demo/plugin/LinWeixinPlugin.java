@@ -1,34 +1,11 @@
 package lin.demo.plugin;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.ClipboardManager;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Typeface;
-import android.net.Uri;
-import android.os.Environment;
-import android.os.Handler;
-import android.text.TextUtils;
 
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
-import lin.comm.http.HttpCommunicate;
-import lin.core.Device;
-import lin.core.Images;
-import lin.core.NavActivity;
-import lin.core.log.ExceptionPackage;
-import lin.demo.Utils;
 import lin.demo.tabbar.TabbarActivity;
 
 /**

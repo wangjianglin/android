@@ -2,7 +2,7 @@ package lin.comm.http;
 
 import android.content.Context;
 
-import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,69 +90,65 @@ public class HttpCommunicate {
 //	
 //}
 	//用soft引用实现
-	private static List<SoftReference<HttpRequestListener>> listeners = new ArrayList<SoftReference<HttpRequestListener>>();
+	private static List<HttpRequestListener> mListeners = new ArrayList<HttpRequestListener>();
 	
-	private static HttpRequestListener globalListner =new HttpRequestListener(){
+	private static HttpRequestListener mGlobalListner =new HttpRequestListener(){
 
 		@Override
 		public void request(HttpCommunicateImpl impl, HttpPackage pack) {
 			HttpRequestListener item = null;
-			for(SoftReference<HttpRequestListener> listener : listeners){
-				item = listener.get();
-				if(item == null){
+			for(HttpRequestListener listener : mListeners){
+				if(listener == null){
 					continue;
 				}
-				item.request(impl, pack);
+				listener.request(impl, pack);
 			}
 		}
 
 		@Override
 		public void requestComplete(HttpCommunicateImpl impl, HttpPackage pack, Object obj, List<Error> warning) {
 			HttpRequestListener item = null;
-			for(SoftReference<HttpRequestListener> listener : listeners){
-				item = listener.get();
-				if(item == null){
+			for(HttpRequestListener listener : mListeners){
+				if(listener == null){
 					continue;
 				}
-				item.requestComplete(impl, pack,obj,warning);
+				listener.requestComplete(impl, pack,obj,warning);
 			}
 		}
 
 		@Override
 		public void requestFault(HttpCommunicateImpl impl, HttpPackage pack, Error error) {
 			HttpRequestListener item = null;
-			for(SoftReference<HttpRequestListener> listener : listeners){
-				item = listener.get();
-				if(item == null){
+			for(HttpRequestListener listener : mListeners){
+				if(listener == null){
 					continue;
 				}
-				item.requestFault(impl, pack,error);
+				listener.requestFault(impl, pack,error);
 			}
 		}
 
 	};
 
-		public void newSession(){
-			global().newSession();
-		}
+	public void newSession(){
+		global().newSession();
+	}
 	//private static Map<String, HttpCommunicateImpl> impls = new HashMap<String, HttpCommunicateImpl>();
-	//	private static Map<String,WeakReference<HttpCommunicateImpl>> impls = new HashMap<String, WeakReference<HttpCommunicateImpl>>();
-		private static Map<String,SoftReference<HttpCommunicateImpl>> impls = new HashMap<String, SoftReference<HttpCommunicateImpl>>();
+	private static Map<String,WeakReference<HttpCommunicateImpl>> mImpls = new HashMap<String, WeakReference<HttpCommunicateImpl>>();
 
 	public static HttpCommunicateImpl get(String name) {
 		return get(name,type);
 	}
 
 	public static HttpCommunicateImpl get(String name,HttpCommunicateType type) {
-		SoftReference<HttpCommunicateImpl> impl = impls.get(name);
+		WeakReference<HttpCommunicateImpl> impl = mImpls.get(name);
 		if (impl != null && impl.get() != null) {
 			return impl.get();
 		}
 
-		synchronized (impls) {
-			impl = impls.get(name);
+		synchronized (mImpls) {
+			impl = mImpls.get(name);
 			if(impl != null && impl.get() == null){
-				impls.remove(name);
+				mImpls.remove(name);
 			}
 			if (impl == null || impl.get() == null) {
 //				HttpCommunicateImpl himpl = new HttpCommunicateImpl(name,_tmp);
@@ -164,53 +160,47 @@ public class HttpCommunicate {
 				}else{
 					himpl = new HttpURLConnectionCommunicateImpl(name,_tmp);
 				}
-				impl = new SoftReference<HttpCommunicateImpl>(himpl);
-				himpl.addHttpRequestListener(globalListner);
+				impl = new WeakReference<HttpCommunicateImpl>(himpl);
+				himpl.addHttpRequestListener(mGlobalListner);
 				if(mContext != null) {
 					himpl.init(mContext);
 				}
-				impls.put(name, impl);
+				mImpls.put(name, impl);
 			}
 			return impl.get();
 		}
 	}
 
 	public static void remove(String name) {
-		synchronized (impls) {
-			SoftReference<HttpCommunicateImpl> impl = impls.remove(name);
+		synchronized (mImpls) {
+			WeakReference<HttpCommunicateImpl> impl = mImpls.remove(name);
 			if(impl != null){
 				if(impl.get()!=null){
-					impl.get().removeHttpRequestListener(globalListner);
+					impl.get().removeHttpRequestListener(mGlobalListner);
 				}
 			}
 			
 			ArrayList<String> list = new ArrayList<String>();
-			for(String item : impls.keySet()){
-				impl = impls.get(item);
+			for(String item : mImpls.keySet()){
+				impl = mImpls.get(item);
 				if(impl == null || impl.get() == null){
 					list.add(item);
 				}
 			}
 			for(String item : list){
-				impls.remove(item);
+				mImpls.remove(item);
 			}
 		}
 	}
 
-//	private static HttpCommunicateImpl globalHttpURL = null;//get("Global",HttpCommunicateType.HttpURLConnection);
-
-	private static HttpCommunicateImpl globalImpl = null;
+	private static HttpCommunicateImpl mGlobalImpl = null;
 
 	public static HttpCommunicateImpl global(){
-		if(globalImpl != null){
-			return globalImpl;
+		if(mGlobalImpl != null){
+			return mGlobalImpl;
 		}
-		if(type == HttpCommunicateType.HttpClient){
-			globalImpl = get("Global",HttpCommunicateType.HttpClient);
-		}else{
-			globalImpl = get("Global",HttpCommunicateType.HttpURLConnection);
-		}
-		return globalImpl;
+		mGlobalImpl = get("global",type);
+		return mGlobalImpl;
 	}
 
 	/**
@@ -286,21 +276,16 @@ public class HttpCommunicate {
 	}
 
 	public static void addGlobalHttpRequestListener(HttpRequestListener listener) {
-		listeners.add(new SoftReference<HttpRequestListener>(listener));
+		mListeners.add(listener);
 	}
 
 	public static void removeHttpRequestListener(HttpRequestListener listener) {
-		for(SoftReference<HttpRequestListener> item : listeners){
-			if(item.get() == listener){
-				listeners.remove(item);
-				return;
-			}
-		}
+		global().removeHttpRequestListener(listener);
 	}
 
 	public static void removeGlobaHttpRequestListener(
 			HttpRequestListener listener) {
-		listeners.remove(listener);
+		mListeners.remove(listener);
 	}
 
 	// private static CookieStore cookieStore = new BasicCookieStore();
@@ -313,65 +298,39 @@ public class HttpCommunicate {
 //		return global.request(pack, listener);
 //	}
 
-	public static HttpCommunicateResult<Object> request(lin.comm.http.HttpPackage pack){
-//		if(listener != null){
-//			return global.request(pack,listener::result,listener::fault);
-//		}
+	public static <T> HttpCommunicateResult<T> request(lin.comm.http.HttpPackage<T> pack){
 		return global().request(pack,null);
 	}
 
-	public static HttpCommunicateResult<Object> request(lin.comm.http.HttpPackage pack, ResultListener listener){
-//		if(listener != null){
-//			return global.request(pack,listener::result,listener::fault);
-//		}
+	public static <T> HttpCommunicateResult<T> request(lin.comm.http.HttpPackage<T> pack, ResultListener<T> listener){
 		return global().request(pack,listener);
 	}
-
-//	public static HttpCommunicateResult<Object> request(lin.comm.http.HttpPackage pack, ResultListener listener, Params params){
-//		return global().request(pack,listener,params);
-//	}
-	
-//	public static HttpCommunicateResult request(lin.client.http.TcpPackage pack,ResultFunction result){
-//		return global.request(pack,result,null);
-//	}
-//	
-//	public HttpCommunicateResult request(lin.client.http.TcpPackage pack,final ResultFunction result,final FaultFunction fault){
-//		return global.request(pack,result,fault);
-//	}
-
-//	public static HttpCommunicateResult upload(File file,
-//			ResultListener listener) {
-//		return global.upload(file, listener);
-//	}
 
 
 	public static HttpCommunicateResult<FileInfo> download(String file) {
 		return global().download(file,null);
 	}
 	public static HttpCommunicateResult<FileInfo> download(String file,
-														   ResultListener listener) {
+														   ResultListener<FileInfo> listener) {
 		return global().download(file,listener,null);
 	}
 
 	public static HttpCommunicateResult<FileInfo> download(String file,
-												 ResultListener listener,Params params) {
+												 ResultListener<FileInfo> listener,Params params) {
 		return global().download(file,listener,params);
 	}
 
 	public static HttpCommunicateResult<FileInfo> download(URL file) {
 		return global().download(file, null);
-		//return HttpCommunicateImpl.downloadImpl(file,listener);
 	}
 
 	public static HttpCommunicateResult<FileInfo> download(URL file,
-														   ResultListener listener) {
+														   ResultListener<FileInfo> listener) {
 		return global().download(file, listener);
-		//return HttpCommunicateImpl.downloadImpl(file,listener);
 	}
 	public static HttpCommunicateResult<FileInfo> download(URL file,
-												  ResultListener listener,Params params) {
+												  ResultListener<FileInfo> listener,Params params) {
 		return global().download(file, listener);
-		//return HttpCommunicateImpl.downloadImpl(file,listener);
 	}
 
 	public static void addHeader(String name, String value){
@@ -388,8 +347,8 @@ public class HttpCommunicate {
 			return;
 		}
 		HttpCommunicate.mContext = context;
-		synchronized (impls) {
-			for (SoftReference<HttpCommunicateImpl> impl : impls.values()){
+		synchronized (mImpls) {
+			for (WeakReference<HttpCommunicateImpl> impl : mImpls.values()){
 				HttpCommunicateImpl himpl = impl.get();
 				if(himpl != null){
 					himpl.init(context);

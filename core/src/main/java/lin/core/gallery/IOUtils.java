@@ -920,14 +920,14 @@ public class IOUtils {
     //-----------------------------------------------------------------------
 
     /**
-     * Get the contents of an <code>InputStream</code> as a list of Strings,
+     * Get the contents of an <code>InputStream</code> as a list of StringUtil,
      * one entry per line, using the default character encoding of the platform.
      * <p/>
      * This method buffers the input internally, so there is no need to use a
      * <code>BufferedInputStream</code>.
      *
      * @param input the <code>InputStream</code> to read from, not null
-     * @return the list of Strings, never null
+     * @return the list of StringUtil, never null
      * @throws NullPointerException if the input is null
      * @throws IOException  if an I/O error occurs
      * @since 1.1
@@ -937,7 +937,7 @@ public class IOUtils {
     }
 
     /**
-     * Get the contents of an <code>InputStream</code> as a list of Strings,
+     * Get the contents of an <code>InputStream</code> as a list of StringUtil,
      * one entry per line, using the specified character encoding.
      * <p/>
      * This method buffers the input internally, so there is no need to use a
@@ -945,7 +945,7 @@ public class IOUtils {
      *
      * @param input    the <code>InputStream</code> to read from, not null
      * @param encoding the encoding to use, null means platform default
-     * @return the list of Strings, never null
+     * @return the list of StringUtil, never null
      * @throws NullPointerException if the input is null
      * @throws IOException  if an I/O error occurs
      * @since 2.3
@@ -956,7 +956,7 @@ public class IOUtils {
     }
 
     /**
-     * Get the contents of an <code>InputStream</code> as a list of Strings,
+     * Get the contents of an <code>InputStream</code> as a list of StringUtil,
      * one entry per line, using the specified character encoding.
      * <p/>
      * Character encoding names can be found at
@@ -967,7 +967,7 @@ public class IOUtils {
      *
      * @param input    the <code>InputStream</code> to read from, not null
      * @param encoding the encoding to use, null means platform default
-     * @return the list of Strings, never null
+     * @return the list of StringUtil, never null
      * @throws NullPointerException                         if the input is null
      * @throws IOException                          if an I/O error occurs
      * @throws java.nio.charset.UnsupportedCharsetException thrown instead of {@link UnsupportedEncodingException} in version 2.2 if the encoding is not
@@ -979,14 +979,14 @@ public class IOUtils {
     }
 
     /**
-     * Get the contents of a <code>Reader</code> as a list of Strings,
+     * Get the contents of a <code>Reader</code> as a list of StringUtil,
      * one entry per line.
      * <p/>
      * This method buffers the input internally, so there is no need to use a
      * <code>BufferedReader</code>.
      *
      * @param input the <code>Reader</code> to read from, not null
-     * @return the list of Strings, never null
+     * @return the list of StringUtil, never null
      * @throws NullPointerException if the input is null
      * @throws IOException  if an I/O error occurs
      * @since 1.1

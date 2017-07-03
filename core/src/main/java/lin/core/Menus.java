@@ -6,7 +6,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -58,12 +58,12 @@ public class Menus {
     }
 
 //    private static Map<Integer,Method> menuItemMaps = new HashMap<>();
-    private static Map<SoftReference<Object>,Map<Integer,Method>> menuObjectMaps = new HashMap<>();
+    private static Map<WeakReference<Object>,Map<Integer,Method>> menuObjectMaps = new HashMap<>();
 
     private static Map<Integer,Method> getMenuItemMaps(Object holder){
-        List<SoftReference<Object>> keys = new ArrayList<>();
+        List<WeakReference<Object>> keys = new ArrayList<>();
         Map<Integer,Method> map = null;
-        for(Map.Entry<SoftReference<Object>,Map<Integer,Method>> entry : menuObjectMaps.entrySet()){
+        for(Map.Entry<WeakReference<Object>,Map<Integer,Method>> entry : menuObjectMaps.entrySet()){
             if(entry.getKey().get() == null){
                 keys.add(entry.getKey());
                 continue;
@@ -72,14 +72,14 @@ public class Menus {
                 map = entry.getValue();
             }
         }
-        for(SoftReference<Object> key : keys) {
+        for(WeakReference<Object> key : keys) {
             menuObjectMaps.remove(key);
         }
         if(map != null){
             return map;
         }
         map = new HashMap<Integer,Method>();
-        menuObjectMaps.put(new SoftReference<Object>(holder),map);
+        menuObjectMaps.put(new WeakReference<Object>(holder),map);
         return map;
     }
 

@@ -1,5 +1,7 @@
 package lin.comm.httpdns;
 
+import android.content.Context;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -23,7 +25,8 @@ public class AliHttpDNS extends AbstractHttpDNS{
         SERVER_IP = ip;
     }
     private String accountId;
-    public AliHttpDNS(String account){
+    public AliHttpDNS(Context context,String account){
+        super(context);
         this.accountId = account;
     }
 

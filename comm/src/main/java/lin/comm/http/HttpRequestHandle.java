@@ -12,7 +12,7 @@ public interface HttpRequestHandle {
 
     public void preprocess(HttpPackage pack,HttpCommunicate.Params params);
 
-	Map<String,Object> getParams(HttpPackage pack,HttpMessage httpMessage);
+	Map<String,Object> getParams(HttpPackage pack);
 
-    void response(HttpPackage pack,HttpClientResponse response, byte[] bytes, ResultListener listener);
+    void response(HttpPackage pack,HttpClientResponse response,ResultListener listener);
 }

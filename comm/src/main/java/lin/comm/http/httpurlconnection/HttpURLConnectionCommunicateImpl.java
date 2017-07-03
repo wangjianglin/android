@@ -1,11 +1,9 @@
 package lin.comm.http.httpurlconnection;
 
-import org.apache.http.impl.client.CloseableHttpClient;
-
 import lin.comm.http.AbstractHttpCommunicateImpl;
 import lin.comm.http.HttpCommunicate;
 import lin.comm.http.HttpCommunicateDownloadFile;
-import lin.comm.http.HttpCommunicateRequest;
+import lin.comm.http.HttpCommunicateHandler;
 
 /**
  * 
@@ -18,21 +16,22 @@ public class HttpURLConnectionCommunicateImpl extends AbstractHttpCommunicateImp
 		super(name, c);
 	}
 
-	private SessionInfo sessionInfo = new SessionInfo();
-
 	@Override
-	protected HttpCommunicateRequest getRequest() {
-		return new HttpURLConnectionRequest(sessionInfo);
+	protected HttpCommunicateHandler getHandler() {
+		return new HttpURLConnectionHandler();
 	}
+
+//	private SessionInfo sessionInfo = new SessionInfo();
+
+//	@Override
+//	protected HttpCommunicateRequest getRequest() {
+//		return new HttpURLConnectionRequest(sessionInfo);
+//	}
 
 	@Override
 	protected HttpCommunicateDownloadFile downloadRequest() {
-		return new DownloadFile(context);
+		return new DownloadFile(mContext);
 	}
 
-	@Override
-	public void newSession() {
-		sessionInfo = new SessionInfo();
-	}
 
 }

@@ -15,7 +15,7 @@ public abstract class AbstractHttpRequestHandle implements HttpRequestHandle{
 	public void preprocess(HttpPackage pack,HttpCommunicate.Params params){}
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, Object> getParams(HttpPackage pack,HttpMessage httpMessage) {
+	public Map<String, Object> getParams(HttpPackage pack) {
 
 		Map<String,Object> params = pack.getParams();
 		if(params == null){

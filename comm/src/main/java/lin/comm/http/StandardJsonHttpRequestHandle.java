@@ -91,13 +91,13 @@ public class StandardJsonHttpRequestHandle extends AbstractHttpRequestHandle{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void response(HttpPackage pack, HttpClientResponse response, byte[] bytes, ResultListener listener) {
+	public void response(HttpPackage pack, HttpClientResponse response, ResultListener listener) {
 		
 		Object obj = null;
 		List<Error> warning = null;
 		Error error = null;
 		try{
-			String resp = new String(bytes,"utf-8");
+			String resp = new String(response.getData(),"utf-8");
 //			obj = lin.util.JsonUtil.deserialize(resp, pack.getRespType());
 //			obj  = lin.util.json.JSONUtil.deserialize(resp);
 //			ResultData resultData = (ResultData) lin.util.json.JSONUtil.deserialize(obj,ResultData.class);

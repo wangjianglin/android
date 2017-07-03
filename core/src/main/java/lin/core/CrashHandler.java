@@ -1,8 +1,5 @@
 package lin.core;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.lang.Thread.UncaughtExceptionHandler;
 
 import android.content.Context;
@@ -11,6 +8,7 @@ import android.os.Looper;
 import android.widget.Toast;
 
 import lin.core.log.Log;
+import lin.util.DeviceUtil;
 
 
 /**
@@ -134,7 +132,7 @@ public class CrashHandler {
 			
 			Crash crash = new Crash();
 			crash.setStackTrace(Utils.printStackTrace(ex));
-			crash.setDeviceInfo(Device.collectDeviceInfo(this.mContext));
+			crash.setDeviceInfo(DeviceUtil.collectDeviceInfo(this.mContext));
 			crash.setThreadInfo(Utils.threadInfo(thread));
 			listener.crash(crash);
 			return true;

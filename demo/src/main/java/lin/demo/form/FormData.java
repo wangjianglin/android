@@ -1,8 +1,6 @@
 package lin.demo.form;
 
-import android.databinding.Bindable;
-
-import lin.core.LocalStorage;
+import lin.util.LocalStorage;
 
 /**
  * Created by lin on 18/01/2017.

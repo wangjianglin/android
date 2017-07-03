@@ -5,7 +5,7 @@ import lin.comm.http.annotation.HttpPackageUrl;
 
 @HttpPackageUrl("/core/comm/sessionId.action")
 @HttpPackageMethod(HttpMethod.GET)
-public class SessionIdPackage extends lin.comm.http.HttpPackage{
+public class SessionIdPackage extends lin.comm.http.HttpPackage<String>{
 
 //	public SessionIdPackage(){
 //		super("/core/comm/sessionId.action");

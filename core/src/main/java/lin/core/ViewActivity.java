@@ -17,7 +17,7 @@ import android.view.ViewStub;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
-import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +36,7 @@ public class ViewActivity extends AppCompatActivity{
 	private ViewStub viewStud;
 
 	public ViewActivity(){
-		activitys.add(new SoftReference<Activity>(this));
+		activitys.add(new WeakReference<Activity>(this));
 	}
 
 	public void hideToolbar(){
@@ -88,11 +88,11 @@ public class ViewActivity extends AppCompatActivity{
 //		LayoutInflaterFactory.setFactory2(this);
 	}
 
-	private static List<SoftReference<Activity>> activitys = new ArrayList<SoftReference<Activity>>();
+	private static List<WeakReference<Activity>> activitys = new ArrayList<WeakReference<Activity>>();
 
 	public static Activity getActivity(View view){
 
-		for (SoftReference<Activity> item : activitys){
+		for (WeakReference<Activity> item : activitys){
 			Activity a = item.get();
 			if(a == null){
 				continue;

@@ -111,4 +111,18 @@ public class HttpUtils {
 		return uri;
 	}
 
+	public static String parseCharset(String contentType, String defaultCharset) {
+		if(contentType != null) {
+			String[] params = contentType.split(";");
+
+			for(int i = 1; i < params.length; ++i) {
+				String[] pair = params[i].trim().split("=");
+				if(pair.length == 2 && pair[0].equals("charset")) {
+					return pair[1];
+				}
+			}
+		}
+
+		return defaultCharset;
+	}
 }

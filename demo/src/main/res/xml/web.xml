@@ -82,7 +82,7 @@
 <!--    <plugin name="App">-->
 <!--        <param name="ios-package" value="CDVAppPlugin" />-->
 <!--    </plugin>-->
-<!--    <plugin name="Device">-->
+<!--    <plugin name="DeviceUtil">-->
 <!--        <param name="ios-package" value="CDVDevice" />-->
 <!--    </plugin>-->
 <!--    -->

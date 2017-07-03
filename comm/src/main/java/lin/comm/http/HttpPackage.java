@@ -21,7 +21,7 @@ import lin.comm.http.annotation.HttpParamName;
  * @date 2013-7-16 上午11:58:23
  *
  */
-public abstract class HttpPackage {
+public abstract class HttpPackage<T> {
 	public static final HttpRequestHandle JSON = new EncryptJsonHttpRequestHandle();
 	public static final HttpRequestHandle STANDARD_JSON = new StandardJsonHttpRequestHandle02();
 	public static final HttpRequestHandle NONE = new NoneHttpRequestHandle();

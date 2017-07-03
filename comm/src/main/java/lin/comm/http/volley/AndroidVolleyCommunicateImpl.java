@@ -8,7 +8,9 @@ import com.android.volley.toolbox.Volley;
 import lin.comm.http.AbstractHttpCommunicateImpl;
 import lin.comm.http.HttpCommunicate;
 import lin.comm.http.HttpCommunicateDownloadFile;
-import lin.comm.http.HttpCommunicateRequest;
+import lin.comm.http.HttpCommunicateHandler;
+import lin.comm.http.httpurlconnection.*;
+import lin.comm.http.httpurlconnection.DownloadFile;
 
 /**
  * Created by lin on 22/06/2017.
@@ -16,7 +18,8 @@ import lin.comm.http.HttpCommunicateRequest;
 
 public class AndroidVolleyCommunicateImpl extends AbstractHttpCommunicateImpl {
 
-    private RequestQueue mQueue = null;//Volley.newRequestQueue(getApplicationContext());;
+    RequestQueue mQueue = null;//Volley.newRequestQueue(getApplicationContext());;
+    volatile SessionInfo mSessionInfo = new SessionInfo();
     public AndroidVolleyCommunicateImpl(String name, HttpCommunicate c) {
         super(name, c);
 //        mQueue = Volley.newRequestQueue(c.)
@@ -29,17 +32,22 @@ public class AndroidVolleyCommunicateImpl extends AbstractHttpCommunicateImpl {
     }
 
     @Override
-    public void newSession() {
-
+    protected HttpCommunicateHandler getHandler() {
+        return new AndroidVolleyRequestHandler();
     }
 
     @Override
-    protected HttpCommunicateRequest getRequest() {
-        return null;
+    public void newSession() {
+        mSessionInfo = new SessionInfo();
     }
+
+//    @Override
+//    protected HttpCommunicateRequest getRequest() {
+//        return new AndroidVolleyRequest(mQueue,mSessionInfo);
+//    }
 
     @Override
     protected HttpCommunicateDownloadFile downloadRequest() {
-        return null;
+        return new lin.comm.http.httpurlconnection.DownloadFile(mContext);
     }
 }

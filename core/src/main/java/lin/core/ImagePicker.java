@@ -731,7 +731,7 @@ public class ImagePicker extends ResView {
 				if(vedioFile.exists()){
 					return Uri.fromFile(vedioFile);
 				}
-				HttpCommunicate.download(vedioUrl, new ProgressResultListener() {
+				HttpCommunicate.download(vedioUrl, new ProgressResultListener<FileInfo>() {
 					@Override
 					public void progress(final long progress, final long total) {
 						mHandler.post(new Runnable() {
@@ -743,10 +743,10 @@ public class ImagePicker extends ResView {
 					}
 
 					@Override
-					public void result(Object obj, List<Error> warning) {
+					public void result(FileInfo file, List<Error> warning) {
 						try {
 
-							FileInfo file = (FileInfo) obj;
+//							FileInfo file = (FileInfo) obj;
 							byte[] bs = new byte[1024];
 							int count = 0;
 							InputStream _in = new FileInputStream(file.getFile());

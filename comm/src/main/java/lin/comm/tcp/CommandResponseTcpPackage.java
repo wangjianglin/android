@@ -1,7 +1,7 @@
 package lin.comm.tcp;
 
 import lin.comm.tcp.annotation.Command;
-import lin.util.ByteUtils;
+import lin.util.Bytes;
 
 /**
  * Created by lin on 1/28/16.
@@ -45,11 +45,11 @@ public abstract class CommandResponseTcpPackage extends ResponseTcpPackage imple
     public final byte[] write()
     {
         byte[] bs = new byte[this.getSize()];
-        ByteUtils.writeByte(bs, this.major, 0);
-        ByteUtils.writeByte(bs, this.minor, 1);
-        ByteUtils.writeByte(bs, this.revise, 2);
-        ByteUtils.writeInt(bs, this.command, 3);
-        ByteUtils.writeInt(bs, this.getSize(), 7);
+        Bytes.writeByte(bs, this.major, 0);
+        Bytes.writeByte(bs, this.minor, 1);
+        Bytes.writeByte(bs, this.revise, 2);
+        Bytes.writeInt(bs, this.command, 3);
+        Bytes.writeInt(bs, this.getSize(), 7);
         this.bodyWrite(bs, 11);
         return bs;
     }

@@ -1,4 +1,4 @@
-package lin.core;
+package lin.util;
 
 import java.lang.reflect.Field;
 
@@ -7,8 +7,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
+import android.provider.Settings;
 
-public class Device {
+public class DeviceUtil {
 
 	/**
 	 * 手机设备参数信息
@@ -49,5 +50,9 @@ public class Device {
 			}
 		}
 		return sb.toString();
+	}
+
+	public static String uuid(Context context) {
+		return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 	}
 }

@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
-import lin.util.ByteUtils;
+import lin.util.Bytes;
 
 public class Session
     {
@@ -82,7 +82,7 @@ public class Session
             }else{
             	tmpBs[2] = 1;
             }
-            ByteUtils.writeLong(tmpBs, pack.getSequeue(), 3);
+            Bytes.writeLong(tmpBs, pack.getSequeue(), 3);
             int pos = 11;
 
             for (int n = 0; n < bs.length; n++)

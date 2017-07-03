@@ -13,12 +13,12 @@ public class NormalHttpRequestHandle  extends AbstractHttpRequestHandle{
 
     @SuppressWarnings("unchecked")
     @Override
-    public void response(HttpPackage pack,HttpClientResponse response, byte[] bytes, ResultListener listener) {
+    public void response(HttpPackage pack,HttpClientResponse response, ResultListener listener) {
 
         Object obj = null;
         List<Error> warning = null;
         try{
-            String resp = new String(bytes,"utf-8");
+            String resp = new String(response.getData(),"utf-8");
 
             Type type =  pack.getRespType();
 

@@ -1,6 +1,4 @@
-package lin.core;
-
-import java.lang.reflect.Type;
+package lin.util;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,19 +7,34 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.lang.reflect.Type;
+
 /**
  * 
  * @author lin
  * @date Jul 31, 2015 12:52:42 AM
  *
  */
-public class LocalStorage {
+public class LocalStorageImpl {
 
-	public static void clean() {
-		helper.getWritableDatabase().delete(DATABASE_TABLE, null, null);
+	private static final String KEY_ID = "_id";
+	private static final int DATABASE_VERSION = 1;
+	private static final String KEY_NAME = "_name";
+	private static final String KEY_VALUE = "_value";
+
+
+	private LocalStorageDatabaseHelper mHelper;
+
+	public LocalStorageImpl(LocalStorage l, Context context, String table){
+		mHelper = new LocalStorageDatabaseHelper(context, table, null, DATABASE_VERSION);
+	}
+
+	public void clean() {
+//		mHelper.getWritableDatabase().delete(DATABASE_TABLE, null, null);
+		mHelper.clean();
 	}
 	
-	public static void setItem(String name,Object value){
+	public void setItem(String name,Object value){
 		String json = null;
 		try {
 //			json = lin.util.json.JSONUtil.serialize(value);
@@ -29,23 +42,23 @@ public class LocalStorage {
 		} catch (Throwable e) {
 			throw new RuntimeException(e);
 		}
-		helper.setItemValue(name,json);
+		mHelper.setItemValue(name,json);
 	}
 	
-	public static void remove(String name){
-		helper.remove(name);
+	public void remove(String name){
+		mHelper.remove(name);
 	}
 	
-	public static String getItem(String name){
+	public String getItem(String name){
 		return getItem(name,String.class);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> T getItem(String name,Class<T> type){
+	public <T> T getItem(String name,Class<T> type){
 		return (T) getItemImpl(name,type);
 	}
 
-	public static <T> T getItem(String name,T def){
+	public <T> T getItem(String name,T def){
 		Object r = getItem(name,def.getClass());
 		if(r == null){
 			return def;
@@ -53,11 +66,11 @@ public class LocalStorage {
 		return (T)r;
 	}
 	
-	public static Object getItem(String name,Type type){
+	public Object getItem(String name,Type type){
 		return getItemImpl(name,type);
 	}
-	private static Object getItemImpl(String name,Type type){
-		String json = helper.getItemValue(name);
+	private Object getItemImpl(String name,Type type){
+		String json = mHelper.getItemValue(name);
 		if(json == null){
 			return null;
 		}
@@ -70,34 +83,41 @@ public class LocalStorage {
 		}
 		return obj;
 	}
-	
+
+	private static Context mContext;
 	public synchronized static void init(Context context){
-		if(helper == null){
-			helper = new LocalStorageDatabaseHelper(context, DATABASE_TABLE, null, DATABASE_VERSION);
-		}
+		mContext = context;
+//		if(mHelper == null){
+//			mHelper = new LocalStorageDatabaseHelper(context, DEFAULT_DATABASE_TABLE, null, DATABASE_VERSION);
+//		}
 	}
 
-	private static LocalStorageDatabaseHelper helper;
-
-	private static final String DATABASE_TABLE = "local_storage_data_base_name";
-	private static final String KEY_ID = "_id";
-	private static final int DATABASE_VERSION = 1;
-	private static final String KEY_NAME = "_name";
-	private static final String KEY_VALUE = "_value";
 
 	private static class LocalStorageDatabaseHelper extends SQLiteOpenHelper {
 
+
+		private String mDatabaseTable = null;
+
+		private String mDataCreate = null;
+
 		public LocalStorageDatabaseHelper(Context context, String name, CursorFactory factory, int version) {
 			super(context, name, factory, version);
+			mDatabaseTable = name;
+			mDataCreate = "create table " + mDatabaseTable + " (" + KEY_ID
+					+ " integer primary key autoincrement, " + KEY_NAME + " text, " + KEY_VALUE + " text);";
 		}
 
 		public void remove(String name) {
 			int id = getItemId(name);
-			helper.getWritableDatabase().delete(DATABASE_TABLE, KEY_ID + " = "+id, null);
+			this.getWritableDatabase().delete(mDatabaseTable, KEY_ID + " = "+id, null);
+		}
+
+		public void clean(){
+			this.getWritableDatabase().delete(mDatabaseTable, null, null);
 		}
 
 		public int getItemId(String name) {
-			Cursor c = this.getWritableDatabase().query(DATABASE_TABLE, new
+			Cursor c = this.getWritableDatabase().query(mDatabaseTable, new
 					String[]{KEY_ID,KEY_NAME,KEY_VALUE}, KEY_NAME + " == '" + name +"'", null, null,
 					null, KEY_ID+" desc");
 			 if(c == null || !c.moveToNext()){
@@ -107,7 +127,7 @@ public class LocalStorage {
 		}
 		
 		public String getItemValue(String name) {
-			Cursor c = this.getWritableDatabase().query(DATABASE_TABLE, new
+			Cursor c = this.getWritableDatabase().query(mDatabaseTable, new
 					String[]{KEY_ID,KEY_NAME,KEY_VALUE}, KEY_NAME + " == '" + name +"'", null, null,
 					null, KEY_ID+" desc");
 			 if(c == null || !c.moveToNext()){
@@ -125,24 +145,22 @@ public class LocalStorage {
 			cvs.put(KEY_VALUE, json);
 			
 			if(id == -1){
-				helper.getWritableDatabase().insert(DATABASE_TABLE, null, cvs);
+				this.getWritableDatabase().insert(mDatabaseTable, null, cvs);
 			}else{
-				helper.getWritableDatabase().update(DATABASE_TABLE, cvs, KEY_ID + " = " + id,null);
+				this.getWritableDatabase().update(mDatabaseTable, cvs, KEY_ID + " = " + id,null);
 			}
 			
 		}
 
-		private static final String DATABASE_CREATE = "create table " + DATABASE_TABLE + " (" + KEY_ID
-				+ " integer primary key autoincrement, " + KEY_NAME + " text, " + KEY_VALUE + " text);";
 
 		@Override
 		public void onCreate(SQLiteDatabase _db) {
-			_db.execSQL(DATABASE_CREATE);
+			_db.execSQL(mDataCreate);
 		}
 
 		@Override
 		public void onUpgrade(SQLiteDatabase _db, int _oldVersion, int _newVersion) {
-			_db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE);
+			_db.execSQL("DROP TABLE IF EXISTS " + mDatabaseTable);
 			onCreate(_db);
 		}
 

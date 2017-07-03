@@ -305,7 +305,7 @@ public class PhotoSelectActivity extends ViewActivity{
 //                if (!StringUtils.isEmpty(photoInfo.getPhotoPath())) {
 //                    folderB = new File(photoInfo.getPhotoPath()).getParent();
 //                }
-//                if (TextUtils.equals(folderA, folderB)) {
+//                if (StringUtil.equals(folderA, folderB)) {
 //                    List<PhotoInfo> list = folderInfo.getPhotoList();
 //                    if (list == null) {
 //                        list = new ArrayList<>();
@@ -509,7 +509,7 @@ public class PhotoSelectActivity extends ViewActivity{
 //            try {
 //                for(Iterator<PhotoInfo> iterator = mSelectPhotoList.iterator();iterator.hasNext();){
 //                    PhotoInfo pi = iterator.next();
-//                    if (pi != null && TextUtils.equals(pi.getPhotoPath(), info.getPhotoPath())) {
+//                    if (pi != null && StringUtil.equals(pi.getPhotoPath(), info.getPhotoPath())) {
 //                        iterator.remove();
 //                        break;
 //                    }

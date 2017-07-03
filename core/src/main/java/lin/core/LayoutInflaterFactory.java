@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,15 +29,14 @@ public class LayoutInflaterFactory {
 
     private volatile static LayoutInflater.Factory2 factory2 = null;
     private static Lock lock = new ReentrantLock();
-//    private static Map<SoftReference<Context>,LayoutInflater> inflaters = new HashMap<>();
-    private static List<SoftReference<LayoutInflater>> inflaters = new ArrayList<>();
+    private static List<WeakReference<LayoutInflater>> inflaters = new ArrayList<>();
 
     public static LayoutInflater from(Context context){
 
         LayoutInflater result = null;
         lock.lock();
-        List<SoftReference<LayoutInflater>> removes = new ArrayList<>();
-        for(SoftReference<LayoutInflater> item : inflaters){
+        List<WeakReference<LayoutInflater>> removes = new ArrayList<>();
+        for(WeakReference<LayoutInflater> item : inflaters){
             LayoutInflater inflater = item.get();
             if(inflater == null){
                 removes.add(item);
@@ -75,7 +74,7 @@ public class LayoutInflaterFactory {
             inflater.setFactory2(new LayoutInflaterFactory2Impl(null));
         }else{
             inflater = new LayoutInflaterImpl(inflater);
-            inflaters.add(new SoftReference<LayoutInflater>(inflater));
+            inflaters.add(new WeakReference<LayoutInflater>(inflater));
         }
 
         lock.unlock();

@@ -9,6 +9,9 @@ DownlaodFile：
 5、文件名
 
 
+cookies 加策略，是但一url唯一 ，还是全部url共用
+
+处理cookie 1和cookie2
 
 
 可以适配，HttpClient、HttpURLConnection两种通信方式
@@ -34,3 +37,23 @@ HttpPackage 加入请求与响应编码注解
 https://www.feicuibaba.com/proxy/proxy-channel.apk.php?channel=own  不能用httpdns
 
 http get 中文乱码
+
+
+规范http错误码：
+
+-1未知
+600
+700 未知网络相关
+701 无网络链接
+702 timeout
+800 未知代码错误
+801 字符编码错误
+802 json 解析错误
+
+
+-1000 到 -1999 http相关
+
+-2000 至 -2999 dns相关
+
+-3000 到 -3999 tcp
+-4000 到 -5999 代码相关

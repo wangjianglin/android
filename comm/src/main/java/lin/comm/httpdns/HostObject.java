@@ -9,14 +9,10 @@ public class HostObject {
     private String hostName;
     private String[] ips;
     private long ttl;
-    private long queryTime;//得到ip时间
+    private long queryTime;//得到ip时间，以秒为单位
 //    private long expiredRequestTime;//过期请求时间
     private HttpDNS.SessionMode sessionMode = HttpDNS.SessionMode.Sticky;
     private int ipIndex = 0;
-
-//    public boolean isRequest(){
-//        return expiredRequestTime + ttl < System.currentTimeMillis() / 1000;
-//    }
 
     public boolean isExpired() {
         return getQueryTime() + ttl < System.currentTimeMillis() / 1000;
@@ -100,14 +96,6 @@ public class HostObject {
     public void setQueryTime(long queryTime) {
         this.queryTime = queryTime;
     }
-
-//    public long getExpiredRequestTime() {
-//        return expiredRequestTime;
-//    }
-//
-//    public void setExpiredRequestTime(long expiredRequestTime) {
-//        this.expiredRequestTime = expiredRequestTime;
-//    }
 
     public HttpDNS.SessionMode getSessionMode() {
         return sessionMode;

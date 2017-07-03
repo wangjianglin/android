@@ -1,5 +1,6 @@
 package lin.comm.http;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import lin.comm.Constants;
@@ -90,10 +91,10 @@ public class StandardJsonHttpRequestHandle02 extends AbstractHttpRequestHandle{
 		}
 	}
 
-	public void error(HttpPackage pack, byte[] bytes, ResultListener listener){
+	public void error(HttpPackage pack,HttpClientResponse response, ResultListener listener){
 		Error error = null;
 		try {
-			String resp = new String(bytes, "utf-8");
+			String resp = new String(response.getData(), HttpUtils.parseCharset(response.getHeader("Content-Type"), "utf-8"));
 			ResultData resultData = JsonUtil.deserialize(resp, new JsonUtil.GeneralType(ResultData.class, pack.getRespType()));
 
 			error = new Error(resultData.code,
@@ -101,44 +102,48 @@ public class StandardJsonHttpRequestHandle02 extends AbstractHttpRequestHandle{
 					resultData.getCause(),
 					resultData.getStackTrace());
 			error.setWarning(resultData.warning);
+		}catch (UnsupportedEncodingException e){
+			error = new Error(-1801,"",e.getMessage(), Utils.printStackTrace(e));
 		}catch (Throwable e){
-			error = new Error(-5,"",e.getMessage(), Utils.printStackTrace(e));
+			error = new Error(-1802,"",e.getMessage(), Utils.printStackTrace(e));
 		}
 		listener.fault(error);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void response(HttpPackage pack,HttpClientResponse response, byte[] bytes, ResultListener listener) {
+	public void response(HttpPackage pack,HttpClientResponse response, ResultListener listener) {
 
 		if (response.getStatusCode() == 200) {
 			if(response.getHeader(Constants.HTTP_COMM_WITH_WARNING) != null) {
-				resultWithWarning(pack, bytes, listener);
+				resultWithWarning(pack,response, listener);
 			}else{
-				result(pack, bytes, listener);
+				result(pack,response, listener);
 			}
 		}else if(response.getStatusCode() == 600) {
-			error(pack, bytes, listener);
+			error(pack,response, listener);
 		}else{
-			listener.fault(new Error(-4,"未知错误","",""));
+			listener.fault(new Error(-1000 - response.getStatusCode(),"","",response.getMessage()));
 		}
 	}
 
-	public void resultWithWarning(HttpPackage pack, byte[] bytes, ResultListener listener) {
+	public void resultWithWarning(HttpPackage pack,HttpClientResponse response, ResultListener listener) {
 
 		Object obj = null;
 		List<Error> warning = null;
 		Error error = null;
 		try{
-			String resp = new String(bytes,"utf-8");
+			String resp = new String(response.getData(),HttpUtils.parseCharset(response.getHeader("Content-Type"),"utf-8"));
 
 			ResultData resultData = JsonUtil.deserialize(resp, new JsonUtil.GeneralType(ResultData.class, pack.getRespType()));
 
 			obj = resultData.getResult();
 			warning = resultData.getWarning();
 
-		}catch(Throwable e){
-			error = new Error(-1,null,null,lin.util.Utils.printStackTrace(e));
+		}catch (UnsupportedEncodingException e){
+			error = new Error(-1801,"",e.getMessage(), Utils.printStackTrace(e));
+		}catch (Throwable e){
+			error = new Error(-1802,"",e.getMessage(), Utils.printStackTrace(e));
 		}
 		if(error != null){
 			HttpUtils.fireFault(listener, error);
@@ -147,16 +152,18 @@ public class StandardJsonHttpRequestHandle02 extends AbstractHttpRequestHandle{
 		}
 	}
 
-	public void result(HttpPackage pack, byte[] bytes, ResultListener listener){
+	public void result(HttpPackage pack,HttpClientResponse response, ResultListener listener){
 
 		Object obj = null;
 		List<Error> warning = null;
 		Error error = null;
 		try{
-			String resp = new String(bytes,"utf-8");
+			String resp = new String(response.getData(),HttpUtils.parseCharset(response.getHeader("Content-Type"),"utf-8"));
 			obj = JsonUtil.deserialize(resp, pack.getRespType());
-		}catch(Throwable e){
-			error = new Error(-1,null,null,lin.util.Utils.printStackTrace(e));
+		}catch (UnsupportedEncodingException e){
+			error = new Error(-1801,"",e.getMessage(), Utils.printStackTrace(e));
+		}catch (Throwable e){
+			error = new Error(-1802,"",e.getMessage(), Utils.printStackTrace(e));
 		}
 		if(error != null){
 			HttpUtils.fireFault(listener, error);

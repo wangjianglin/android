@@ -43,21 +43,21 @@ public interface HttpCommunicateImpl{
 
     void removeHttpRequestListener(HttpRequestListener listener);
 
-    HttpCommunicateResult<Object> request(HttpPackage pack, ResultListener listener);
-    HttpCommunicateResult<Object> request(HttpPackage pack);
+    <T> HttpCommunicateResult<T> request(HttpPackage<T> pack, ResultListener<T> listener);
+    <T> HttpCommunicateResult<T> request(HttpPackage<T>  pack);
 
     //	public HttpCommunicateResult request(lin.client.http.TcpPackage pack,final ResultFunction result,final FaultFunction fault){
 //    HttpCommunicateResult<Object> request(HttpPackage pack, ResultListener listener, HttpCommunicate.Params params);
 
     HttpCommunicateResult<FileInfo> download(String file);
-    HttpCommunicateResult<FileInfo> download(String file, ResultListener listener);
+    HttpCommunicateResult<FileInfo> download(String file, ResultListener<FileInfo> listener);
 
-    HttpCommunicateResult<FileInfo> download(String file, ResultListener listener, HttpCommunicate.Params params);
+    HttpCommunicateResult<FileInfo> download(String file, ResultListener<FileInfo> listener, HttpCommunicate.Params params);
 
     HttpCommunicateResult<FileInfo> download(URL file);
-    HttpCommunicateResult<FileInfo> download(URL file, ResultListener listener);
+    HttpCommunicateResult<FileInfo> download(URL file, ResultListener<FileInfo> listener);
 
-    HttpCommunicateResult<FileInfo> download(URL file, ResultListener listener, HttpCommunicate.Params params);
+    HttpCommunicateResult<FileInfo> download(URL file, ResultListener<FileInfo> listener, HttpCommunicate.Params params);
 
     boolean isMainThread();
 

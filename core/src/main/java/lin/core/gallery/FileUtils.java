@@ -1437,12 +1437,12 @@ public class FileUtils {
     }
 
     /**
-     * Reads the contents of a file line by line to a List of Strings.
+     * Reads the contents of a file line by line to a List of StringUtil.
      * The file is always closed.
      *
      * @param file     the file to read, must not be {@code null}
      * @param encoding the encoding to use, {@code null} means platform default
-     * @return the list of Strings representing each line in the file, never {@code null}
+     * @return the list of StringUtil representing each line in the file, never {@code null}
      * @throws IOException in case of an I/O error
      * @since 2.3
      */
@@ -1457,11 +1457,11 @@ public class FileUtils {
     }
 
     /**
-     * Reads the contents of a file line by line to a List of Strings. The file is always closed.
+     * Reads the contents of a file line by line to a List of StringUtil. The file is always closed.
      *
      * @param file     the file to read, must not be {@code null}
      * @param encoding the encoding to use, {@code null} means platform default
-     * @return the list of Strings representing each line in the file, never {@code null}
+     * @return the list of StringUtil representing each line in the file, never {@code null}
      * @throws IOException                          in case of an I/O error
      * @throws java.nio.charset.UnsupportedCharsetException thrown instead of {@link UnsupportedEncodingException} in version 2.2 if the encoding is not
      *                                                      supported.
@@ -1472,11 +1472,11 @@ public class FileUtils {
     }
 
     /**
-     * Reads the contents of a file line by line to a List of Strings using the default encoding for the VM.
+     * Reads the contents of a file line by line to a List of StringUtil using the default encoding for the VM.
      * The file is always closed.
      *
      * @param file the file to read, must not be {@code null}
-     * @return the list of Strings representing each line in the file, never {@code null}
+     * @return the list of StringUtil representing each line in the file, never {@code null}
      * @throws IOException in case of an I/O error
      * @since 1.3
      */

@@ -9,7 +9,6 @@
 //import android.view.View;
 //import android.view.ViewGroup;
 //
-//import java.lang.ref.SoftReference;
 //
 ///**
 // * Created by lin on 15/01/2017.

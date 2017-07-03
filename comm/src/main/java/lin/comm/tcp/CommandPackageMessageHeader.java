@@ -48,11 +48,11 @@ package lin.comm.tcp;
 //	// = value; } }
 //
 //	public void read(byte[] headers) {
-//		 major = ByteUtils.readByte(headers);
-//		 minor = ByteUtils.readByte(headers, 1);
-//		 revise = ByteUtils.readByte(headers, 2);
-//		 command = ByteUtils.readInt(headers, 3);
-//		 length = ByteUtils.readInt(headers, 7);
+//		 major = Bytes.readByte(headers);
+//		 minor = Bytes.readByte(headers, 1);
+//		 revise = Bytes.readByte(headers, 2);
+//		 command = Bytes.readInt(headers, 3);
+//		 length = Bytes.readInt(headers, 7);
 //	}
 //
 //	public int getCommand() {

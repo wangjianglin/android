@@ -61,8 +61,7 @@ class DownloadFile implements HttpCommunicateDownloadFile {
     private HttpGet get;
     private CookieStore mCookie;
 
-    DownloadFile(CookieStore cookie, Context context){
-        this.mCookie = cookie;
+    DownloadFile(Context context){
         this.mContext = context;
 
     }

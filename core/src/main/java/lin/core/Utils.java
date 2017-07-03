@@ -102,7 +102,7 @@ public class Utils {
 //	    ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);  
 //	    ComponentName cn = am.getRunningTasks(1).get(0).topActivity;  
 //	    String currentPackageName = cn.getPackageName();  
-//	    if(!TextUtils.isEmpty(currentPackageName) && currentPackageName.equals(context.getPackageName()))  
+//	    if(!StringUtil.isEmpty(currentPackageName) && currentPackageName.equals(context.getPackageName()))
 //	    {  
 //	        return true ;  
 //	    }  
