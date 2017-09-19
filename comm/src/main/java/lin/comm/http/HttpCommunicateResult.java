@@ -19,7 +19,7 @@ public class HttpCommunicateResult<T> {
     //HttpCommunicateResult(AutoResetEvent are, System.Action abort)
 //	ReentrantLock lock = new ReentrantLock();
 //	Condition condition = lock.newCondition();
-    Aboutable request ;
+    Aboutable mRequest ;
 	public HttpCommunicateResult()
     {
 		//this.lock = lock;
@@ -27,51 +27,51 @@ public class HttpCommunicateResult<T> {
         //this.abort = abort;
     }
 
-    private Boolean _result = null;
-    private List<Error> warning;
-    private Error error;
+    private Boolean mSuccess = null;
+    private List<Error> mWarning;
+    private Error mError;
 
-	private AutoResetEvent set = new AutoResetEvent(false);
+	private AutoResetEvent mSet = new AutoResetEvent(false);
 
     AutoResetEvent getAutoResetEvent(){
-        return set;
+        return mSet;
     }
 
     public void abort()
     {
-    	request.abort();	
+    	mRequest.abort();
     }
 
-    long threadId = -1;
+    long mThreadId = -1;
     public HttpCommunicateResult waitForEnd()
     {
-    	threadId = Thread.currentThread().getId();
-    	set.waitOne();
+        mThreadId = Thread.currentThread().getId();
+        mSet.waitOne();
     	return this;
     }
-    private  T _obj;
+    private  T mObj;
     public void setResult(boolean result, T obj, List<Error> warning,Error error){
 //    	this.lock.lock();
-    	this._result = result;
-    	this._obj = obj;
-        this.warning = warning;
-        this.error = error;
+    	this.mSuccess = result;
+    	this.mObj = obj;
+        this.mWarning = warning;
+        this.mError = error;
 //    	this.condition.signalAll();
 //    	this.lock.unlock();
     }
     public T getResult(){
     	this.waitForEnd();
-    	return _obj;
+    	return mObj;
     }
     public List<Error> getWarning(){
-        return warning;
+        return mWarning;
     }
     public Error getError(){
-        return error;
+        return mError;
     }
     public boolean isSuccess()
     {
     	this.waitForEnd();
-    	return this._result;
+    	return this.mSuccess;
     }
 }

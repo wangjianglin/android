@@ -58,7 +58,9 @@ public abstract class AbstractHttpDNS implements HttpDNS {
     private LocalStorageImpl mHttpDnsStoreage = null;
     public AbstractHttpDNS(Context context) {
         LocalStorage.init(context);
-        mHttpDnsStoreage = LocalStorage.get("http_dns");
+        if(context == null) {
+            mHttpDnsStoreage = LocalStorage.get("http_dns");
+        }
     }
 
     // 是否允许过期的IP返回
@@ -96,12 +98,17 @@ public abstract class AbstractHttpDNS implements HttpDNS {
         hostObject.status(hostManager.get(hostName));
         hostObject.setQueryTime(System.currentTimeMillis() / 1000);
         hostManager.put(hostName, hostObject);
-        mHttpDnsStoreage.setItem(hostName,JsonUtil.serialize(hostObject));
+        if(mHttpDnsStoreage != null) {
+            mHttpDnsStoreage.setItem(hostName, JsonUtil.serialize(hostObject));
+        }
         return hostObject;
     }
 
     private HostObject fetchWithCache(String hostName,int timeout){
-        String hostObjectStr = mHttpDnsStoreage.getItem(hostName);
+        String hostObjectStr = null;
+        if(mHttpDnsStoreage != null){
+            hostObjectStr = mHttpDnsStoreage.getItem(hostName);
+        }
 //        HostObject.prase(hostObjectStr)
 
         HostObject hostObject = null;
@@ -115,7 +122,9 @@ public abstract class AbstractHttpDNS implements HttpDNS {
         if(hostObject != null){
             hostManager.put(hostName, hostObject);
             if(System.currentTimeMillis() / 1000 - hostObject.getQueryTime() > 86400) {
-                mHttpDnsStoreage.remove(hostName);
+                if(mHttpDnsStoreage != null) {
+                    mHttpDnsStoreage.remove(hostName);
+                }
             }
             return hostObject;
         }

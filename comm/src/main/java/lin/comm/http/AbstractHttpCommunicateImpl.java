@@ -259,10 +259,10 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
                         continue;
                     }
                     buffer.append(cookie.toString());
-                    buffer.append(';');
+                    buffer.append("; ");
                 }
                 if(buffer.length() > 0){
-                    buffer.deleteCharAt(buffer.length()-1);
+                    buffer.deleteCharAt(buffer.length()-2);
                 }
                 params.addHeader("Cookie", buffer.toString());
             }
@@ -297,8 +297,6 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
         processPackHttpHeaders(pack,params);
 
         final HttpCommunicateResult<T> httpHesult = new HttpCommunicateResult<T>();
-
-//        HttpCommunicateRequest request = this.getRequest();
 
         final ResultListener listenerImpl = new ResultListener<T>() {
 
@@ -348,12 +346,7 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
                         fireRequestFaultListener(pack, error);
                     }});
             }
-        };//);
-
-//        request.setPackage(pack);
-//        request.setImpl(this);
-//        request.setListener(listenerImpl);
-//        request.setParams(params);
+        };
 
         final HttpCommunicateHandler handler = this.getHandler();
 
@@ -367,28 +360,34 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
                 handler.process(new HttpCommunicateHandler.Listener() {
                     @Override
                     public void response(HttpClientResponse response) {
-                        String cookieStr = response.getHeader("Set-Cookie");
 
-                        if(cookieStr != null && !"".equals(cookieStr)) {
-
-                            URI uri = null;
-                            try {
-                                uri = mBaseUrl.toURI();
-                            } catch (URISyntaxException e) {
-                            }
-                            for(HttpCookie cookie : HttpCookie.parse(cookieStr)){
-                                mSessionInfo.mCookieStore.add(uri,cookie);
-                            }
-                        }
+                        processCookie(response);
                         pack.getRequestHandle().response(pack,response,listenerImpl);
                     }
                 });
             }
         });
 
-        httpHesult.request = handler;
+        httpHesult.mRequest = handler;
 
         return httpHesult;
+    }
+
+    private void processCookie(HttpClientResponse response){
+        for(String cookieStr : response.getHeaders("Set-Cookie")) {
+
+            if (cookieStr != null && !"".equals(cookieStr)) {
+
+                URI uri = null;
+                try {
+                    uri = mBaseUrl.toURI();
+                } catch (URISyntaxException e) {
+                }
+                for (HttpCookie cookie : HttpCookie.parse(cookieStr)) {
+                    mSessionInfo.mCookieStore.add(uri, cookie);
+                }
+            }
+        }
     }
 
 
@@ -414,7 +413,7 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
     }
     private boolean fireResult(final HttpCommunicateResult httpResult,final ResultListener listener,final Object obj,final List<Error> warning){
         if(listener != null){
-            if(this.isMainThread() && httpResult.threadId != mHandler.getLooper().getThread().getId()){
+            if(this.isMainThread() && httpResult.mThreadId != mHandler.getLooper().getThread().getId()){
                 mHandler.post(new Runnable(){
 
                     @Override
@@ -445,7 +444,7 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
     private void fireFault(final HttpCommunicateResult httpResult,final ResultListener listener,final Error error){
         if(listener != null){
-            if(this.isMainThread() && httpResult.threadId != mHandler.getLooper().getThread().getId()){
+            if(this.isMainThread() && httpResult.mThreadId != mHandler.getLooper().getThread().getId()){
                 mHandler.post(new Runnable(){
 
                     @Override
@@ -469,8 +468,8 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
     }
     private void fireProgress(final HttpCommunicateResult httpResult,final ProgressResultListener listener,final long progress,final long total){
         if(listener != null){
-//			System.out.println("3 progress:"+progress+"\ttotal:"+total);
-            if(this.isMainThread() && httpResult.threadId != mHandler.getLooper().getThread().getId()){
+
+            if(this.isMainThread() && httpResult.mThreadId != mHandler.getLooper().getThread().getId()){
                 mHandler.post(new Runnable(){
 
                     @Override
@@ -614,21 +613,19 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
             @Override
             public void progress(long progress, long total) {
-//				System.out.println("2 progress:"+progress+"\ttotal:"+total);
+
                 if (finalPListener != null){
                     fireProgress(httpHesult, finalPListener,progress,total);
                 }
             }
-        };//);
-
-//        request.setPackage(pack);
+        };
 
 
         request.setImpl(this);
         request.setListener(listenerImpl);
         request.setParams(params);
 
-        httpHesult.request = request;
+        httpHesult.mRequest = request;
 
         Runnable task = new Runnable() {
             @Override
@@ -654,10 +651,6 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
         };
 
 
-
-//        downloadFile.context = context;
-////		downloadFile.http = this.http;
-//        downloadFile.download(file);
         pushDownloadTask(file.toString(),task);
 
         return httpHesult;

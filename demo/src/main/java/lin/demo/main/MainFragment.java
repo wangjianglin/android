@@ -41,7 +41,7 @@ import lin.demo.databinding.ActivityMainItemBinding;
 //@lin.core.mvm.
 @ResId(R.layout.activity_main_frag)
 @OptionsMenu
-@MenuId(R.menu.tasks_fragment_menu)
+@MenuId({R.menu.tasks_fragment_menu,R.menu.tasks_fragment_menu})
 public class MainFragment extends ResFragment implements MainContract.View {
 
     private MainContract.Presenter mPresenter;

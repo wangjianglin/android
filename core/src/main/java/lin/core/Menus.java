@@ -92,6 +92,8 @@ public class Menus {
 
     private static void processClsMenuAnnot(Class<?> cls, Context context,lin.core.annotation.MenuId menuAnnot,Menu menu, MenuInflater inflater){
         for(int id : menuAnnotIds(cls,context,menuAnnot,"$menu")){
+            menu.removeGroup(id);
+            menu.removeItem(id);
             inflater.inflate(id,menu);
         }
     }
