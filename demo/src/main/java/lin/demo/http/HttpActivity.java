@@ -74,6 +74,9 @@ public class HttpActivity extends ViewActivity {
             e.printStackTrace();
         }
 
+        impl.enableMock();
+        impl.getMock().mock(pack,"==");
+
         impl.request(pack, new ResultListener<String>() {
             @Override
             public void result(String obj, List<Error> warning) {
@@ -112,15 +115,15 @@ public class HttpActivity extends ViewActivity {
         impl.setMainThread(true);
 
         impl.setHttpDNS(new AliHttpDNS(this,"172280"){
-            @Override
-            public String getIpByHost(String hostName) {
-//                return super.getIpByHost(hostName);
-                return "120.76.68.177";
-            }
+//            @Override
+//            public String getIpByHost(String hostName) {
+////                return super.getIpByHost(hostName);
+//                return "120.76.68.177";
+//            }
         });
 
         try {
-            HttpCommunicate.setCommUrl(new URL("https://s.feicuibaba.com"));
+            impl.setCommUrl(new URL("https://s.feicuibaba.com"));
 //            HttpCommunicate.setCommUrl(new URL("http://192.168.0.100:8080/fcbb_b2b2c"));
 //            HttpCommunicate.setCommUrl(new URL("http://192.168.1.66:8080/fcbb_b2b2c"));
 //            HttpCommunicate. setCommUrl(new URL("http://120.76.68.177/"));
@@ -128,16 +131,36 @@ public class HttpActivity extends ViewActivity {
             e.printStackTrace();
         }
 
-        impl.download("https://www.feicuibaba.com/proxy/proxy-channel.apk.php?channel=own", new ResultListener<FileInfo>() {
+//        impl.download("https://www.feicuibaba.com/proxy/proxy-channel.apk.php?channel=own", new ResultListener<FileInfo>() {
+//            @Override
+//            public void result(FileInfo obj, List<Error> warning) {
+//                Toast.makeText(getApplicationContext(),obj.getFile().getAbsolutePath(),Toast.LENGTH_LONG).show();
+//            }
+//
+//            @Override
+//            public void fault(Error error) {
+//                Toast.makeText(getApplicationContext(),"错误",Toast.LENGTH_LONG).show();
+//                System.out.println(error.getStackTrace());
+//            }
+//        });
+        TestPackage pack = new TestPackage();
+
+        pack.setData("测试数据！");
+
+//        ExceptionPackage pack = new ExceptionPackage();
+
+
+        impl.request(pack, new ResultListener<String>() {
             @Override
-            public void result(FileInfo obj, List<Error> warning) {
-                Toast.makeText(getApplicationContext(),obj.getFile().getAbsolutePath(),Toast.LENGTH_LONG).show();
+            public void result(String obj, List<Error> warning) {
+                Toast.makeText(getApplicationContext(),"obj:"+obj,Toast.LENGTH_LONG).show();
+                System.out.println();
             }
 
             @Override
             public void fault(Error error) {
-                Toast.makeText(getApplicationContext(),"错误",Toast.LENGTH_LONG).show();
-                System.out.println(error.getStackTrace());
+                Toast.makeText(getApplicationContext(),error.getStackTrace(),Toast.LENGTH_LONG).show();
+                System.out.println();
             }
         });
     }

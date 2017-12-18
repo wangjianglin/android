@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.Arrays;
 
 import lin.comm.http.HttpCommunicate;
+import lin.comm.http.HttpCommunicateImpl;
 import lin.comm.http.HttpCommunicateType;
 import lin.comm.httpdns.AliHttpDNS;
 import lin.comm.httpdns.HttpDNS;
@@ -80,6 +81,12 @@ public class DemoApplication extends Application {
                 }
             }
         });
+
+        HttpCommunicate.global().enableMock();
+
+//        HttpCommunicate.getMock().mock();
+
+//        HttpCommunicateImpl.Mock.setErrorListener();
     }
 
 

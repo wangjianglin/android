@@ -4,6 +4,8 @@ package lin.core;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+//import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.*;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -58,11 +60,12 @@ public class NavActivity extends ViewActivity {
 		String className = intent.getStringExtra("cls");
 		int layoutId = intent.getIntExtra("layout_id",0);
 
-		System.out.println("argsId 2:"+argsId);
 		nav = Nav.getNav(argsId);
-		if(nav != null) {
-			nav.activity = this;
+		if(nav == null) {
+			this.finish();
+			return;
 		}
+		nav.activity = this;
 
 		ActionBar actionBar = this.getSupportActionBar();
 //		if(actionBar == null) {
@@ -165,6 +168,11 @@ public class NavActivity extends ViewActivity {
 		return null;
 	}
 
+//	@Override
+//	public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+//		super.onCreate(savedInstanceState, persistentState);
+//		System.out.println("save instance state ............................");
+//	}
 
 	private boolean isBackKeyDown = false;
 	@Override

@@ -67,8 +67,29 @@ class PtrHandler {
             }
             if (layoutManager instanceof LinearLayoutManager && count > 0) {
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
-                if (linearLayoutManager.findLastCompletelyVisibleItemPosition() == count - 1) {
+                int pos = linearLayoutManager.findLastCompletelyVisibleItemPosition();
+
+                if (pos == count - 1) {
                     return true;
+                }
+
+
+
+                if(pos == -1 && linearLayoutManager.getChildCount() > 0){
+                    int pos2 = linearLayoutManager.findLastVisibleItemPosition();
+                    if(pos2 == -1 || pos2 == count-1) {
+                        View view = linearLayoutManager
+                                .getChildAt(linearLayoutManager.getChildCount() - 1);
+                        if (view == null) {
+                            return true;
+                        }
+                        if (view != null) {
+                            int diff = (view.getBottom() - (recyclerView.getHeight() + recyclerView.getScrollY()));
+                            if (diff <= 0) {
+                                return true;
+                            }
+                        }
+                    }
                 }
             } else if (layoutManager instanceof StaggeredGridLayoutManager) {
                 StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) layoutManager;

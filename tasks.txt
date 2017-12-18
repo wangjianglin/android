@@ -6,3 +6,5 @@ xwalk单独下载安装
 TCP 通信
 
 WebSocket 通信
+
+page 视频左右滑动

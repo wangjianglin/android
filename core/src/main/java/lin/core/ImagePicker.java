@@ -332,12 +332,15 @@ public class ImagePicker extends ResView {
 					} catch (InterruptedException e) {
 					}
 
-					getHandler().post(new Runnable() {
-						@Override
-						public void run() {
-							fireOnTouchListener(e);
-						}
-					});
+					Handler handler = getHandler();
+					if(handler != null) {
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								fireOnTouchListener(e);
+							}
+						});
+					}
 
 				}
 			}).start();

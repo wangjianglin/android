@@ -14,6 +14,7 @@ import lin.comm.http.annotation.HttpPackageMethod;
 import lin.comm.http.annotation.HttpPackageReturnType;
 import lin.comm.http.annotation.HttpPackageUrl;
 import lin.comm.http.annotation.HttpParamName;
+import lin.comm.http.annotation.HttpPath;
 
 /**
  * 
@@ -37,16 +38,16 @@ public abstract class HttpPackage<T> {
     /// 是否启用缓存，默认不启用
     /// </summary>
     //[DefaultValue(false)]
-    private boolean enableCache;// { get; protected set; }
-	private HttpRequestHandle requestHandle = STANDARD_JSON;
-	private boolean multipart = false;
+    private boolean mEnableCache;// { get; protected set; }
+	private HttpRequestHandle mRequestHandle = STANDARD_JSON;
+	private boolean mMultipart = false;
 
-	private HttpMethod method = HttpMethod.POST;
-	private Type respType  = String.class;//{ get;protected set; }
+	private HttpMethod mMethod = HttpMethod.POST;
+	private Type mRespType  = String.class;//{ get;protected set; }
 
-	private Map<String,String> headers = new HashMap<String, String>();
+	private Map<String,String> mHeaders = new HashMap<String, String>();
 
-	private HttpCommParams commParams = new HttpCommParams();
+	private HttpCommParams mCommParams = new HttpCommParams();
     public HttpPackage(){
     	this.init();
     }
@@ -54,25 +55,23 @@ public abstract class HttpPackage<T> {
     private void init(){
 		Class<?> cls = this.getClass();
     	HttpPackageUrl urla = cls.getAnnotation(HttpPackageUrl.class);
-    	//this(urla.value());
 
     	if(urla != null){
-    		this.url = urla.value();
+    		this.mOriginUrl = urla.value();
+    		this.mUrl = urla.value();
     	}
     	HttpPackageMethod methoda = cls.getAnnotation(HttpPackageMethod.class);
     	if(methoda != null){
-    		this.method = methoda.value();
-    	}else{
-//			this.method = HttpMethod.POST;
-		}
+    		this.mMethod = methoda.value();
+    	}
     	
     	final HttpPackageReturnType methodt = cls.getAnnotation(HttpPackageReturnType.class);
     	if(methodt != null){
     		final Class<?>[] ptypes = methodt.parameterizedType();
     		if(ptypes == null || ptypes.length == 0){
-    			this.respType = methodt.value();
+    			this.mRespType = methodt.value();
     		}else{
-    			this.respType = new ParameterizedType(){
+    			this.mRespType = new ParameterizedType(){
 
     				@Override
     				public Type[] getActualTypeArguments() {
@@ -103,168 +102,139 @@ public abstract class HttpPackage<T> {
     public HttpPackage(String url,HttpMethod method)
     {
     	this.init();
-    	this.url = url;
-    	this.method = method;
-        //EnableCache = false;
-//        UrlType = UrlType.RELATIVE;
-//        this.RequestHandle = JSON;
-//        EnableCache = false;
-//        //HasParams = true;
-//        this.RespType = _DefautlRespType;
-//        this.Version = new Version();
-//        this.Version.Major = 0;
-//        this.Version.Minor = 0;
+    	this.mOriginUrl = url;
+    	this.mUrl = url;
+    	this.mMethod = method;
     }
-    private String url;//{ get; set; }
 
-    /// <summary>
-    /// 数据包的版本号
-    /// </summary>
-//    private Version version = new Version(0,0);// { get; protected set; }
-
-
-    /// <summary>
-    /// 表示是否需要进行参数设置
-    /// </summary>
-    //public virtual bool HasParams { get; protected set; }
+    private String mOriginUrl;
+    private String mUrl;
 
     public HttpRequestHandle getRequestHandle() { 
-    	return requestHandle;
+    	return mRequestHandle;
 }
     protected void setRequestHandle(HttpRequestHandle handle) {
-		this.requestHandle = handle;
+		this.mRequestHandle = handle;
 	}
 
 
+	private void processHttpPath(Field f){
+		HttpPath path = f.getAnnotation(HttpPath.class);
+		if(path == null){
+			return;
+		}
+		String pathName = path.value();
+		if(path == null || "".equals(pathName)){
+			pathName=f.getName();
+		}
+
+		f.setAccessible(true);
+		try {
+			Object pathValue = f.get(this);
+			this.mUrl = this.mUrl.replaceAll(":"+pathName,pathValue != null?pathValue.toString():"");
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
+	private void processHttpParams(Map<String,Object> params,Field f){
+		HttpParamName item = f.getAnnotation(HttpParamName.class);
+		if(item == null){
+			return;
+		}
+		String paramName = item.value();
+		if(paramName == null || "".equals(paramName)){
+			paramName = f.getName();
+		}
+		f.setAccessible(true);
+		try {
+			Object paramValue = f.get(this);
+			if(paramValue == null){
+				return;
+			}
+			if(paramValue instanceof String
+					|| paramValue.getClass().isEnum()
+					|| paramValue.getClass().isPrimitive()
+					|| Number.class.isAssignableFrom(paramValue.getClass())){// || paramValue instanceof ContentBody){
+				params.put(paramName, paramValue);
+				return;
+			}
+
+			HttpFileInfo fileInfo = f.getAnnotation(HttpFileInfo.class);
+			String fileName;
+			if(fileInfo != null){
+				fileName = fileInfo.name();
+			}else{
+				fileName = paramName;
+			}
+			FileParamInfo contentBody = null;
+			String mineType = "application/octet-stream";
+			if(paramValue instanceof byte[]){
+				contentBody = new FileParamInfo();
+				contentBody.setFile((byte[])paramValue);
+				contentBody.setMimeType(mineType);
+				contentBody.setFileName(fileName);
+				mMultipart = true;
+			}else if(paramValue instanceof java.io.File){
+				contentBody = new FileParamInfo();
+				contentBody.setFile((File)paramValue);
+				contentBody.setMimeType(mineType);
+				contentBody.setFileName(fileName);
+				mMultipart = true;
+			}else if(paramValue instanceof java.io.InputStream){
+				contentBody = new FileParamInfo();
+				contentBody.setFile((InputStream)paramValue);
+				contentBody.setMimeType(mineType);
+				contentBody.setFileName(fileName);
+				mMultipart = true;
+			}else{
+				params.put(paramName, paramValue);
+				return;
+			}
+			params.put(paramName, contentBody);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
     public Map<String, Object> getParams()
     {
     	Class<?> cls = this.getClass();
     	Field[] fs = cls.getDeclaredFields();
-		HttpParamName item = null;
-		Object paramValue;
-		String paramName = null;
-		FileParamInfo contentBody = null;
-		String fileName = null;
-//		ContentType mimeType = ContentType.DEFAULT_BINARY;
-		String mineType = "application/octet-stream";
+
 		HttpFileInfo fileInfo;
 		Map<String,Object> params = new HashMap<String,Object>();
+		this.mUrl = this.mOriginUrl;
     	for(Field f : fs){
-    		item = f.getAnnotation(HttpParamName.class);
-    		if(item == null){
-    			continue;
-    		}
-    		paramName = item.value();
-    		if(paramName == null || "".equals(paramName)){
-    			paramName = f.getName();
-    		}
-    		f.setAccessible(true);
-    		try {
-//    			ContentBody f2;
-//    			ByteArrayBody b = new ByteArrayBody(data, filename);
-//    			FileBody fb = new FileBody(file);
-//    			InputStreamBody ib = new InputStreamBody();
-//    			StringBody sb = new StringBody();
-    			
-    			paramValue = f.get(this);
-				if(paramValue == null){
-//					params.put(paramName,"");
-					continue;
-				}
-    			if(paramValue instanceof String
-						|| paramValue.getClass().isEnum()
-						|| paramValue.getClass().isPrimitive()
-						|| Number.class.isAssignableFrom(paramValue.getClass())){// || paramValue instanceof ContentBody){
-    				params.put(paramName, paramValue);
-    				continue;
-    			}
-
-    			fileInfo = f.getAnnotation(HttpFileInfo.class);
-    			if(fileInfo != null){
-    				fileName = fileInfo.name();
-//    				mimeType = new ContentType(fileInfo.mimeType());
-    			}else{
-    				fileName = paramName;
-//    				mimeType = null;
-    			}
-    			if(paramValue instanceof byte[]){
-    				//contentBody = new ByteArrayBody((byte[]) paramValue,mimeType,fileName);
-					contentBody = new FileParamInfo();
-					contentBody.setFile((byte[])paramValue);
-					contentBody.setMimeType(mineType);
-					contentBody.setFileName(fileName);
-    				multipart = true;
-    			}else if(paramValue instanceof java.io.File){
-    				//contentBody = new FileBody((File) paramValue,mimeType,((File) paramValue).getName());
-//					contentBody = new FileBody((File) paramValue);
-					contentBody = new FileParamInfo();
-					contentBody.setFile((File)paramValue);
-					contentBody.setMimeType(mineType);
-					contentBody.setFileName(fileName);
-    				multipart = true;
-    			}else if(paramValue instanceof java.io.InputStream){
-//    				contentBody = new InputStreamBody((InputStream) paramValue,mimeType,fileName);
-					contentBody = new FileParamInfo();
-					contentBody.setFile((InputStream)paramValue);
-					contentBody.setMimeType(mineType);
-					contentBody.setFileName(fileName);
-    				multipart = true;
-    			}else{
-    				params.put(paramName, paramValue);
-    				continue;
-    			}
-				params.put(paramName, contentBody);
-			} catch (Throwable e) {
-				e.printStackTrace();
-			}
+			processHttpParams(params,f);
+			processHttpPath(f);
     	}
         return params;
     }
     public HttpMethod getMethod(){
-    	return method;
+    	return mMethod;
     }
-//	public UrlType getUrlType() {
-//		return urlType;
-//	}
-//	public void setUrlType(UrlType urlType) {
-//		this.urlType = urlType;
-//	}
 	public boolean isEnableCache() {
-		return enableCache;
+		return mEnableCache;
 	}
 	protected void setEnableCache(boolean enableCache) {
-		this.enableCache = enableCache;
+		this.mEnableCache = enableCache;
 	}
 	public String getUrl() {
-		return url;
+		return mUrl;
 	}
-	
-//	private void setUri(String uri) {
-//		this.uri = uri;
-//	}
+
 	public Type getRespType() {
-		return respType;
+		return mRespType;
 	}
 	protected void setRespType(Type respType) {
-		this.respType = respType;
+		this.mRespType = respType;
 	}
-//	public Version getVersion() {
-//		return version;
-//	}
-//	protected void setVersion(Version version) {
-//		this.version = version;
-//	}
 
 	public HttpCommParams getCommParams() {
-		return commParams;
+		return mCommParams;
 	}
 
-//	public void setCommParams(HttpCommParams commParams) {
-//		this.commParams = commParams;
-//	}
-
 	public boolean isMultipart(){
-		return multipart;
+		return mMultipart;
 	}
 
 	private Map<String,String> getAnonHeaders(){
@@ -292,78 +262,14 @@ public abstract class HttpPackage<T> {
 		return headers;
 	}
 	public void addHeader(String name,String value){
-		headers.put(name,value);
+		mHeaders.put(name,value);
 	}
 	public Map<String,String> getHeaders(){
 		Map<String,String> r = new HashMap<String,String>();
 		Map<String,String> h = getAnonHeaders();
-		r.putAll(headers);
+		r.putAll(mHeaders);
 		r.putAll(h);
 		return r;
 	}
 }
 
-//
-//	public Map<String, Object> getParams()
-//	{
-//		Class<?> cls = this.getClass();
-//		Field[] fs = cls.getDeclaredFields();
-//		HttpParamName item = null;
-//		Object paramValue;
-//		String paramName = null;
-//		ContentBody contentBody = null;
-//		String fileName = null;
-//		ContentType mimeType = ContentType.DEFAULT_BINARY;
-//		HttpFileInfo fileInfo;
-//		Map<String,Object> params = new HashMap<String,Object>();
-//		for(Field f : fs){
-//			item = f.getAnnotation(HttpParamName.class);
-//			if(item == null){
-//				continue;
-//			}
-//			paramName = item.value();
-//			if(paramName == null || "".equals(paramName)){
-//				paramName = f.getName();
-//			}
-//			f.setAccessible(true);
-//			try {
-////    			ContentBody f2;
-////    			ByteArrayBody b = new ByteArrayBody(data, filename);
-////    			FileBody fb = new FileBody(file);
-////    			InputStreamBody ib = new InputStreamBody();
-////    			StringBody sb = new StringBody();
-//
-//				paramValue = f.get(this);
-//				if(paramValue == null || paramValue instanceof String || paramValue.getClass().isPrimitive() || paramValue instanceof ContentBody){
-//					params.put(paramName, paramValue);
-//					continue;
-//				}
-//				fileInfo = f.getAnnotation(HttpFileInfo.class);
-//				if(fileInfo != null){
-//					fileName = fileInfo.name();
-////    				mimeType = new ContentType(fileInfo.mimeType());
-//				}else{
-//					fileName = paramName;
-////    				mimeType = null;
-//				}
-//				if(paramValue instanceof byte[]){
-//					contentBody = new ByteArrayBody((byte[]) paramValue,mimeType,fileName);
-//					multipart = true;
-//				}else if(paramValue instanceof java.io.File){
-//					//contentBody = new FileBody((File) paramValue,mimeType,((File) paramValue).getName());
-//					contentBody = new FileBody((File) paramValue);
-//					multipart = true;
-//				}else if(paramValue instanceof java.io.InputStream){
-//					contentBody = new InputStreamBody((InputStream) paramValue,mimeType,fileName);
-//					multipart = true;
-//				}else{
-//					params.put(paramName, paramValue);
-//					continue;
-//				}
-//				params.put(paramName, contentBody);
-//			} catch (Throwable e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		return params;
-//	}

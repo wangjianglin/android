@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import lin.comm.http.httpclient.HttpClientCommunicateImpl;
 import lin.comm.http.httpurlconnection.HttpURLConnectionCommunicateImpl;
@@ -253,6 +254,13 @@ public class HttpCommunicate {
 		global().setCacheSize(cacheSize);
 	}
 
+	public static Mock getMock(){
+		return global().getMock();
+	}
+
+	public static void enableMock(){
+		global().enableMock();
+	}
 //	/**
 //	 * 设置代理
 //	 *
@@ -355,5 +363,121 @@ public class HttpCommunicate {
 				}
 			}
 		}
+	}
+
+	public static class Mock {
+
+		private Map<Object, Object> httpResult = new HashMap<>();
+		private Map<Object, Error> httpError = new HashMap<>();
+		private Mock.ResultListener mResultListener;
+		private Mock.ErrorListener mErrorListener;
+
+
+		public void clear() {
+			httpResult.clear();
+			httpError.clear();
+			mResultListener = null;
+			mErrorListener = null;
+		}
+
+		public void reset() {
+			clear();
+		}
+
+		public void mock(HttpPackage pack, Object result) {
+			httpResult.put(pack, result);
+		}
+
+		public void mock(Class<? extends HttpPackage> cls, Object result) {
+			httpResult.put(cls, result);
+		}
+
+		public void mock(HttpPackage pack, Error error) {
+			httpError.put(pack, error);
+		}
+
+		public void mock(Class<? extends HttpPackage> cls, Error error) {
+			httpError.put(cls, error);
+		}
+
+		public void removeMock(HttpPackage pack) {
+			httpResult.remove(pack);
+		}
+
+		public void removeMock(Class<? extends HttpPackage> cls) {
+			httpResult.remove(cls);
+			httpError.remove(cls);
+		}
+
+		public void removeMock(HttpPackage pack, Error error) {
+			httpError.remove(pack);
+		}
+
+		public void setResultListener(Mock.ResultListener resultListener) {
+			mResultListener = resultListener;
+		}
+
+		public void setErrorListener(Mock.ErrorListener errorListener) {
+			mErrorListener = errorListener;
+		}
+
+		public interface ResultListener {
+			Object result(HttpPackage pack);
+		}
+
+		public interface ErrorListener {
+			Error error(HttpPackage pack);
+		}
+
+
+		protected boolean process(ThreadPoolExecutor executor, final lin.comm.http.ResultListener listener, HttpPackage pack) {
+
+			Error error = httpError.get(pack);
+			if (error == null) {
+				error = httpError.get(pack.getClass());
+			}
+
+			if (error == null && mErrorListener != null) {
+				error = mErrorListener.error(pack);
+			}
+
+			if (error != null) {
+				final Error finalError = error;
+				executor.execute(new Runnable() {
+					@Override
+					public void run() {
+						listener.fault(finalError);
+					}
+				});
+
+				return true;
+			}
+
+			Object result = httpResult.get(pack);
+			boolean hasResult = httpResult.containsKey(pack);
+			if (result == null && !hasResult) {
+				result = httpResult.get(pack.getClass());
+			}
+
+			hasResult = hasResult || httpResult.containsKey(pack.getClass());
+
+			if (result == null && mResultListener != null && !hasResult) {
+				result = mResultListener.result(pack);
+			}
+
+			if (listener != null || hasResult) {
+				final Object finalResult = result;
+				executor.execute(new Runnable() {
+					@Override
+					public void run() {
+						listener.result(finalResult, null);
+					}
+				});
+				return true;
+			}
+
+			return false;
+		}
+
 	}
 }

@@ -8,8 +8,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-
-import java.lang.ref.WeakReference;
 import java.net.HttpCookie;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -28,9 +26,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import lin.comm.httpdns.HttpDNS;
 import lin.util.Action;
 
-
 /**
- *
  * @author 王江林
  * @date 2013-7-29 下午9:13:22
  *
@@ -59,6 +55,8 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
     private static long cacheSize = 200 * 1024 * 1024;
 
     private boolean mMainThread = false;
+
+    private HttpCommunicate.Mock mMock;
 
     protected AbstractHttpCommunicateImpl(String name,HttpCommunicate c) {
         if(c == null){
@@ -137,6 +135,16 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
     }
 
 
+    @Override
+    public HttpCommunicate.Mock getMock() {
+        return mMock;
+    }
+
+    @Override
+    public void enableMock(){
+         mMock = new HttpCommunicate.Mock();
+    }
+
     /**
      * 设置通信 URL
      * @param url
@@ -190,10 +198,10 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 //
 //		private CredentialsProvider credentialsProvider;
 //
-    /**
-     *
-     * @param credsProvider
-     */
+//    /**
+//     *
+//     * @param credsProvider
+//     */
 //		public void setCredentialsProvider(CredentialsProvider credsProvider){
 //			credentialsProvider = credsProvider;
 //		}
@@ -348,6 +356,12 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
             }
         };
 
+        HttpCommunicate.Mock mock = this.getMock();
+
+        if(mock != null && mock.process(mExecutor,listenerImpl,pack)){
+            return httpHesult;
+        }
+
         final HttpCommunicateHandler handler = this.getHandler();
 
         handler.setPackage(pack);
@@ -374,7 +388,11 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
     }
 
     private void processCookie(HttpClientResponse response){
-        for(String cookieStr : response.getHeaders("Set-Cookie")) {
+        List<String> cookies = response.getHeaders("Set-Cookie");
+        if(cookies == null || cookies.isEmpty()){
+            return;
+        }
+        for(String cookieStr : cookies) {
 
             if (cookieStr != null && !"".equals(cookieStr)) {
 

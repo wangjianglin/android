@@ -34,6 +34,10 @@ import lin.core.annotation.ToolsResId;
  */
 public class Views {
 
+	private static Class<?> mResCls;
+	public static void setResCls(Class<?> cls){
+		mResCls = cls;
+	}
 	@SuppressWarnings("unchecked")
 	public static <T extends View> T parentView(View view,Class<T> c){
 		if(c == null){
@@ -115,7 +119,9 @@ public class Views {
 		}else if(context != null){
 			try {
 				resCls = Class.forName(context.getPackageName() + ".R");
-			}catch (Throwable e){}
+			}catch (Throwable e){
+				resCls = mResCls;
+			}
 		}
 		return resCls;
 	}

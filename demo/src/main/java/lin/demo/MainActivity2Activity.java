@@ -3,7 +3,7 @@ package lin.demo;
 import java.util.Locale;
 
 import android.app.Activity;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-public class MainActivity2Activity extends ActionBarActivity {
+public class MainActivity2Activity extends AppCompatActivity {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide

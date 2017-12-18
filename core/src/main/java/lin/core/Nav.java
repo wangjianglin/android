@@ -236,12 +236,11 @@ public class Nav {
 			return ((NavActivity) context).getNav();
 		}
 		throw new RuntimeException("content not NavActivity");
-//		return null;
 	}
+
 	public static Nav getNav(android.support.v4.app.Fragment fragment){
 		if(fragment == null){
 			throw new RuntimeException("fragment is null");
-//			return null;
 		}
 		return getNav(fragment.getContext());
 	}
@@ -249,14 +248,9 @@ public class Nav {
 	static Nav getNav(String argsId){
 		SoftReference<Nav> value = navsMap.get(argsId);
 		if(value == null){
-			throw new RuntimeException("nav release");
-//			return null;
+			return null;
 		}
-		Nav nav = value.get();
-		if(nav == null){
-			throw new RuntimeException("not nav value");
-		}
-		return nav;
+		return value.get();
 	}
 
 	public interface Result{
