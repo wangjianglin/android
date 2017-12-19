@@ -258,9 +258,6 @@ public class HttpCommunicate {
 		return global().getMock();
 	}
 
-	public static void enableMock(){
-		global().enableMock();
-	}
 //	/**
 //	 * 设置代理
 //	 *
@@ -367,15 +364,15 @@ public class HttpCommunicate {
 
 	public static class Mock {
 
-		private Map<Object, Object> httpResult = new HashMap<>();
-		private Map<Object, Error> httpError = new HashMap<>();
+		private Map<Object, Object> mHttpResult = new HashMap<>();
+		private Map<Object, Error> mHttpError = new HashMap<>();
 		private Mock.ResultListener mResultListener;
 		private Mock.ErrorListener mErrorListener;
 
 
 		public void clear() {
-			httpResult.clear();
-			httpError.clear();
+			mHttpResult.clear();
+			mHttpError.clear();
 			mResultListener = null;
 			mErrorListener = null;
 		}
@@ -385,32 +382,29 @@ public class HttpCommunicate {
 		}
 
 		public void mock(HttpPackage pack, Object result) {
-			httpResult.put(pack, result);
+			mHttpResult.put(pack, result);
 		}
 
 		public void mock(Class<? extends HttpPackage> cls, Object result) {
-			httpResult.put(cls, result);
+			mHttpResult.put(cls, result);
 		}
 
 		public void mock(HttpPackage pack, Error error) {
-			httpError.put(pack, error);
+			mHttpError.put(pack, error);
 		}
 
 		public void mock(Class<? extends HttpPackage> cls, Error error) {
-			httpError.put(cls, error);
+			mHttpError.put(cls, error);
 		}
 
 		public void removeMock(HttpPackage pack) {
-			httpResult.remove(pack);
+			mHttpResult.remove(pack);
+			mHttpError.remove(pack);
 		}
 
 		public void removeMock(Class<? extends HttpPackage> cls) {
-			httpResult.remove(cls);
-			httpError.remove(cls);
-		}
-
-		public void removeMock(HttpPackage pack, Error error) {
-			httpError.remove(pack);
+			mHttpResult.remove(cls);
+			mHttpError.remove(cls);
 		}
 
 		public void setResultListener(Mock.ResultListener resultListener) {
@@ -432,9 +426,9 @@ public class HttpCommunicate {
 
 		protected boolean process(ThreadPoolExecutor executor, final lin.comm.http.ResultListener listener, HttpPackage pack) {
 
-			Error error = httpError.get(pack);
+			Error error = mHttpError.get(pack);
 			if (error == null) {
-				error = httpError.get(pack.getClass());
+				error = mHttpError.get(pack.getClass());
 			}
 
 			if (error == null && mErrorListener != null) {
@@ -442,30 +436,32 @@ public class HttpCommunicate {
 			}
 
 			if (error != null) {
-				final Error finalError = error;
-				executor.execute(new Runnable() {
-					@Override
-					public void run() {
-						listener.fault(finalError);
-					}
-				});
+				if(listener != null) {
+					final Error finalError = error;
+					executor.execute(new Runnable() {
+						@Override
+						public void run() {
+							listener.fault(finalError);
+						}
+					});
+				}
 
 				return true;
 			}
 
-			Object result = httpResult.get(pack);
-			boolean hasResult = httpResult.containsKey(pack);
+			Object result = mHttpResult.get(pack);
+			boolean hasResult = mHttpResult.containsKey(pack);
 			if (result == null && !hasResult) {
-				result = httpResult.get(pack.getClass());
+				result = mHttpResult.get(pack.getClass());
 			}
 
-			hasResult = hasResult || httpResult.containsKey(pack.getClass());
+			hasResult = hasResult || mHttpResult.containsKey(pack.getClass());
 
 			if (result == null && mResultListener != null && !hasResult) {
 				result = mResultListener.result(pack);
 			}
 
-			if (listener != null || hasResult) {
+			if (listener != null && hasResult) {
 				final Object finalResult = result;
 				executor.execute(new Runnable() {
 					@Override

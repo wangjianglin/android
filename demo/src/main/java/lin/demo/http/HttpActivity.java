@@ -74,8 +74,10 @@ public class HttpActivity extends ViewActivity {
             e.printStackTrace();
         }
 
-        impl.enableMock();
+//        impl.enableMock();
         impl.getMock().mock(pack,"==");
+
+//        HttpCommunicate.getMock()
 
         impl.request(pack, new ResultListener<String>() {
             @Override

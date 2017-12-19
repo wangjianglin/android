@@ -137,12 +137,15 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
     @Override
     public HttpCommunicate.Mock getMock() {
+        if(mMock != null){
+            return mMock;
+        }
+        synchronized (this){
+            if(mMock == null) {
+                mMock = new HttpCommunicate.Mock();
+            }
+        }
         return mMock;
-    }
-
-    @Override
-    public void enableMock(){
-         mMock = new HttpCommunicate.Mock();
     }
 
     /**

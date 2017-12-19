@@ -74,9 +74,6 @@ public interface HttpCommunicateImpl {
 
     Map<String, String> defaultHeaders();
 
-
     HttpCommunicate.Mock getMock();
-
-    void enableMock();
 
 }
