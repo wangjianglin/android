@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.TypedArray;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -28,27 +29,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import lin.comm.http.*;
-import lin.comm.http.Error;
-import lin.core.annotation.Click;
-import lin.core.annotation.LongClick;
-import lin.core.annotation.ResCls;
-import lin.core.annotation.ResId;
-import lin.core.annotation.Touch;
-import lin.core.annotation.ViewById;
-import lin.core.fitChart.FitChart;
-import lin.util.Procedure;
-
-import android.graphics.Bitmap;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Date;
 import java.util.List;
+
+import lin.comm.http.Error;
+import lin.comm.http.FileInfo;
+import lin.comm.http.HttpCommunicate;
+import lin.comm.http.ProgressResultListener;
+import lin.core.annotation.Click;
+import lin.core.annotation.ResCls;
+import lin.core.annotation.ResId;
+import lin.core.annotation.ViewById;
+import lin.core.fitChart.FitChart;
+import lin.util.Procedure;
 
 /**
  * 
@@ -671,13 +669,29 @@ public class ImagePicker extends ResView {
 			double lWidth = layout.getWidth();
 			double lHeight = layout.getHeight();
 
-			double s = (vWidth/vHeight)/(lWidth/lHeight);
 			RelativeLayout.LayoutParams lp = null;
-			if(s > 0){
-				lp = new RelativeLayout.LayoutParams((int)lWidth,(int)(lHeight / s));
+
+			if(vWidth>lWidth || vHeight>lHeight){
+				double wf = vWidth/lWidth;
+				double hf = vHeight/lHeight;
+				double minf = Math.min(wf,hf);
+				vWidth = Math.ceil(vWidth*minf);
+				vHeight = Math.ceil(vHeight*minf);
 			}else{
-				lp = new RelativeLayout.LayoutParams((int)(lWidth*s),(int)lHeight);
+				double wf = vWidth/lWidth;
+				double hf = vHeight/lHeight;
+				double maxf = Math.max(wf,hf);
+				vWidth = Math.ceil(vWidth/maxf);
+				vHeight = Math.ceil(vHeight/maxf);
 			}
+			lp = new RelativeLayout.LayoutParams((int)vWidth,(int)vHeight);
+//			double s = (vWidth/vHeight)/(lWidth/lHeight);
+//			if(s > 1){
+//				lp = new RelativeLayout.LayoutParams((int)lWidth,(int)(lHeight / s));
+//			}else{
+//				lp = new RelativeLayout.LayoutParams((int)(lWidth*s),(int)(lHeight*s));
+//			}
+
 			lp.addRule(RelativeLayout.CENTER_IN_PARENT);
 			surfaceView.setLayoutParams(lp);
 			surfaceView.setVisibility(View.VISIBLE);

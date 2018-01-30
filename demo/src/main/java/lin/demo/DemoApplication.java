@@ -82,7 +82,7 @@ public class DemoApplication extends Application {
             }
         });
 
-        HttpCommunicate.global().enableMock();
+//        HttpCommunicate.global().enableMock();
 
 //        HttpCommunicate.getMock().mock();
 
