@@ -1,36 +1,17 @@
 package lin.core;
 
-import java.lang.ref.SoftReference;
-import java.lang.ref.WeakReference;
-import java.lang.reflect.Constructor;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.support.v4.app.*;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+
+import java.lang.ref.SoftReference;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import lin.core.annotation.ResCls;
-import lin.core.annotation.ViewById;
 
 /**
  *
@@ -235,7 +216,8 @@ public class Nav {
 		if(context instanceof NavActivity){
 			return ((NavActivity) context).getNav();
 		}
-		throw new RuntimeException("content not NavActivity");
+//		throw new RuntimeException("content not NavActivity");
+		return null;
 	}
 
 	public static Nav getNav(android.support.v4.app.Fragment fragment){
