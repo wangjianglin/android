@@ -497,7 +497,7 @@ public class ImagePicker extends ResView {
 
 	public void setVedioImage(String vedioImage) {
 		if(this.vedioImage == null && vedioImage == null
-				|| this.vedioImage != null && this.vedioImage.equals(vedioImage)){
+				|| (this.vedioImage != null && this.vedioImage.equals(vedioImage))){
 			return;
 		}
 		this.vedioImage = vedioImage;
@@ -672,8 +672,8 @@ public class ImagePicker extends ResView {
 			RelativeLayout.LayoutParams lp = null;
 
 			if(vWidth>lWidth || vHeight>lHeight){
-				double wf = vWidth/lWidth;
-				double hf = vHeight/lHeight;
+				double wf = lWidth/vWidth;
+				double hf = lHeight/vHeight;
 				double minf = Math.min(wf,hf);
 				vWidth = Math.ceil(vWidth*minf);
 				vHeight = Math.ceil(vHeight*minf);

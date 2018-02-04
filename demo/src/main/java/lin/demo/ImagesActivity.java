@@ -48,6 +48,7 @@ public class ImagesActivity extends ViewActivity {
         images.setImagePaths(imagePaths);
         images.setEdited(false);
 String url = "http://i.feicuibaba.com/upload/store/1393/333FF40C-5B5C-49D0-B558-EBFCC878ED72.mp4";
+//url = "http://i.feicuibaba.com/upload/buyers/12345/2018-02-04/VID_20180201_174154.mp4";
 //url = "http://i.feicuibaba.com/upload/store/1988/B91584BE-742D-4E6E-97C4-85257C1758B7.mp4";
 //        url="http://i.feicuibaba.com/upload/store/2318/FE0463A2-3115-4502-B758-E89091943A4D.mp4";
         images.setVedioUrl(url);
