@@ -1,7 +1,7 @@
-package lin.web;
+package io.cess.web;
 
-import lin.web.plugin.Config;
-import lin.web.plugin.JavaScriptObject;
+import io.cess.web.plugin.Config;
+import io.cess.web.plugin.JavaScriptObject;
 
 import org.xwalk.core.JavascriptInterface;
 

@@ -465,7 +465,7 @@
             android:textStyle="bold"
             />
 
-        <lin.core.gallery.widget.HorizontalListView
+        <io.cess.core.gallery.widget.HorizontalListView
             android:id="@+id/lv_photo"
             android:layout_width="match_parent"
             android:layout_height="100dp"

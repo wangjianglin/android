@@ -20,7 +20,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <lin.core.ptr.PtrScrollView
+    <io.cess.core.ptr.PtrScrollView
         android:id="@+id/ptr_default_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -31,6 +31,6 @@
             android:orientation="vertical">
 
         </LinearLayout>
-    </lin.core.ptr.PtrScrollView>
+    </io.cess.core.ptr.PtrScrollView>
 
 </LinearLayout>

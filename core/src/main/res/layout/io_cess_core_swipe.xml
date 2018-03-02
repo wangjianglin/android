@@ -1,0 +1,10 @@
+<io.cess.core.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+   
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+	android:id="@+id/io_cess_core_swipe_pager"
+    android:background="#eee" >
+
+
+
+</io.cess.core.ViewPager>

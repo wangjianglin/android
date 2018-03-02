@@ -1,4 +1,4 @@
-package lin.web.plugin;
+package io.cess.web.plugin;
 
 import android.app.Activity;
 import android.net.Uri;

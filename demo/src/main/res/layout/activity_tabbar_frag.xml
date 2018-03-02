@@ -7,7 +7,7 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
-                tools:context="lin.demo.tabbar.TabbarActivity">
+                tools:context="io.cess.demo.tabbar.TabbarActivity">
 
     <!--<TextView android:text="@string/hello_world" android:layout_width="wrap_content"-->
     <!--android:layout_height="wrap_content" />-->
@@ -30,12 +30,12 @@
         <!-- 底部导航栏_首页 -->
 
         <tabbarItem
-            class="lin.demo.tabbar.Tab1"
+            class="io.cess.demo.tabbar.Tab1"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             lin:tabbar_icon="@drawable/nav_home_icon"
             lin:tabbar_name="首页"
-            lin:theme="@layout/lin_core_nav_main"/>
+            lin:theme="@layout/io_cess_core_nav_main"/>
 
         <tabbarItem
             android:id="@+id/tab_shouye_two"
@@ -44,7 +44,7 @@
             lin:tabbar_activate_icon="@drawable/nav_home_activate"
             lin:tabbar_icon="@drawable/nav_home_icon"
             lin:tabbar_name="微站"
-            lin:theme="@layout/lin_core_nav_main"/>
+            lin:theme="@layout/io_cess_core_nav_main"/>
         <!--<fragment-->
         <!--class="lin.test.tabbar.Tab1"-->
         <!--android:id="@+id/tab1"-->
@@ -53,18 +53,18 @@
         <!--ccn:tabbar_name="首页"-->
         <!--ccn:tabbar_activate_icon="@drawable/nav_home_activate"-->
         <!--ccn:tabbar_icon="@drawable/nav_home_icon"-->
-        <!--ccn:theme="@layout/lin_core_nav_main">-->
+        <!--ccn:theme="@layout/io_cess_core_nav_main">-->
 
         <!--</fragment>-->
 
         <!--<tabItem class="lin.test.tabbar.Tab1"></tabItem>-->
-        <!--<lin.core.Navigation-->
+        <!--<io.cess.core.Navigation-->
         <!--android:layout_width="fill_parent"-->
         <!--android:layout_height="fill_parent"-->
         <!--ccn:tab_name="首页"-->
         <!--ccn:tab_activate_icon="@drawable/nav_home_activate"-->
         <!--ccn:tab_icon="@drawable/nav_home_icon"-->
-        <!--ccn:theme="@layout/lin_core_nav_main" >-->
+        <!--ccn:theme="@layout/io_cess_core_nav_main" >-->
 
         <!--<lin.test.tabbar.TabItemView1-->
         <!--android:layout_width="fill_parent"-->
@@ -72,11 +72,11 @@
         <!--ccn:nav_show_title="true"-->
         <!--ccn:nav_title="null" >-->
         <!--</lin.test.tabbar.TabItemView1>-->
-        <!--</lin.core.Navigation>-->
+        <!--</io.cess.core.Navigation>-->
 
         <!-- 底部导航栏_首页 -->
 
-        <lin.demo.tabbar.TabItemView2
+        <io.cess.demo.tabbar.TabItemView2
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             lin:nav_show="false"
@@ -84,12 +84,12 @@
             lin:tabbar_activate_icon="@drawable/nav_classify_activate"
             lin:tabbar_icon="@drawable/nav_classify_icon"
             lin:tabbar_name="分类"
-            lin:theme="@layout/lin_core_nav_main">
-        </lin.demo.tabbar.TabItemView2>
+            lin:theme="@layout/io_cess_core_nav_main">
+        </io.cess.demo.tabbar.TabItemView2>
 
         <!-- 底部导航栏_首页 -->
 
-        <lin.demo.tabbar.TabItemView3
+        <io.cess.demo.tabbar.TabItemView3
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             lin:nav_show="false"
@@ -97,13 +97,13 @@
             lin:tabbar_activate_icon="@drawable/nav_discovery_activate"
             lin:tabbar_icon="@drawable/nav_discovery_icon"
             lin:tabbar_name="淘货"
-            lin:theme="@layout/lin_core_nav_main">
-        </lin.demo.tabbar.TabItemView3>
+            lin:theme="@layout/io_cess_core_nav_main">
+        </io.cess.demo.tabbar.TabItemView3>
 
 
         <!-- 底部导航栏_首页 -->
 
-        <lin.demo.tabbar.TabItemView4
+        <io.cess.demo.tabbar.TabItemView4
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             lin:nav_show="false"
@@ -111,11 +111,11 @@
             lin:tabbar_activate_icon="@drawable/nav_cart_activate"
             lin:tabbar_icon="@drawable/nav_cart_icon"
             lin:tabbar_name="购物车"
-            lin:theme="@layout/lin_core_nav_main">
-        </lin.demo.tabbar.TabItemView4>
+            lin:theme="@layout/io_cess_core_nav_main">
+        </io.cess.demo.tabbar.TabItemView4>
 
 
-        <lin.demo.tabbar.TabItemView4
+        <io.cess.demo.tabbar.TabItemView4
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             lin:nav_show="false"
@@ -123,8 +123,8 @@
             lin:tabbar_activate_icon="@drawable/nav_mine_activate"
             lin:tabbar_icon="@drawable/nav_mine_icon"
             lin:tabbar_name="我的"
-            lin:theme="@layout/lin_core_nav_main">
-        </lin.demo.tabbar.TabItemView4>
+            lin:theme="@layout/io_cess_core_nav_main">
+        </io.cess.demo.tabbar.TabItemView4>
 
 
     </tabbar>

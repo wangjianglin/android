@@ -3,7 +3,7 @@
 
     <data>
 
-        <import type="lin.demo.ptr.PtrListActivity" alias="Handler"/>
+        <import type="io.cess.demo.ptr.PtrListActivity" alias="Handler"/>
         <variable
             name="handler"
             type="Handler"/>
@@ -29,13 +29,13 @@
 
     </android.support.design.widget.AppBarLayout>
     <!--app:ptr_load_more="@{handler.onLoadMore}"-->
-    <lin.core.ptr.PtrListView
+    <io.cess.core.ptr.PtrListView
         app:ptr_mode="both"
         app:ptr_load_more="@{()->handler.onLoadMore()}"
         android:id="@+id/ptr_default_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </lin.core.ptr.PtrListView>
+    </io.cess.core.ptr.PtrListView>
 
 </LinearLayout>
 

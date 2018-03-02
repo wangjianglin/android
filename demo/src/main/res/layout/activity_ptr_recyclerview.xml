@@ -20,12 +20,12 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <lin.core.ptr.PtrRecyclerView
+    <io.cess.core.ptr.PtrRecyclerView
         app:ptr_mode="both"
         app:ptr_auto_refresh="true"
         android:id="@+id/ptr_default_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </lin.core.ptr.PtrRecyclerView>
+    </io.cess.core.ptr.PtrRecyclerView>
 
 </LinearLayout>

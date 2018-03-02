@@ -1,4 +1,4 @@
-//package lin.xwalk_lib;
+//package io.cess.xwalk_lib;
 //
 //import org.junit.Test;
 //

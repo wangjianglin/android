@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item type="id" name="io_cess_core_act_tools_toolbar"/>
+    <item type="id" name="io_cess_core_act_fragment_layout"/>
+    <item type="id" name="io_cess_core_act_view_layout"/>
+    <item type="id" name="io_cess_core_act_tools_frame_stud"/>
+    <item type="id" name="io_cess_core_act_tools_view_stud"/>
+
+    <item type="id" name="io_cess_core_act_tools_layout"/>
+
+    <declare-styleable name="act">
+
+        <attr name="act_tools_content" format="reference"/>
+    </declare-styleable>
+</resources>

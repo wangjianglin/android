@@ -8,8 +8,8 @@
 	android:orientation="vertical">
 
 	<view
-		class="lin.core.Nav$View"
-		android:id="@id/lin_core_nav_view"
+		class="io.cess.core.Nav$View"
+		android:id="@id/io_cess_core_nav_view"
 		android:layout_width="0dp"
 		android:layout_height="0dp"/>
 	<android.support.design.widget.AppBarLayout
@@ -17,7 +17,7 @@
 		android:layout_height="wrap_content">
 
 		<android.support.v7.widget.Toolbar
-			android:id="@id/lin_core_nav_toolbar"
+			android:id="@id/io_cess_core_nav_toolbar"
 			android:layout_width="match_parent"
 			android:layout_height="?attr/actionBarSize"
 			android:background="?attr/colorPrimary" />
@@ -39,7 +39,7 @@
 		android:layout_height="match_parent">
 
 		<FrameLayout
-			android:id="@id/lin_core_nav_content_frame"
+			android:id="@id/io_cess_core_nav_content_frame"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent" />
 

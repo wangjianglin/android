@@ -4,7 +4,7 @@
     <!--<import type="lin.test.list.Data"/>-->
         <variable
             name="data"
-            type="lin.demo.main.Data"/>
+            type="io.cess.demo.main.Data"/>
     </data>
     <LinearLayout
         android:orientation="vertical" android:layout_width="match_parent"

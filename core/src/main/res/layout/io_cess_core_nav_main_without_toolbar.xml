@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <view
+        class="io.cess.core.Nav$View"
+        android:id="@id/io_cess_core_nav_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"/>
+
+
+    <FrameLayout
+        android:id="@id/io_cess_core_nav_content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+</RelativeLayout>

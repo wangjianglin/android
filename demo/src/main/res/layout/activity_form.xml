@@ -4,7 +4,7 @@
     <data>
         <variable
             name="data"
-            type="lin.demo.form.FormData"/>
+            type="io.cess.demo.form.FormData"/>
     </data>
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,31 +25,31 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <lin.core.form.Form
+        <io.cess.core.form.Form
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <lin.core.form.Section
+            <io.cess.core.form.Section
                 app:form_section_header="ok"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <lin.core.form.SectionFooter
+                <io.cess.core.form.SectionFooter
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="============"/>
-                </lin.core.form.SectionFooter>
-                <lin.core.form.Segue
+                </io.cess.core.form.SectionFooter>
+                <io.cess.core.form.Segue
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/form_row_height"
                 app:form_row_text="text"
                 app:form_row_title="title1"
                     app:form_row_segue="@{data.segueClsStr}"
                 />
-                <lin.core.form.Text
+                <io.cess.core.form.Text
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/form_row_height"
                     app:form_row_text="@={data.rowText}"
@@ -57,14 +57,14 @@
                     app:form_row_text_hint="请输入。。。"
                     app:form_row_text_navtitle="标题"
                     />
-                <lin.core.form.Row
+                <io.cess.core.form.Row
                     android:layout_width="match_parent"
                     android:visibility="gone"
                     android:layout_height="@dimen/form_row_height"
                     app:form_row_text="text"
                     app:form_row_title="title3"
                     />
-                <lin.core.form.Switch
+                <io.cess.core.form.Switch
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/form_row_height"
                     app:form_row_switch="@={data.check}"
@@ -74,7 +74,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="自定义1"/>
-                <lin.core.form.Row
+                <io.cess.core.form.Row
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/form_row_height"
                     app:form_row_text="text"
@@ -87,60 +87,60 @@
                         android:layout_centerInParent="true"
                         android:layout_alignParentRight="true"
                         android:text="自定义2"/>
-                    </lin.core.form.Row>
-                <lin.core.form.Row
+                    </io.cess.core.form.Row>
+                <io.cess.core.form.Row
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/form_row_height"
                     app:form_row_text="text"
                     app:form_row_title="title6"
                     />
-            </lin.core.form.Section>
+            </io.cess.core.form.Section>
 
 
-            <lin.core.form.Section
+            <io.cess.core.form.Section
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <lin.core.form.Row
+                <io.cess.core.form.Row
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/form_row_height"
                     app:form_row_text="text"
                     app:form_row_title="自定义图标Row"
                     app:form_row_icon="@drawable/icon"
                     app:form_row_accessory="false"/>
-                <lin.core.form.Row
+                <io.cess.core.form.Row
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/form_row_height"
                     app:form_row_text="text"
                     app:form_row_title="title2"
                     />
-                <lin.core.form.Row
+                <io.cess.core.form.Row
                     android:layout_width="match_parent"
                     android:visibility="invisible"
                     android:layout_height="@dimen/form_row_height"
                     app:form_row_text="text"
                     app:form_row_title="title3"
                     />
-                <lin.core.form.Row
+                <io.cess.core.form.Row
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/form_row_height"
                     app:form_row_text="text"
                     app:form_row_title="title4"
                     />
-                <lin.core.form.Row
+                <io.cess.core.form.Row
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/form_row_height"
                     app:form_row_text="text"
                     app:form_row_title="title5"
                     />
-                <lin.core.form.Row
+                <io.cess.core.form.Row
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/form_row_height"
                     app:form_row_text="text"
                     app:form_row_title="title6"
                     />
-            </lin.core.form.Section>
-        </lin.core.form.Form>
+            </io.cess.core.form.Section>
+        </io.cess.core.form.Form>
 
     </LinearLayout>
 

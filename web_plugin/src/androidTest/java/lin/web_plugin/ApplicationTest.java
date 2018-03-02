@@ -1,4 +1,4 @@
-package lin.web_plugin;
+package io.cess.web_plugin;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

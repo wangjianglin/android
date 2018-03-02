@@ -6,9 +6,9 @@
 
     <variable
         name="data"
-        type="lin.demo.binding.User"/>
+        type="io.cess.demo.binding.User"/>
 </data>
-    <lin.core.ReView
+    <io.cess.core.ReView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -32,6 +32,6 @@
 
     </TextView>
 
-    </lin.core.ReView>
+    </io.cess.core.ReView>
 
 </layout>

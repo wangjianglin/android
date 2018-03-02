@@ -13,7 +13,7 @@
      <!--app:ptr_auto_refresh="true/false"-->
      <!--app:ptr_auto_load_more="true/false"-->
 
-   <declare-styleable name="lin">
+   <declare-styleable name="io_cess">
 
 
         <attr name="view_theme" format="reference"/>

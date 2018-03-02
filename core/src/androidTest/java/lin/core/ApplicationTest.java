@@ -1,4 +1,4 @@
-package lin.core;
+package io.cess.core;
 
 import android.app.Application;
 import android.net.Uri;
@@ -6,7 +6,7 @@ import android.test.ApplicationTestCase;
 
 import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
 
-import lin.util.Procedure;
+import io.cess.util.Procedure;
 
 /**
  * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>

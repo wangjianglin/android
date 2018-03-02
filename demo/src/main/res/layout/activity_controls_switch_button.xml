@@ -4,12 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <lin.core.SwitchButton
+    <io.cess.core.SwitchButton
         android:layout_width="match_parent"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_height="40dp"></lin.core.SwitchButton>
+        android:layout_height="40dp"></io.cess.core.SwitchButton>
 
 
 </LinearLayout>

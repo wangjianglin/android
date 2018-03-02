@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="lin.demo">
+    package="io.cess.demo">
 
     <uses-permission android:name="android.permission.WRITE_APN_SETTINGS" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -90,7 +90,7 @@
              <!--</intent-filter>-->
         </activity>
 
-        <activity android:name="lin.core.NavActivity"
+        <activity android:name="io.cess.core.NavActivity"
             android:theme="@style/AppTheme.OverlapSystemBar"/>
         <activity
             android:name=".PullToRefresh"
@@ -110,9 +110,9 @@
             android:theme="@style/AppTheme.OverlapSystemBar" />
 
         <service
-            android:name="lin.core.log.LogService"
+            android:name="io.cess.core.log.LogService"
             android:enabled="true" />
-        <service android:name="lin.core.UpdateService" />
+        <service android:name="io.cess.core.UpdateService" />
 
         <activity
             android:name=".TichTextAciivity"

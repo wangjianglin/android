@@ -1,11 +1,11 @@
-package lin.demo;
+package io.cess.demo;
 
 import android.test.AndroidTestCase;
 
 import java.io.File;
 
-import lin.comm.http.HttpCommunicate;
-import lin.core.log.LogUploadPackage;
+import io.cess.comm.http.HttpCommunicate;
+import io.cess.core.log.LogUploadPackage;
 
 /**
  * Created by lin on 9/25/15.

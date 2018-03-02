@@ -7,7 +7,7 @@
     >
 
 
-    <lin.demo.core.ViewHolder
+    <io.cess.demo.core.ViewHolder
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 </LinearLayout>

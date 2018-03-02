@@ -1,4 +1,4 @@
-package lin.comm;
+package io.cess.comm;
 
 //import android.app.Application;
 //import android.test.ApplicationTestCase;

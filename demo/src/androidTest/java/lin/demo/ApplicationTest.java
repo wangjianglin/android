@@ -1,4 +1,4 @@
-package lin.demo;
+package io.cess.demo;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

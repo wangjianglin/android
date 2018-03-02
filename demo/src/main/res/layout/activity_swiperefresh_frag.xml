@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <lin.core.swiperefresh.SuperSwipeRefreshLayout
+    <io.cess.core.swiperefresh.SuperSwipeRefreshLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
         android:id="@+id/activity_swiperefresh_frag_swipe"
@@ -16,5 +16,5 @@
         android:scrollbars="vertical"
         android:id="@+id/activity_swiperefresh_frag_listview"/>
 
-    </lin.core.swiperefresh.SuperSwipeRefreshLayout>
+    </io.cess.core.swiperefresh.SuperSwipeRefreshLayout>
 </LinearLayout>

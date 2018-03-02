@@ -23,7 +23,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <lin.core.SwipeView
+        <io.cess.core.SwipeView
             android:id="@+id/act_default_view"
             android:layout_width="match_parent"
             android:layout_height="150dp"
@@ -36,7 +36,7 @@
                 android:textColor="#f00"
                 android:background="#444"
                 android:text="one"/>
-        </lin.core.SwipeView>
+        </io.cess.core.SwipeView>
 
     </RelativeLayout>
 

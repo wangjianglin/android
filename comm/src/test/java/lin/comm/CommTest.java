@@ -1,4 +1,4 @@
-package lin.comm;
+package io.cess.comm;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -6,9 +6,9 @@ import org.junit.Test;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import lin.comm.http.HttpCommunicate;
-import lin.comm.http.HttpCommunicateResult;
-import lin.comm.http.TestPackage;
+import io.cess.comm.http.HttpCommunicate;
+import io.cess.comm.http.HttpCommunicateResult;
+import io.cess.comm.http.TestPackage;
 
 /**
  * Created by lin on 09/07/2017.

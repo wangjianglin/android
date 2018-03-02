@@ -1,4 +1,4 @@
-package lin.web.plugin;
+package io.cess.web.plugin;
 
 import java.io.IOException;
 import java.util.HashMap;

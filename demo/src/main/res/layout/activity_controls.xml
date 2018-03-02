@@ -5,16 +5,16 @@
     android:background="#0ff"
     android:orientation="vertical">
 
-    <lin.core.Segmented
+    <io.cess.core.Segmented
         android:id="@+id/segmentedId"
         android:layout_width="match_parent"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_height="40dp"></lin.core.Segmented>
+        android:layout_height="40dp"></io.cess.core.Segmented>
 
 
-    <lin.demo.CustomView
+    <io.cess.demo.CustomView
         android:layout_width="match_parent"
-        android:layout_height="300dp"></lin.demo.CustomView>
+        android:layout_height="300dp"></io.cess.demo.CustomView>
 </LinearLayout>

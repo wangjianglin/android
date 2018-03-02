@@ -1,4 +1,4 @@
-package lin.web;
+package io.cess.web;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -22,11 +22,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import lin.comm.http.FileInfo;
-import lin.comm.http.HttpCommunicate;
-import lin.comm.httpdns.HttpDNS;
-import lin.util.ThreadPool;
-import lin.util.thread.AutoResetEvent;
+import io.cess.comm.http.FileInfo;
+import io.cess.comm.http.HttpCommunicate;
+import io.cess.comm.httpdns.HttpDNS;
+import io.cess.util.ThreadPool;
+import io.cess.util.thread.AutoResetEvent;
 
 public class WebCache {
 
@@ -92,10 +92,10 @@ public class WebCache {
 //		cacheData(context,urlString);
 //
 //		return existCacheFileName(context,urlString);
-//		String[] paths = lin.util.Files.externalStorages(context);
+//		String[] paths = io.cess.util.Files.externalStorages(context);
 
 //		for(String path : paths){
-//			String fileName = "images"+lin.util.MD5.digest(urlString) + ".cache";
+//			String fileName = "images"+io.cess.util.MD5.digest(urlString) + ".cache";
 //			fileName = path + "/buyers/" + fileName;
 	}
 
@@ -128,7 +128,7 @@ public class WebCache {
 			return null;
 		}
 		File path = context.getExternalCacheDir();
-		String fileNameMD5 = "images" + lin.util.MD5.digest(urlString) + ".cache";
+		String fileNameMD5 = "images" + io.cess.util.MD5.digest(urlString) + ".cache";
 
 		String fileName = path.getAbsolutePath() + cachePath + fileNameMD5;
 
@@ -460,7 +460,7 @@ public class WebCache {
 		if (path == null) {
 			return null;
 		}
-		String fileNameMD5 = "images" + lin.util.MD5.digest(urlString) + ".cache";
+		String fileNameMD5 = "images" + io.cess.util.MD5.digest(urlString) + ".cache";
 
 		String fileName = path.getAbsolutePath() + cachePath + fileNameMD5;
 

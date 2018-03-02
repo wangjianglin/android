@@ -4,7 +4,7 @@
         <!--&lt;!&ndash;<import type="lin.test.list.Data"/>&ndash;&gt;-->
         <!--<variable-->
             <!--name="data"-->
-            <!--type="lin.demo.swiperefresh.Data"/>-->
+            <!--type="io.cess.demo.swiperefresh.Data"/>-->
     <!--</data>-->
     <LinearLayout
         android:clickable="true"

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--<declare-styleable name="GFFloatingActionButton">-->
+        <!--<attr name="fabColorPressed" format="color"/>-->
+        <!--<attr name="fabColorNormal" format="color"/>-->
+        <!--<attr name="fabIcon" format="reference"/>-->
+        <!--<attr name="fabTitle" format="string"/>-->
+    <!--</declare-styleable>-->
+
+    <!--<declare-styleable name="HorizontalListView">-->
+        <!--<attr name="dividerWidth" format="dimension" />-->
+        <!--<attr name="android:divider" />-->
+        <!--<attr name="android:requiresFadingEdge" />-->
+        <!--<attr name="android:fadingEdgeLength" />-->
+    <!--</declare-styleable>-->
+
+    <item name="io_cess_core_gallery_preview_pager" type="id"/>
+    <item name="io_cess_core_gallery_select_ll_folder_panel" type="id"/>
+    <item name="io_cess_core_gallery_select_lv_folder_list" type="id"/>
+    <item name="io_cess_core_gallery_select_tv_sub_title" type="id"/>
+    <item name="io_cess_core_gallery_select_tv_choose_count" type="id"/>
+    <item name="io_cess_core_gallery_select_gv_photo_list" type="id"/>
+    <item name="io_cess_core_gallery_select_tv_empty_view" type="id"/>
+
+    <dimen name="io_cess_core_grallery_title_bar_height">56dp</dimen>
+
+    <dimen name="io_cess_core_grallery_fab_size_normal">56dp</dimen>
+    <dimen name="io_cess_core_grallery_fab_icon_size">24dp</dimen>
+    <dimen name="io_cess_core_grallery_fab_shadow_offset">3dp</dimen>
+    <dimen name="io_cess_core_grallery_fab_shadow_radius">9dp</dimen>
+    <dimen name="io_cess_core_grallery_fab_stroke_width">0.0dp</dimen>
+
+    <item name="io_cess_core_grallery_fab_label" type="id"/>
+
+    <string name="io_cess_core_grallery_gallery">Gallery</string>
+    <string name="io_cess_core_grallery_all_photo">All Photo</string>
+    <string name="io_cess_core_grallery_selected">selected(%1$d/%2$d)</string>
+    <string name="io_cess_core_grallery_folder_photo_size">%1$d Piece</string>
+    <string name="io_cess_core_grallery_photo_edit">Photo Edit</string>
+    <string name="io_cess_core_grallery_photo_crop">Photo Crop</string>
+    <string name="io_cess_core_grallery_crop_suc">Photo crop success</string>
+    <string name="io_cess_core_grallery_crop_fail">Photo crop failure</string>
+    <string name="io_cess_core_grallery_no_photo">Photo empty</string>
+    <string name="io_cess_core_grallery_waiting">Please wait…</string>
+    <string name="io_cess_core_grallery_select_max_tips">Has reached the maximum number selection!</string>
+    <string name="io_cess_core_grallery_empty_sdcard">No SD card</string>
+    <string name="io_cess_core_grallery_open_gallery_fail">Gallery init failure!</string>
+    <string name="io_cess_core_grallery_take_photo_fail">Take photo failure</string>
+    <string name="io_cess_core_grallery_saving">Saving picture…</string>
+    <string name="io_cess_core_grallery_please_reopen_gf">Please reopen Gallery</string>
+    <string name="io_cess_core_grallery_edit_letoff_photo_format">The image format does not support this operation!</string>
+    <string name="io_cess_core_grallery_photo_list_empty">Failed to get the picture!</string>
+    <string name="io_cess_core_grallery_preview">Preview</string>
+    <string name="io_cess_core_grallery_permissions_tips_gallery">This app requesting access to your Gallery</string>
+    <string name="io_cess_core_grallery_permissions_denied_tips">Unable to get pictures</string>
+    <string name="io_cess_core_grallery_maxsize_zero_tip">Maxsize should be greater than zero</string>
+
+</resources>

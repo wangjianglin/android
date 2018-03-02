@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tableRow1"
+    android:layout_width="fill_parent"
+
+    android:background="#0000"
+    android:layout_height="fill_parent" >
+
+
+    <TextView android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ef434343"
+        android:textSize="16dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="3dp"
+        android:id="@id/io_cess_core_form_row_title"
+        android:layout_centerVertical="true"/>
+
+
+    <io.cess.core.SwitchButton android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ef434343"
+        android:id="@id/io_cess_core_form_row_switch"
+        android:textSize="16dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="3dp"
+        android:layout_centerInParent="true"
+        android:layout_alignParentRight="true"/>
+
+    <!--<ImageView android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@id/io_cess_core_form_row_accessory"-->
+        <!--android:layout_marginRight="5dp"-->
+        <!--android:layout_marginTop="22dp"-->
+        <!--android:layout_marginBottom="3dp"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:src="@drawable/io_cess_core_form_row_accessory"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:scaleType="center"-->
+        <!--android:scaleX="0.8"-->
+        <!--android:scaleY="0.8" />-->
+</RelativeLayout>

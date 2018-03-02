@@ -1,4 +1,4 @@
-//package lin.xwalk_lib;
+//package io.cess.xwalk_lib;
 //
 //import android.app.Application;
 //import android.test.ApplicationTestCase;

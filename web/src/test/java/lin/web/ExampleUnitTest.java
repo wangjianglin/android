@@ -1,4 +1,4 @@
-package lin.web;
+package io.cess.web;
 
 import org.junit.Test;
 

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="false"
+    android:layout_alignParentStart="false"
+    android:layout_centerHorizontal="true"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginTop="10dp"
+    android:animateLayoutChanges="false"
+    android:animationCache="true"
+    android:columnCount="4"
+    android:minHeight="80dp">
+
+    <RelativeLayout
+        android:id="@id/io_cess_core_images_video"
+        android:padding="5dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="8dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="8dp"
+            android:layout_above="@+id/io_cess_core_images_video_img">
+            <ImageView
+                android:padding="6dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/io_cess_core_images_item_background"
+                android:src="@drawable/io_cess_core_images_video" />
+        </RelativeLayout>
+        <TextView
+            android:padding="1dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/io_cess_core_images_video_img"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:text="视频(可选)"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@id/io_cess_core_images_camera"
+        android:padding="5dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="8dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="8dp"
+            android:layout_above="@+id/io_cess_core_images_camera_img">
+            <ImageView
+                android:padding="1dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/io_cess_core_images_item_background"
+                android:src="@drawable/io_cess_core_images_camre" />
+        </RelativeLayout>
+        <TextView
+            android:padding="1dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/io_cess_core_images_camera_img"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:text="图片(必选)"/>
+    </RelativeLayout>
+
+</GridLayout>

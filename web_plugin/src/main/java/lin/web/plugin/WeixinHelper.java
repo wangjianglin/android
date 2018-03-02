@@ -1,9 +1,9 @@
-package lin.web.plugin;
+package io.cess.web.plugin;
 
 import java.security.MessageDigest;
 import java.util.*;
 
-import lin.util.Utils;
+import io.cess.util.Utils;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
