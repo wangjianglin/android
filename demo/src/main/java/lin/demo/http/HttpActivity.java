@@ -16,9 +16,17 @@ import lin.comm.http.ExceptionPackage;
 import lin.comm.http.FileInfo;
 import lin.comm.http.HttpCommunicate;
 import lin.comm.http.HttpCommunicateImpl;
+import lin.comm.http.HttpMethod;
+import lin.comm.http.HttpPackage;
 import lin.comm.http.ResultListener;
 import lin.comm.http.SessionIdPackage;
 import lin.comm.http.TestPackage;
+import lin.comm.http.annotation.HttpPackageMethod;
+import lin.comm.http.annotation.HttpPackageUrl;
+import lin.comm.http.annotation.HttpParamName;
+import lin.comm.http.auth.Authentication;
+import lin.comm.http.auth.OAuth2Authentication;
+import lin.comm.http.auth.OAuth2GrantType;
 import lin.comm.httpdns.AliHttpDNS;
 import lin.core.LayoutInflaterFactory;
 import lin.core.ViewActivity;
@@ -39,6 +47,18 @@ public class HttpActivity extends ViewActivity {
 //        setContentView(R.layout.activity_form);
 
         setContentView(R.layout.activity_http);
+
+        HttpCommunicateImpl impl = HttpCommunicate.get("impl");
+
+        OAuth2Authentication authentication = new OAuth2Authentication("http://192.168.1.66:18002/oauth/token");
+        authentication.setClientId("web_app");
+        authentication.setSecret("123456");
+        authentication.setUsername("admin");
+        authentication.setPassword("admin");
+
+        authentication.setGrantType(OAuth2GrantType.Password);
+
+        impl.setAuthentication(authentication);
     }
 
     @Click(R.id.activity_http_button1)
@@ -46,7 +66,7 @@ public class HttpActivity extends ViewActivity {
 
 //        ExceptionPackage pack = new ExceptionPackage();
 //        pack.setWarning(true);
-        TestPackage pack = new TestPackage();
+        AuthTestPackage pack = new AuthTestPackage();
 
         pack.setData("测试数据！");
 
@@ -57,13 +77,13 @@ public class HttpActivity extends ViewActivity {
         impl.setDebug(true);
         impl.setMainThread(true);
 
-        impl.setHttpDNS(new AliHttpDNS(this,"172280"){
-            @Override
-            public String getIpByHost(String hostName) {
-//                return super.getIpByHost(hostName);
-                return "120.76.68.177";
-            }
-        });
+//        impl.setHttpDNS(new AliHttpDNS(this,"172280"){
+//            @Override
+//            public String getIpByHost(String hostName) {
+////                return super.getIpByHost(hostName);
+//                return "120.76.68.177";
+//            }
+//        });
 
         try {
             impl.setCommUrl(new URL("https://s.feicuibaba.com"));
@@ -75,7 +95,7 @@ public class HttpActivity extends ViewActivity {
         }
 
 //        impl.enableMock();
-        impl.getMock().mock(pack,"==");
+//        impl.getMock().mock(pack,"==");
 
 //        HttpCommunicate.getMock()
 
@@ -145,7 +165,7 @@ public class HttpActivity extends ViewActivity {
 //                System.out.println(error.getStackTrace());
 //            }
 //        });
-        TestPackage pack = new TestPackage();
+        AuthTestPackage pack = new AuthTestPackage();
 
         pack.setData("测试数据！");
 
@@ -196,4 +216,32 @@ public class HttpActivity extends ViewActivity {
         onBackPressed();
         return true;
     }
+}
+
+
+@HttpPackageMethod(HttpMethod.POST)
+@HttpPackageUrl("http://192.168.1.66:5555/shorturl/")
+class AuthTestPackage extends HttpPackage<String> {
+
+
+//	 @Override
+//	public Map<String, Object> getParams() {
+//		Map<String,Object> map = new HashMap<String, Object>();
+//		map.put("data", data);
+//		return map;
+//	}
+
+    @HttpParamName
+    private String data;// { get; set; }
+//     public override IDictionary<string, object> GetParams()
+//     {
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
 }

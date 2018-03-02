@@ -25,7 +25,6 @@ import android.graphics.BitmapFactory;
 import lin.comm.http.FileInfo;
 import lin.comm.http.HttpCommunicate;
 import lin.comm.httpdns.HttpDNS;
-import lin.util.ThreadPool;
 import lin.util.thread.AutoResetEvent;
 
 public class WebCache {

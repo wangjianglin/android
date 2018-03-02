@@ -206,8 +206,8 @@ public class PhotoEditFragment extends CropImageFragment implements AdapterView.
     };
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreateView() {
+
         if ( GalleryFinal.getFunctionConfig() == null || GalleryFinal.getGalleryTheme() == null) {
             resultFailureDelayed(getString(R.string.lin_core_grallery_please_reopen_gf), true);
         } else {

@@ -235,7 +235,8 @@ public class Nav {
 		if(context instanceof NavActivity){
 			return ((NavActivity) context).getNav();
 		}
-		throw new RuntimeException("content not NavActivity");
+		return null;
+//		throw new RuntimeException("content not NavActivity");
 	}
 
 	public static Nav getNav(android.support.v4.app.Fragment fragment){

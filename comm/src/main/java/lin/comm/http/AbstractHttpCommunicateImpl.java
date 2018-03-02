@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import lin.comm.http.auth.Authentication;
 import lin.comm.httpdns.HttpDNS;
 import lin.util.Action;
 
@@ -58,6 +59,10 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
     private HttpCommunicate.Mock mMock;
 
+    private Handler mHandler = null;
+
+    private Authentication authentication;
+
     protected AbstractHttpCommunicateImpl(String name,HttpCommunicate c) {
         if(c == null){
             throw new RuntimeException();
@@ -65,8 +70,8 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
         this.mName = name;
         mSessionInfo = new SessionInfo();
 
-        if(Looper.myLooper() == null || Looper.myLooper() == Looper.getMainLooper()){
-            mHandler = gHandler;
+        if(Looper.myLooper() == null){
+            mHandler = new Handler(Looper.getMainLooper());
         }else{
             mHandler = new Handler();
         }
@@ -299,7 +304,7 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
         this.fireRequestListener(pack);
 
-        HttpCommunicate.Params params = new HttpCommunicate.Params();
+        final HttpCommunicate.Params params = new HttpCommunicate.Params();
 
         params.setDebug(this.isDebug(pack));
         params.setMainThread(this.isMainThread(pack));
@@ -367,13 +372,18 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
         final HttpCommunicateHandler handler = this.getHandler();
 
-        handler.setPackage(pack);
-        handler.setImpl(this);
-        handler.setParams(params);
 
         mExecutor.execute(new Runnable() {
             @Override
             public void run() {
+                if(authentication != null){
+                    params.addHeader("Authorization",authentication.auth());
+                }
+
+                handler.setPackage(pack);
+                handler.setImpl(AbstractHttpCommunicateImpl.this);
+                handler.setParams(params);
+
                 handler.process(new HttpCommunicateHandler.Listener() {
                     @Override
                     public void response(HttpClientResponse response) {
@@ -714,13 +724,14 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
         return mMainThread;
     }
 
-    private Handler mHandler = null;//new Handler();
-    private static Handler gHandler = new Handler();
-
     public void setMainThread(boolean mainThread) {
         this.mMainThread = mainThread;
     }
 
+    @Override
+    public void setAuthentication(Authentication authentication) {
+        this.authentication = authentication;
+    }
 
     @Override
     public void newSession() {

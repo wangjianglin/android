@@ -37,11 +37,12 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
-    //compile 'com.mcxiaoke.volley:library:1.0.19'
+    compile 'com.squareup.okhttp3:okhttp:3.9.1'
+    compile 'com.mcxiaoke.volley:library:1.0.19'
 
     compile project(':util')
 
-//    testCompile "junit:junit:$rootProject.ext.junitVersion"
+    testCompile "junit:junit:$rootProject.ext.junitVersion"
 //    testCompile "org.mockito:mockito-all:$rootProject.ext.mockitoVersion"
 //    testCompile "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
 }

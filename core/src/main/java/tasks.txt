@@ -94,3 +94,6 @@ TextEdit加保存菜单
 
 
 列表项 左右滑动
+
+
+Nav支持普通 Activity

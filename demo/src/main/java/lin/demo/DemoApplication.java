@@ -52,7 +52,7 @@ public class DemoApplication extends Application {
         }
         Images.init(this);
         System.out.println("app pid:" + android.os.Process.myPid());
-        Log.init(this, "http://192.168.1.66:8080/fcbb_b2b2c/exception/addLog.action", "http://192.168.1.66:8080/fcbb_b2b2c/exception/add.action", "[ccn android]");
+//        Log.init(this, "http://192.168.1.66:8080/fcbb_b2b2c/exception/addLog.action", "http://192.168.1.66:8080/fcbb_b2b2c/exception/add.action", "[ccn android]");
 
 //        Log.info("info","test");
 
@@ -81,8 +81,6 @@ public class DemoApplication extends Application {
                 }
             }
         });
-
-        HttpCommunicate.global().enableMock();
 
 //        HttpCommunicate.getMock().mock();
 

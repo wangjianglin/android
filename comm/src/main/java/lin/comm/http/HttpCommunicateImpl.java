@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import lin.comm.http.auth.Authentication;
 import lin.comm.httpdns.HttpDNS;
 
 /**
@@ -75,5 +76,7 @@ public interface HttpCommunicateImpl {
     Map<String, String> defaultHeaders();
 
     HttpCommunicate.Mock getMock();
+
+    void setAuthentication(Authentication authentication);
 
 }
