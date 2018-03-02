@@ -1,4 +1,4 @@
-package lin.demo;
+﻿package lin.demo;
 
 
 import android.app.Application;
@@ -81,6 +81,7 @@ public class DemoApplication extends Application {
                 }
             }
         });
+
 
 //        HttpCommunicate.getMock().mock();
 
