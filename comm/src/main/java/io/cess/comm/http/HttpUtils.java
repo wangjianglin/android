@@ -1,10 +1,14 @@
 package io.cess.comm.http;
 
 import android.annotation.SuppressLint;
-import java.net.URL;
-import java.util.Date;
-import java.util.List;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -47,67 +51,36 @@ public class HttpUtils {
     public static long getTimestamp() { return new Date().getTime(); }
     
 	@SuppressLint("DefaultLocale")
-	public static String uri(HttpCommunicateImpl impl,io.cess.comm.http.HttpPackage pack){
-		if(pack.getUrl() == null){
+	public static String uri(HttpCommunicateImpl impl,io.cess.comm.http.HttpPackage pack) {
+		if (pack.getUrl() == null) {
 			return null;
 		}
-		if(pack.getUrl().toLowerCase().startsWith("http://")){
-			return pack.getUrl();
-		}
-		URL commUrl = impl.getCommUrl();
-		String uri = null;
-		String commUriString = null;
-		//String uriPath = pack.getLocation();
-//		String uriPath = "__http_comm_protocol__";
-//		 if (pack.getUrlType() == UrlType.RELATIVE)
-//         {
-             commUriString = commUrl.toString();
 
-             if(pack.getUrl().startsWith("/")){
-            	 commUriString += pack.getUrl();
-             }else{
-            	 commUriString += "/" + pack.getUrl();
-             }
-             if (!pack.isEnableCache())
-             {
-                 if (commUriString.contains("?"))
-                 {
-                     uri = commUriString  + "&_time_stamp_" + (new Date()).getTime() + "=1";
-                 }
-                 else
-                 {
-                     uri = commUriString +  "?_time_stamp_" + (new Date()).getTime() + "=1";
-                 }
-             }
-//         }
-//         else
-//         {
-//             //HttpCommunicate.CommUri.
-//             String tmpUrl = null;
-//             if (pack.getLocation().startsWith("/"))
-//             {
-//                 tmpUrl = commUri.getScheme() + "://" + commUri.getHost() + ":" + commUri.getPort() + pack.getLocation();
-//             }
-//             else
-//             {
-//                 tmpUrl = pack.getLocation();
-//             }
-//             if (pack.isEnableCache())
-//             {
-//                 uri = tmpUrl;
-//             }
-//             else
-//             {
-//                 if (pack.getLocation().endsWith("?"))
-//                 {
-//                     uri = tmpUrl + "&_time_stamp_" + (new Date()).getTime() + "=1";
-//                 }
-//                 else
-//                 {
-//                     uri = tmpUrl + "?_time_stamp_" + (new Date()).getTime() + "=1";
-//                 }
-//             }
-//         }
+		String commUriString = null;
+		if (pack.getUrl().toLowerCase().startsWith("http://")
+				|| pack.getUrl().toLowerCase().startsWith("https://")) {
+			commUriString = pack.getUrl();
+		}else {
+			URL commUrl = impl.getCommUrl();
+
+			commUriString = commUrl.toString();
+
+			if(pack.getUrl().startsWith("/")){
+				commUriString += pack.getUrl();
+			}else{
+				commUriString += "/" + pack.getUrl();
+			}
+		}
+
+		String uri = commUriString;
+
+		if (!pack.isEnableCache()) {
+			if (commUriString.contains("?")) {
+				uri = commUriString + "&_time_stamp_" + (new Date()).getTime() + "=1";
+			} else {
+				uri = commUriString + "?_time_stamp_" + (new Date()).getTime() + "=1";
+			}
+		}
 		return uri;
 	}
 
@@ -124,5 +97,55 @@ public class HttpUtils {
 		}
 
 		return defaultCharset;
+	}
+
+	public static String urlAddQueryString(String urlString, String queryString) {
+		if(queryString == null || "".equals(queryString)){
+			return urlString;
+		}
+		if (urlString.indexOf('?') == -1) {
+			urlString += "?" + queryString;
+		} else {
+			urlString += "&" + queryString;
+		}
+		return urlString;
+	}
+
+	public static Map<String,String> queryMap(Map<String, Object> params) throws UnsupportedEncodingException {
+    	Map<String,String> map = new HashMap<>();
+
+    	if(params == null || params.isEmpty()){
+    		return map;
+		}
+		for (Map.Entry<String, Object> item : params.entrySet()) {
+    		map.put(item.getKey(),encode(item.getValue().toString()));
+		}
+    	return map;
+	}
+
+	public static String generQueryString(Map<String, Object> params) throws UnsupportedEncodingException {
+
+		if (params == null) {
+			return "";
+		}
+		StringBuffer sBuffer = new StringBuffer();
+		for (Map.Entry<String, Object> item : params.entrySet()) {
+			sBuffer.append(item.getKey());
+			sBuffer.append("=");
+			if (item.getValue() != null) {
+				sBuffer.append(encode(item.getValue().toString()));
+//                sBuffer.append(item.getValue());
+
+			}
+			sBuffer.append("&");
+		}
+		if (sBuffer.length() > 0) {
+			sBuffer.deleteCharAt(sBuffer.length() - 1);
+		}
+		return sBuffer.toString();
+	}
+
+	public static String encode(String value) throws UnsupportedEncodingException {
+		return URLEncoder.encode(value, "utf-8");
 	}
 }

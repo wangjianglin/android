@@ -2,6 +2,8 @@ package io.cess.comm.http;
 
 import com.android.volley.Response;
 
+import java.util.Map;
+
 /**
  * Created by lin on 28/06/2017.
  */
@@ -19,4 +21,6 @@ public interface HttpCommunicateHandler<T extends HttpCommunicateImpl> extends A
     void setImpl(T impl);
 
     void setParams(HttpCommunicate.Params params);
+
+    void setRequestParams(Map<String,Object> requestParams);
 }

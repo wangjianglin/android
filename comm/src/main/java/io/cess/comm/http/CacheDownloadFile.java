@@ -39,7 +39,7 @@ public class CacheDownloadFile {
         }
         helper.addAccess(url);
 
-        return new FileInfo(url,new File(cacheFile.getFile()),cacheFile.getFileName(),cacheFile.getLastModified());
+        return new FileInfo(url,new File(cacheFile.getFile()),cacheFile.getFileName(),cacheFile.getLastModified(),cacheFile.getFileSize());
     }
     public synchronized static void init(Context context){
         if(helper == null){

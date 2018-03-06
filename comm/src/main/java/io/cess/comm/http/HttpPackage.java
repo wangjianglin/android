@@ -29,11 +29,6 @@ public abstract class HttpPackage<T> {
 	public static final HttpRequestHandle NORMAL = new NormalHttpRequestHandle();
 
 
-    static
-    {
-
-    }
-
     /// <summary>
     /// 是否启用缓存，默认不启用
     /// </summary>
@@ -92,7 +87,6 @@ public abstract class HttpPackage<T> {
     	}
     	
     }
-
 
 
     public HttpPackage(String url){
@@ -195,12 +189,12 @@ public abstract class HttpPackage<T> {
 			e.printStackTrace();
 		}
 	}
+
     public Map<String, Object> getParams()
     {
     	Class<?> cls = this.getClass();
     	Field[] fs = cls.getDeclaredFields();
 
-		HttpFileInfo fileInfo;
 		Map<String,Object> params = new HashMap<String,Object>();
 		this.mUrl = this.mOriginUrl;
     	for(Field f : fs){
@@ -209,6 +203,7 @@ public abstract class HttpPackage<T> {
     	}
         return params;
     }
+
     public HttpMethod getMethod(){
     	return mMethod;
     }

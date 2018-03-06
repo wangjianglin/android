@@ -113,7 +113,7 @@ def dateStr = new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss.SSS').format(n
 
 subprojects {
 
-    group = 'lin'
+    group = 'io.cess'
     version = prop.getProperty("version","0.0.0")
 
     if(project.name == 'demo'){

@@ -6,7 +6,6 @@ package io.cess.comm.http.httpclient;
 
 
 import android.content.Context;
-import android.os.Environment;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -32,37 +31,23 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
-import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Date;
 
+import io.cess.comm.http.AbstractHttpCommunicateDownloadFile;
 import io.cess.comm.http.FileInfo;
-import io.cess.comm.http.HttpCommunicate;
-import io.cess.comm.http.Error;
-import io.cess.comm.http.HttpCommunicateDownloadFile;
-import io.cess.comm.http.HttpCommunicateImpl;
-import io.cess.comm.http.ProgressResultListener;
-import io.cess.util.Utils;
 
 /**
  * Created by lin on 9/24/15.
  */
 
-class DownloadFile implements HttpCommunicateDownloadFile {
-
-    private static final int DOWNLOAD_SIZE = 800 * 1024;
-
-    private ProgressResultListener listener;
-
-    private Context mContext;
-    private HttpCommunicate.Params params;
-    private HttpCommunicateImpl impl;
+class DownloadFile extends AbstractHttpCommunicateDownloadFile {
 
     private HttpGet get;
     private CookieStore mCookie;
 
     DownloadFile(Context context){
-        this.mContext = context;
+        super(context);
 
     }
 
@@ -80,8 +65,8 @@ class DownloadFile implements HttpCommunicateDownloadFile {
             @Override
             public InetAddress[] resolve(final String host) throws UnknownHostException {
                 String destIp = null;
-                if(impl.getHttpDNS() != null){
-                    destIp = impl.getHttpDNS().getIpByHost(host);
+                if(mImpl.getHttpDNS() != null){
+                    destIp = mImpl.getHttpDNS().getIpByHost(host);
                 }
                 if (destIp != null) {
                     return InetAddress.getAllByName(destIp);
@@ -93,9 +78,9 @@ class DownloadFile implements HttpCommunicateDownloadFile {
         };
 
         RequestConfig defaultRequestConfig = RequestConfig.custom()
-                .setSocketTimeout(params.getTimeout())
-                .setConnectTimeout(params.getTimeout())
-                .setConnectionRequestTimeout(params.getTimeout())
+                .setSocketTimeout(mParams.getTimeout())
+                .setConnectTimeout(mParams.getTimeout())
+                .setConnectionRequestTimeout(mParams.getTimeout())
                 .setStaleConnectionCheckEnabled(true)
                 .build();
 
@@ -110,10 +95,10 @@ class DownloadFile implements HttpCommunicateDownloadFile {
 
 
     @Override
-    public HttpFileInfo getFileInfo(URL url) {
+    public HttpFileInfo getFileInfoImpl(String url) {
 
         try{
-            HttpGet get = new HttpGet(url.toString());
+            HttpGet get = new HttpGet(url);
 
             HttpClient http = genHttp();
             HttpResponse response = http.execute(get);
@@ -170,90 +155,101 @@ class DownloadFile implements HttpCommunicateDownloadFile {
     private long lastModified;
     private int statusCode;
     private long length;
-    private URL url;
+    private String mUrl;
 
-    public void download(URL url) {
-        this.url = url;
-        get = new HttpGet(url.toString());
-
-        boolean isSuccess = false;
-        try{
-//            isSuccess = runImpl();
-            isSuccess = downloadImpl();
-        }catch (Throwable e){
-            e.printStackTrace();
-            Error error = new Error(-3,null,null,Utils.printStackTrace(e));
-//                    error.setStackTrace(Utils.printStackTrace(e));
-            listener.fault(error);
-            return;
-        }
-        if(isSuccess) {
-            listener.result(new FileInfo(get.getURI().toString(),file, fileName, lastModified), null);
-        }else{
-            Error error = new Error(-3,"","","");
-            listener.fault(error);
-        }
-    }
-
-    private boolean downloadImpl()throws Throwable{
-
-//                HttpGet get = new HttpGet();
-
-
-        String md5s = io.cess.util.MD5.digest(get.getURI().toString());
-
-        File path = mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS + "/cache");
-
-        if (path == null) {
-            path = new File(mContext.getCacheDir() + "/" + Environment.DIRECTORY_DOWNLOADS + "/cache");
-        }
-
-        String cacheFileName = path.getAbsoluteFile() + "/download-cache-" + md5s;
-
-
-        file = new File(cacheFileName + ".cache");
-        if(file.exists()){
-            //                    fileInfo(url, null);
-            HttpFileInfo info = getFileInfo(url);
-            length = info.getFileSize();
-            lastModified = info.getLastModified();
-            if(file.length() == length && file.lastModified() == lastModified){
-                return true;
-            }
-            file.delete();
-        }
-
-        File dFile = new File(cacheFileName + ".download");
-
-        path.mkdirs();
-
-        byte[] buffer = new byte[1024 * 4];
-        do {
-            downFile(get, dFile, buffer);
-        }while ((statusCode == HttpStatus.SC_OK
-                || statusCode == HttpStatus.SC_PARTIAL_CONTENT)
-                && dFile.length() < length);
-
-        if (length > 0 && dFile.length() != length) {
-            //listener.fault(new Error(-3,null,null,null));
-            dFile.delete();
-            return false;
-        }
-
-        dFile.renameTo(file);
-        file.setLastModified(lastModified);
-//                    listener.result(file,null);
-        return true;
-//        } else {
-////                    if(listener!=null){
-////                        listener.fault(new Error(-3,null,null,null));
-////                    }
-//            return false;
-////                    throw new RuntimeException("下载失败，服务器连接异常，状态码:" + response.getStatusLine().getStatusCode());
+//    public void download(String url) {
+//        this.mUrl = url;
+//        get = new HttpGet(url);
+//
+//        boolean isSuccess = false;
+//        try{
+////            isSuccess = runImpl();
+//            isSuccess = downloadImpl();
+//        }catch (Throwable e){
+//            e.printStackTrace();
+//            Error error = new Error(-3,null,null,Utils.printStackTrace(e));
+////                    error.setStackTrace(Utils.printStackTrace(e));
+//            mListener.fault(error);
+//            return;
 //        }
+//        if(isSuccess) {
+//            mListener.result(new FileInfo(get.getURI().toString(),file, fileName, lastModified), null);
+//        }else{
+//            Error error = new Error(-3,"","","");
+//            mListener.fault(error);
+//        }
+//    }
+
+//    @Override
+//    protected FileInfo downloadImpl(String url)throws Throwable{
+//
+////                HttpGet get = new HttpGet();
+//
+//
+//        String md5s = io.cess.util.MD5.digest(get.getURI().toString());
+//
+//        File path = mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS + "/cache");
+//
+//        if (path == null) {
+//            path = new File(mContext.getCacheDir() + "/" + Environment.DIRECTORY_DOWNLOADS + "/cache");
+//        }
+//
+//        String cacheFileName = path.getAbsoluteFile() + "/download-cache-" + md5s;
+//
+//
+//        file = new File(cacheFileName + ".cache");
+//        if(file.exists()){
+//            //                    fileInfo(url, null);
+//            HttpFileInfo info = getFileInfo(mUrl);
+//            length = info.getFileSize();
+//            lastModified = info.getLastModified();
+//            if(file.length() == length && file.lastModified() == lastModified){
+//                return new FileInfo(url,file, fileName, lastModified,length);
+//            }
+//            file.delete();
+//        }
+//
+//        File dFile = new File(cacheFileName + ".download");
+//
+//        path.mkdirs();
+//
+//        byte[] buffer = new byte[1024 * 4];
+//        do {
+//            downFile(get, dFile, buffer);
+//        }while ((statusCode == HttpStatus.SC_OK
+//                || statusCode == HttpStatus.SC_PARTIAL_CONTENT)
+//                && dFile.length() < length);
+//
+//        if (length > 0 && dFile.length() != length) {
+//            //listener.fault(new Error(-3,null,null,null));
+//            dFile.delete();
+//            throw new RuntimeException("文件损坏");
+//        }
+//
+//        dFile.renameTo(file);
+//        file.setLastModified(lastModified);
+////                    listener.result(file,null);
+//        return new FileInfo(url,file, fileName, lastModified,length);
+////        } else {
+//////                    if(listener!=null){
+//////                        listener.fault(new Error(-3,null,null,null));
+//////                    }
+////            return false;
+//////                    throw new RuntimeException("下载失败，服务器连接异常，状态码:" + response.getStatusLine().getStatusCode());
+////        }
+//    }
+
+    @Override
+    protected FileInfo downFilePartial(String url, File dFile, byte[] buffer) throws Throwable {
+        return downFilePartialImpl(new HttpGet(url),dFile,buffer);
     }
 
-    private void downFile(HttpGet get,File dFile,byte[] buffer)throws Throwable{
+    @Override
+    protected int getStatusCode() {
+        return statusCode;
+    }
+
+    protected FileInfo downFilePartialImpl(HttpGet get,File dFile,byte[] buffer)throws Throwable{
         long start = dFile.length();
         if (start > 0) {
 //            conn.setRequestProperty("Range", "bytes=" + start + "-" + (start + DOWNLOAD_SIZE - 1));
@@ -304,10 +300,11 @@ class DownloadFile implements HttpCommunicateDownloadFile {
                 _out.write(buffer, 0, count);
                 total += count;
 //                        System.out.println("1 progress:"+total+"\ttotal:"+length);
-                listener.progress(total, length);
+                mListener.progress(total, length);
             }
             _in.close();
         }
+        return new FileInfo(get.getURI().toString(),dFile,fileName,lastModified,length);
     }
 
     private void parseRange(Header header) {
@@ -330,21 +327,5 @@ class DownloadFile implements HttpCommunicateDownloadFile {
 
 //        rStart = Integer.parseInt(rs[0]);
 //        rEnd = Integer.parseInt(rs[1]);
-    }
-
-
-    @Override
-    public void setImpl(HttpCommunicateImpl impl) {
-        this.impl = impl;
-    }
-
-    @Override
-    public void setListener(ProgressResultListener listener) {
-        this.listener = listener;
-    }
-
-    @Override
-    public void setParams(HttpCommunicate.Params params) {
-        this.params = params;
     }
 }

@@ -153,7 +153,7 @@ public class HttpClientHandler extends AbstractHttpCommunicateHandler<HttpURLCon
     }
     private HttpRequestBase get() throws Throwable {
         String url = HttpUtils.uri(mImpl, mPack);
-        url = addGetParams(url,generParams(mPack.getParams()));
+        url = addGetParams(url,generParams(mRequestParams));
         HttpGet get = new HttpGet(url);
 
         addHeaders(this.mPack,get);
@@ -165,18 +165,18 @@ public class HttpClientHandler extends AbstractHttpCommunicateHandler<HttpURLCon
 
         addHeaders(this.mPack,post);
 
-        Map<String,Object> postParams = mPack.getRequestHandle().getParams(mPack);
-        if(postParams != null){
+//        Map<String,Object> postParams = mPack.getRequestHandle().getParams(mPack);
+        if(mRequestParams != null){
             if(mPack.isMultipart()){
                 MultipartEntityBuilder builder = MultipartEntityBuilder.create();
                 builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
                 builder.setCharset(Charset.forName("UTF-8"));
-                if(postParams != null && postParams.size()>0){
-                    for(String key : postParams.keySet()){
-                        if(postParams.get(key) instanceof String){
-                            builder.addPart(key, new StringBody((String) postParams.get(key),contentType));
+                if(mRequestParams != null && mRequestParams.size()>0){
+                    for(String key : mRequestParams.keySet()){
+                        if(mRequestParams.get(key) instanceof String){
+                            builder.addPart(key, new StringBody((String) mRequestParams.get(key),contentType));
                         }else{
-                            builder.addPart(key, (ContentBody) postParams.get(key));
+                            builder.addPart(key, (ContentBody) mRequestParams.get(key));
                         }
                     }
                 }
@@ -185,9 +185,9 @@ public class HttpClientHandler extends AbstractHttpCommunicateHandler<HttpURLCon
             }else{
                 List<NameValuePair> params = new
                         ArrayList<NameValuePair>();
-                if(postParams != null && postParams.size()>0){
-                    for(String key : postParams.keySet()){
-                        params.add(new BasicNameValuePair(key,(String)postParams.get(key)));
+                if(mRequestParams != null && mRequestParams.size()>0){
+                    for(String key : mRequestParams.keySet()){
+                        params.add(new BasicNameValuePair(key,(String)mRequestParams.get(key)));
                     }
                 }
                 try {

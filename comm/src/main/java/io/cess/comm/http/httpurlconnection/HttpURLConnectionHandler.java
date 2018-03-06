@@ -71,13 +71,13 @@ class HttpURLConnectionHandler extends AbstractHttpCommunicateHandler<HttpURLCon
         }
 
         if (mPack.getMethod() == HttpMethod.GET) {
-            String paramsString = generParams(mPack.getParams());
-            urlString = addGetParams(urlString, paramsString);
+            String paramsString = HttpUtils.generQueryString(mRequestParams);
+            urlString = HttpUtils.urlAddQueryString(urlString, paramsString);
         }
 
         HttpURLConnection conn = Utils.open(urlString,this.mImpl.getHttpDNS());
 
-        Map<String, Object> params = mPack.getRequestHandle().getParams(mPack);
+//        Map<String, Object> params = mPack.getRequestHandle().getParams(mPack);
 
         conn.setRequestMethod(mPack.getMethod().name());
         conn.setConnectTimeout(this.mParams.getTimeout());
@@ -108,13 +108,13 @@ class HttpURLConnectionHandler extends AbstractHttpCommunicateHandler<HttpURLCon
         // 设置是否向httpUrlConnection输出，因为这个是post请求，参数要放在
 // http正文内，因此需要设为true, 默认情况下是false;
         if (mPack.getMethod() != HttpMethod.GET) {
-            if (params != null && !params.isEmpty()) {
+            if (mRequestParams != null && !mRequestParams.isEmpty()) {
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
                 if (mPack.isMultipart()) {
-                    setMultipartParams(conn,params);
+                    setMultipartParams(conn,mRequestParams);
                 } else {
-                    setPostParams(conn, params);
+                    setPostParams(conn, mRequestParams);
                 }
             }
         } else {
@@ -178,7 +178,7 @@ class HttpURLConnectionHandler extends AbstractHttpCommunicateHandler<HttpURLCon
     private void setPostParams(HttpURLConnection conn, Map<String, Object> params) throws IOException {
         conn.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
 
-        String paramsString = generParams(params);
+        String paramsString = HttpUtils.generQueryString(params);
         conn.setRequestProperty("Content-Length", String
                 .valueOf(paramsString.length()));
         // 发送POST请求必须设置如下两行
@@ -193,39 +193,39 @@ class HttpURLConnectionHandler extends AbstractHttpCommunicateHandler<HttpURLCon
     }
 
 
-    private String addGetParams(String urlString, String params) {
-        if(params == null || "".equals(params)){
-            return urlString;
-        }
-        if (urlString.indexOf('?') == -1) {
-            urlString += "?" + params;
-        } else {
-            urlString += "&" + params;
-        }
-        return urlString;
-    }
-
-    private String generParams(Map<String, Object> params) throws UnsupportedEncodingException {
-
-        if (params == null) {
-            return "";
-        }
-        StringBuffer sBuffer = new StringBuffer();
-        for (Map.Entry<String, Object> item : params.entrySet()) {
-            sBuffer.append(item.getKey());
-            sBuffer.append("=");
-            if (item.getValue() != null) {
-                sBuffer.append(encode(item.getValue().toString()));
-//                sBuffer.append(item.getValue());
-
-            }
-            sBuffer.append("&");
-        }
-        if (sBuffer.length() > 0) {
-            sBuffer.deleteCharAt(sBuffer.length() - 1);
-        }
-        return sBuffer.toString();
-    }
+//    private String addGetParams(String urlString, String params) {
+//        if(params == null || "".equals(params)){
+//            return urlString;
+//        }
+//        if (urlString.indexOf('?') == -1) {
+//            urlString += "?" + params;
+//        } else {
+//            urlString += "&" + params;
+//        }
+//        return urlString;
+//    }
+//
+//    private String generParams(Map<String, Object> params) throws UnsupportedEncodingException {
+//
+//        if (params == null) {
+//            return "";
+//        }
+//        StringBuffer sBuffer = new StringBuffer();
+//        for (Map.Entry<String, Object> item : params.entrySet()) {
+//            sBuffer.append(item.getKey());
+//            sBuffer.append("=");
+//            if (item.getValue() != null) {
+//                sBuffer.append(encode(item.getValue().toString()));
+////                sBuffer.append(item.getValue());
+//
+//            }
+//            sBuffer.append("&");
+//        }
+//        if (sBuffer.length() > 0) {
+//            sBuffer.deleteCharAt(sBuffer.length() - 1);
+//        }
+//        return sBuffer.toString();
+//    }
 
 
     private void setMultipartParams(HttpURLConnection conn, Map<String, Object> params) throws IOException {
@@ -257,10 +257,10 @@ class HttpURLConnectionHandler extends AbstractHttpCommunicateHandler<HttpURLCon
                 if(item.getValue() == null){
                     textValue = "";
                 }else {
-                    textValue = encode(item.getValue().toString());
+                    textValue = HttpUtils.encode(item.getValue().toString());
                 }
 
-                key = encode(item.getKey());
+                key = HttpUtils.encode(item.getKey());
                 textParams.put(key,textValue);
 
                 length += textValue.length() + boundaryBytes.length + cdBytes.length + key.length() + cdlfBytes.length + lfBytes.length;
@@ -317,11 +317,11 @@ class HttpURLConnectionHandler extends AbstractHttpCommunicateHandler<HttpURLCon
             out.write(cdBytes);
             out.write(item.getKey().getBytes());
             out.write(fnBytes);
-            out.write(encode(item.getValue().getFileName()).getBytes());
+            out.write(HttpUtils.encode(item.getValue().getFileName()).getBytes());
             out.write(cdlfBytes);
 
             out.write(ctBytes);
-            out.write(encode(item.getValue().getMimeType()).getBytes());
+            out.write(HttpUtils.encode(item.getValue().getMimeType()).getBytes());
             out.write(lfBytes);
 
             out.write(lfBytes);
@@ -341,9 +341,9 @@ class HttpURLConnectionHandler extends AbstractHttpCommunicateHandler<HttpURLCon
         out.write(endBytes);
     }
 
-    private String encode(String value) throws UnsupportedEncodingException {
-        return URLEncoder.encode(value, "utf-8");
-    }
+//    private String encode(String value) throws UnsupportedEncodingException {
+//        return URLEncoder.encode(value, "utf-8");
+//    }
 
     @Override
     public void abort() {

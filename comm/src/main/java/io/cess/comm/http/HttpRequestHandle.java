@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public interface HttpRequestHandle {
 
-    public void preprocess(HttpPackage pack,HttpCommunicate.Params params);
+    void preprocess(HttpPackage pack,HttpCommunicate.Params params);
 
 	Map<String,Object> getParams(HttpPackage pack);
 

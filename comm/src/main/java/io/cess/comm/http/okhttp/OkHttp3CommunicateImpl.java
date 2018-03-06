@@ -4,6 +4,7 @@ import io.cess.comm.http.AbstractHttpCommunicateImpl;
 import io.cess.comm.http.HttpCommunicate;
 import io.cess.comm.http.HttpCommunicateDownloadFile;
 import io.cess.comm.http.HttpCommunicateHandler;
+import okhttp3.OkHttpClient;
 
 /**
  * 
@@ -11,14 +12,15 @@ import io.cess.comm.http.HttpCommunicateHandler;
  * @date 2013-7-29 下午9:13:22
  *
  */
-public class HttpURLConnectionCommunicateImpl extends AbstractHttpCommunicateImpl {
-	public HttpURLConnectionCommunicateImpl(String name, HttpCommunicate c) {
+public class OkHttp3CommunicateImpl extends AbstractHttpCommunicateImpl {
+
+	public OkHttp3CommunicateImpl(String name, HttpCommunicate c) {
 		super(name, c);
 	}
 
 	@Override
 	protected HttpCommunicateHandler getHandler() {
-		return new HttpURLConnectionHandler();
+		return new OkHttp3Handler();
 	}
 
 //	private SessionInfo sessionInfo = new SessionInfo();

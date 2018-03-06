@@ -16,6 +16,7 @@ public abstract class AbstractHttpCommunicateHandler<T extends HttpCommunicateIm
     protected HttpPackage mPack;
     protected T mImpl;
     protected HttpCommunicate.Params mParams;
+    protected Map<String,Object> mRequestParams;
 
     protected AbstractHttpCommunicateHandler(){
 
@@ -36,8 +37,13 @@ public abstract class AbstractHttpCommunicateHandler<T extends HttpCommunicateIm
         this.mParams = params;
     }
 
+    @Override
+    public void setRequestParams(Map<String, Object> requestParams) {
+        this.mRequestParams = requestParams;
+    }
 
-//    protected Map<String, String> getHeaders() {
+
+    //    protected Map<String, String> getHeaders() {
 //        Map<String,String> map = new HashMap<>();
 //        HttpDNS mHttpDNS = mImpl.getHttpDNS();
 //        if(mHttpDNS){

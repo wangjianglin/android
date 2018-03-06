@@ -67,6 +67,8 @@ public interface HttpCommunicateImpl {
 
     HttpCommunicateResult<FileInfo> download(URL file, ResultListener<FileInfo> listener, HttpCommunicate.Params params);
 
+    HttpCommunicateResult<FileInfo> download(HttpDownloadPackage pack, ResultListener listener, HttpCommunicate.Params params);
+
     boolean isMainThread();
 
     void setMainThread(boolean mMainThread);

@@ -376,11 +376,15 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
         mExecutor.execute(new Runnable() {
             @Override
             public void run() {
+//                if (pack.getMethod() != HttpMethod.POST && pack.isMultipart()) {
+//                    throw new RuntimeException("Multipart必须采用post请求！");
+//                }
                 if(authentication != null){
                     params.addHeader("Authorization",authentication.auth());
                 }
 
                 handler.setPackage(pack);
+                handler.setRequestParams(pack.getRequestHandle().getParams(pack));
                 handler.setImpl(AbstractHttpCommunicateImpl.this);
                 handler.setParams(params);
 
@@ -523,13 +527,19 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
     public HttpCommunicateResult<FileInfo> download(String file, final ResultListener listener){
         return download(file,listener,null);
     }
-    @Override
-    public HttpCommunicateResult<FileInfo> download(String file, final ResultListener listener, HttpCommunicate.Params params){
 
-        URL url = null;
+    @Override
+    public HttpCommunicateResult<FileInfo> download(URL url, ResultListener listener, HttpCommunicate.Params params){
+        return download(url.toString(),listener,params);
+    }
+    @Override
+    public HttpCommunicateResult<FileInfo> download(HttpDownloadPackage pack, final ResultListener listener, HttpCommunicate.Params params){
+
+        String url = null;
         try {
-            url = new URL(file);
-        } catch (MalformedURLException e) {
+            url = HttpUtils.urlAddQueryString(HttpUtils.uri(this,pack),
+                    HttpUtils.generQueryString(pack.getRequestHandle().getParams(pack)));
+        } catch (Throwable e) {
 
             //AutoResetEvent set = new AutoResetEvent();
             HttpCommunicateResult result = new HttpCommunicateResult();
@@ -556,14 +566,14 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
     }
     @Override
     public HttpCommunicateResult<FileInfo> download(URL file, final ResultListener listener) {
-        return download(file,listener,null);
+        return download(file.toString(),listener,null);
     }
 
     protected abstract HttpCommunicateDownloadFile downloadRequest();
 
 
     @Override
-    public HttpCommunicateResult<FileInfo> download(final URL file, final ResultListener listener, HttpCommunicate.Params params){
+    public HttpCommunicateResult<FileInfo> download(final String file, final ResultListener listener, HttpCommunicate.Params params){
         if (params == null){
             params = new HttpCommunicate.Params();
 
@@ -661,9 +671,12 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
         Runnable task = new Runnable() {
             @Override
             public void run() {
+
+//                url = HttpUtils.urlAddQueryString(HttpUtils.uri(mImpl,mPack),
+//                        HttpUtils.generQueryString(mRequestParams));
                 HttpCommunicateDownloadFile.HttpFileInfo info = request.getFileInfo(file);
 
-                FileInfo cacheFile = CacheDownloadFile.getFileInfo(file.toString());
+                FileInfo cacheFile = CacheDownloadFile.getFileInfo(file);
 
                 if(cacheFile != null && info != null){
                     if(cacheFile.getFile().exists()){

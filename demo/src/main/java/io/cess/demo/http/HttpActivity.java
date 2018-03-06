@@ -48,9 +48,9 @@ public class HttpActivity extends ViewActivity {
 
         setContentView(R.layout.activity_http);
 
-        HttpCommunicateImpl impl = HttpCommunicate.get("impl");
+        HttpCommunicateImpl impl = HttpCommunicate.get("http2");
 
-        OAuth2Authentication authentication = new OAuth2Authentication("http://192.168.1.66:18002/oauth/token");
+        OAuth2Authentication authentication = new OAuth2Authentication("https://api-t.fcbb.io/oauth/token");
         authentication.setClientId("web_app");
         authentication.setSecret("123456");
         authentication.setUsername("admin");
@@ -72,7 +72,7 @@ public class HttpActivity extends ViewActivity {
 
 //        ExceptionPackage pack = new ExceptionPackage();
 
-        HttpCommunicateImpl impl = HttpCommunicate.get("impl");
+        HttpCommunicateImpl impl = HttpCommunicate.get("http2");
 
         impl.setDebug(true);
         impl.setMainThread(true);
@@ -131,7 +131,7 @@ public class HttpActivity extends ViewActivity {
 
     @Click(R.id.activity_http_button2)
     private void c2(){
-        HttpCommunicateImpl impl = HttpCommunicate.get("impl");
+        HttpCommunicateImpl impl = HttpCommunicate.get("http2");
 
         impl.setDebug(true);
         impl.setMainThread(true);
@@ -153,38 +153,39 @@ public class HttpActivity extends ViewActivity {
             e.printStackTrace();
         }
 
-//        impl.download("https://www.feicuibaba.com/proxy/proxy-channel.apk.php?channel=own", new ResultListener<FileInfo>() {
-//            @Override
-//            public void result(FileInfo obj, List<Error> warning) {
-//                Toast.makeText(getApplicationContext(),obj.getFile().getAbsolutePath(),Toast.LENGTH_LONG).show();
-//            }
-//
-//            @Override
-//            public void fault(Error error) {
-//                Toast.makeText(getApplicationContext(),"错误",Toast.LENGTH_LONG).show();
-//                System.out.println(error.getStackTrace());
-//            }
-//        });
-        AuthTestPackage pack = new AuthTestPackage();
-
-        pack.setData("测试数据！");
-
-//        ExceptionPackage pack = new ExceptionPackage();
-
-
-        impl.request(pack, new ResultListener<String>() {
+        impl.download("https://www.feicuibaba.com/proxy/proxy-channel.apk.php?channel=own", new ResultListener<FileInfo>() {
             @Override
-            public void result(String obj, List<Error> warning) {
-                Toast.makeText(getApplicationContext(),"obj:"+obj,Toast.LENGTH_LONG).show();
-                System.out.println();
+            public void result(FileInfo obj, List<Error> warning) {
+                Toast.makeText(getApplicationContext(),obj.getFile().getAbsolutePath(),Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void fault(Error error) {
-                Toast.makeText(getApplicationContext(),error.getStackTrace(),Toast.LENGTH_LONG).show();
-                System.out.println();
+                Toast.makeText(getApplicationContext(),"错误",Toast.LENGTH_LONG).show();
+                System.out.println(error.getStackTrace());
             }
         });
+//
+//        AuthTestPackage pack = new AuthTestPackage();
+//
+//        pack.setData("测试数据！");
+//
+////        ExceptionPackage pack = new ExceptionPackage();
+//
+//
+//        impl.request(pack, new ResultListener<String>() {
+//            @Override
+//            public void result(String obj, List<Error> warning) {
+//                Toast.makeText(getApplicationContext(),"obj:"+obj,Toast.LENGTH_LONG).show();
+//                System.out.println();
+//            }
+//
+//            @Override
+//            public void fault(Error error) {
+//                Toast.makeText(getApplicationContext(),error.getStackTrace(),Toast.LENGTH_LONG).show();
+//                System.out.println();
+//            }
+//        });
     }
 
     private void testSesssionId(HttpCommunicateImpl impl){
@@ -220,7 +221,7 @@ public class HttpActivity extends ViewActivity {
 
 
 @HttpPackageMethod(HttpMethod.POST)
-@HttpPackageUrl("http://192.168.1.66:5555/shorturl/")
+@HttpPackageUrl("https://api-t.fcbb.io/shorturl/a")
 class AuthTestPackage extends HttpPackage<String> {
 
 

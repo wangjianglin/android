@@ -21,53 +21,37 @@ import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
 
+import io.cess.comm.http.AbstractHttpCommunicateDownloadFile;
 import io.cess.comm.http.Error;
 import io.cess.comm.http.FileInfo;
 import io.cess.comm.http.HttpCommunicate;
 import io.cess.comm.http.HttpCommunicateDownloadFile;
 import io.cess.comm.http.HttpCommunicateImpl;
+import io.cess.comm.http.HttpUtils;
 import io.cess.comm.http.ProgressResultListener;
 
 /**
  * Created by lin on 9/24/15.
  */
-public class DownloadFile implements HttpCommunicateDownloadFile {
+public class DownloadFile extends AbstractHttpCommunicateDownloadFile {
 
-    private static final int DOWNLOAD_SIZE = 800 * 1024;
-
-    private ProgressResultListener listener;
-
-    private HttpCommunicateImpl impl;
-    private HttpCommunicate.Params params;
-    private Context context;
 
     public DownloadFile(Context context){
-        this.context = context;
+        super(context);
     }
 
     @Override
-    public void setImpl(HttpCommunicateImpl impl) {
-        this.impl = impl;
-    }
-
-    @Override
-    public void setListener(ProgressResultListener listener) {
-        this.listener = listener;
-    }
-
-
-    @Override
-    public HttpFileInfo getFileInfo(URL url) {
+    protected HttpFileInfo getFileInfoImpl(String url) {
         return getFileInfoImp(url,null);
     }
 
-    private HttpFileInfo getFileInfoImp(URL url,Map<String,Boolean> urls){
+    private HttpFileInfo getFileInfoImp(String url,Map<String,Boolean> urls){
         try {
             if (urls != null && urls.containsKey(url.toString())) {
                 return null;
             }
 //            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            HttpURLConnection conn = Utils.open(url.toString(),this.impl.getHttpDNS());
+            HttpURLConnection conn = Utils.open(url.toString(),this.mImpl.getHttpDNS());
 
             conn.connect();
 
@@ -79,7 +63,7 @@ public class DownloadFile implements HttpCommunicateDownloadFile {
                     urls = new HashMap<String, Boolean>();
                 }
                 urls.put(url.toString(), true);
-                return getFileInfoImp(new URL(conn.getHeaderField("Location")), urls);
+                return getFileInfoImp(conn.getHeaderField("Location"), urls);
             }
 
             HttpFileInfo info = new HttpFileInfo();
@@ -94,12 +78,6 @@ public class DownloadFile implements HttpCommunicateDownloadFile {
 
     }
 
-    @Override
-    public void setParams(HttpCommunicate.Params params) {
-        this.params = params;
-    }
-
-
     public void abort(){
         if(conn != null){
             conn.disconnect();
@@ -110,30 +88,29 @@ public class DownloadFile implements HttpCommunicateDownloadFile {
 
     private HttpURLConnection conn;
 
-    public void download(URL url) {
-//        HttpGet get = new HttpGet(url);
-//        downloadImpl(url);
-        boolean isSuccess = false;
-        try{
-//                    if ()
-            isSuccess = downloadImpl(url);
-        }catch (Throwable e){
-            //有问题，异常有可能是 listener 中产生的
-            e.printStackTrace();
-//                    lin.client.http.Error error = new Error();
-//                    error.setStackTrace(Utils.printStackTrace(e));
-            Error error = new Error(-2,"","",io.cess.util.Utils.printStackTrace(e));
-            listener.fault(error);
-            return;
-        }
-        //FileInfo对象
-        if(isSuccess) {
-            listener.result(new FileInfo(url.toString(),file, fileName, lastModified), null);
-        }else{
-            Error error = new Error(-3,"","","");
-            listener.fault(error);
-        }
-    }
+//    public void download(String url) {
+////        HttpGet get = new HttpGet(url);
+////        downloadImpl(url);
+//        boolean isSuccess = false;
+//        try{
+//            isSuccess = downloadImpl(url);
+//        }catch (Throwable e){
+//            //有问题，异常有可能是 listener 中产生的
+//            e.printStackTrace();
+////                    lin.client.http.Error error = new Error();
+////                    error.setStackTrace(Utils.printStackTrace(e));
+//            Error error = new Error(-2,"","",io.cess.util.Utils.printStackTrace(e));
+//            mListener.fault(error);
+//            return;
+//        }
+//        //FileInfo对象
+//        if(isSuccess) {
+//            mListener.result(new FileInfo(url,file, fileName, lastModified), null);
+//        }else{
+//            Error error = new Error(-3,"","","");
+//            mListener.fault(error);
+//        }
+//    }
 
     private int errorCode = 0;
     private long length = 0;
@@ -145,86 +122,106 @@ public class DownloadFile implements HttpCommunicateDownloadFile {
     private String fileName;
     private int statusCode;
 
-    //解决重复下载问题
-    private boolean downloadImpl(final URL url)throws Throwable{
+    private String mRealUrl;
+    private String mOrigalUrl;
 
+//    //解决重复下载问题
+//    protected FileInfo downloadImpl(final String url)throws Throwable{
+//
+//
+//        String md5s = io.cess.util.MD5.digest(url);
+//
+//        File path = mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS + "/cache");
+//
+//        if (path == null) {
+//            path = new File(mContext.getCacheDir() + "/" + Environment.DIRECTORY_DOWNLOADS + "/cache");
+//        }
+//
+//        //conn.getLastModified()
+//        String cacheFileName = path.getAbsoluteFile() + "/download-cache-" + md5s;// + (new Date()).getTime();// + "-" + conn.getLastModified();
+//        file = new File(cacheFileName + ".cache");
+//    //                file = File.createTempFile(md5s,".cache");
+//
+//
+//        if(file.exists()){
+//    //                    fileInfo(url, null);
+//            HttpFileInfo info = getFileInfo(url);
+//            length = info.getFileSize();
+//            lastModified = info.getLastModified();
+//            if(file.length() == length && file.lastModified() == lastModified){
+//                return new FileInfo(url,file, fileName, lastModified,length);
+//            }
+//            file.delete();
+//        }
+//
+//
+//        File dFile = new File(cacheFileName + ".download");
+//    //                File dFile = File.createTempFile(md5s,".download");
+//
+//        path.mkdirs();
+//
+//        byte[] buffer = new byte[1024 * 4];
+//
+//        String realUrl = url;
+//        do {
+//            realUrl = downFile(realUrl, dFile, buffer);
+//        }while ((statusCode == HttpURLConnection.HTTP_OK
+//                || statusCode == HttpURLConnection.HTTP_PARTIAL)
+//                && dFile.length() < length);
+//
+//        //416 (Requested Range Not Satisfiable/请求范围无法满足)
+//        //416表示客户端包含了一个服务器无法满足的Range头信息的请求。该状态是新加入 HTTP 1.1的。
+//        if(statusCode == 416){//如果请求范围错误，重新下载
+//            dFile.delete();
+//            realUrl = url;
+//            do {
+//                realUrl = downFile(realUrl, dFile, buffer);
+//            }while ((statusCode == HttpURLConnection.HTTP_OK
+//                    || statusCode == HttpURLConnection.HTTP_PARTIAL)
+//                    && dFile.length() < length);
+//        }
+//
+//    //                if((statusCode == HttpURLConnection.HTTP_OK
+//    //                        || statusCode == HttpURLConnection.HTTP_PARTIAL)
+//    //                        && length > 0 && dFile.length() == length){
+//    //                    dFile.delete();
+//    //                }else{
+//    //                    //dFile.renameTo(file);
+//    //                }
+//        if(length <= 0 || (length > 0 && dFile.length() == length)){
+//            dFile.renameTo(file);
+//            file.setLastModified(lastModified);
+//        }else{
+//            dFile.delete();
+//            throw new RuntimeException("文件损坏");
+//        }
+//
+//        return new FileInfo(url,file, fileName, lastModified,length);
+//    //                HttpURLConnection.setFollowRedirects(true);
+//
+//    }
 
-        String md5s = io.cess.util.MD5.digest(url.toString());
+//    @Override
+//    protected FileInfo downFilePartial(String url, File dFile, byte[] buffer) {
+//        return null;
+//    }
 
-        File path = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS + "/cache");
-
-        if (path == null) {
-            path = new File(context.getCacheDir() + "/" + Environment.DIRECTORY_DOWNLOADS + "/cache");
-        }
-
-        //conn.getLastModified()
-        String cacheFileName = path.getAbsoluteFile() + "/download-cache-" + md5s;// + (new Date()).getTime();// + "-" + conn.getLastModified();
-        file = new File(cacheFileName + ".cache");
-    //                file = File.createTempFile(md5s,".cache");
-
-
-        if(file.exists()){
-    //                    fileInfo(url, null);
-            HttpFileInfo info = getFileInfo(url);
-            length = info.getFileSize();
-            lastModified = info.getLastModified();
-            if(file.length() == length && file.lastModified() == lastModified){
-                return true;
-            }
-            file.delete();
-        }
-
-
-        File dFile = new File(cacheFileName + ".download");
-    //                File dFile = File.createTempFile(md5s,".download");
-
-        path.mkdirs();
-
-        byte[] buffer = new byte[1024 * 4];
-
-        URL realUrl = url;
-        do {
-            realUrl = downFile(realUrl, dFile, buffer);
-        }while ((statusCode == HttpURLConnection.HTTP_OK
-                || statusCode == HttpURLConnection.HTTP_PARTIAL)
-                && dFile.length() < length);
-
-        //416 (Requested Range Not Satisfiable/请求范围无法满足)
-        //416表示客户端包含了一个服务器无法满足的Range头信息的请求。该状态是新加入 HTTP 1.1的。
-        if(statusCode == 416){//如果请求范围错误，重新下载
-            dFile.delete();
-            realUrl = url;
-            do {
-                realUrl = downFile(realUrl, dFile, buffer);
-            }while ((statusCode == HttpURLConnection.HTTP_OK
-                    || statusCode == HttpURLConnection.HTTP_PARTIAL)
-                    && dFile.length() < length);
-        }
-
-    //                if((statusCode == HttpURLConnection.HTTP_OK
-    //                        || statusCode == HttpURLConnection.HTTP_PARTIAL)
-    //                        && length > 0 && dFile.length() == length){
-    //                    dFile.delete();
-    //                }else{
-    //                    //dFile.renameTo(file);
-    //                }
-        if(length <= 0 || (length > 0 && dFile.length() == length)){
-            dFile.renameTo(file);
-            file.setLastModified(lastModified);
-        }else{
-            dFile.delete();
-            return false;
-        }
-
-        return true;
-    //                HttpURLConnection.setFollowRedirects(true);
-
+    @Override
+    protected int getStatusCode() {
+        return statusCode;
     }
 
 
-    private URL downFile(URL url,File dFile,byte[] buffer)throws Throwable {
+    @Override
+    protected FileInfo downFilePartial(String url,File dFile,byte[] buffer)throws Throwable {
 //        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        HttpURLConnection conn = Utils.open(url.toString(),this.impl.getHttpDNS());
+        if(mRealUrl != null){
+            url = mRealUrl;
+        }
+        if(mOrigalUrl == null){
+            mOrigalUrl = url;
+        }
+        HttpURLConnection conn = Utils.open(url,this.mImpl.getHttpDNS());
         conn.setRequestMethod("GET");
         //先禁gzip测试
     //                conn.setDoOutput(true);// 是否输入参数
@@ -245,7 +242,8 @@ public class DownloadFile implements HttpCommunicateDownloadFile {
 
         if (statusCode == HttpURLConnection.HTTP_MOVED_TEMP
                 || statusCode == HttpURLConnection.HTTP_MOVED_PERM) {
-            return downFile(new URL(conn.getHeaderField("Location")), dFile, buffer);
+            mRealUrl = null;
+            return downFilePartial(conn.getHeaderField("Location"), dFile, buffer);
         }
 
         if (statusCode == HttpURLConnection.HTTP_OK) {
@@ -254,6 +252,8 @@ public class DownloadFile implements HttpCommunicateDownloadFile {
         } else if (statusCode == HttpURLConnection.HTTP_PARTIAL) {
             parseRange(conn.getHeaderField("Content-Range"));
         }
+
+        mRealUrl = url;
 
         lastModified = conn.getLastModified();
         fileName = parserFileName(conn.getHeaderField("Content-Disposition"));
@@ -288,25 +288,11 @@ public class DownloadFile implements HttpCommunicateDownloadFile {
                 } else {
                     total += count;
                 }
-                listener.progress(total, length);
+                mListener.progress(total, length);
             }
             _in.close();
-    //                    if (length > 0 && total != length) {
-    //                        listener.fault(new Error());
-    //                        return;
-    //                    }
-    //                    dFile.renameTo(file);
-    //                    //file.setLastModified()
-    //                    dFile.setLastModified(conn.getLastModified());
-    //                    listener.result(file,null);
         }
-    //                else {
-    //                    if(listener!=null){
-    //                        listener.fault(new Error());
-    //                    }
-    ////                    throw new RuntimeException("下载失败，服务器连接异常，状态码:" + response.getStatusLine().getStatusCode());
-    //                }
-        return url;
+        return new FileInfo(mOrigalUrl,dFile, fileName,lastModified,length);
     }
 
     private void parseRange(String range) {

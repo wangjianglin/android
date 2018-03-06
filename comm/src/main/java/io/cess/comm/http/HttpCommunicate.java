@@ -12,6 +12,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import io.cess.comm.http.httpclient.HttpClientCommunicateImpl;
 import io.cess.comm.http.httpurlconnection.HttpURLConnectionCommunicateImpl;
+import io.cess.comm.http.okhttp.OkHttp3CommunicateImpl;
 import io.cess.comm.http.volley.AndroidVolleyCommunicateImpl;
 import io.cess.comm.httpdns.HttpDNS;
 
@@ -78,7 +79,7 @@ public class HttpCommunicate {
 	}
 
 
-	private static HttpCommunicateType type = HttpCommunicateType.HttpURLConnection;
+	private static HttpCommunicateType type = HttpCommunicateType.OkHttp3;
 
 	public static void setType(HttpCommunicateType type){
 		HttpCommunicate.type = type;
@@ -158,8 +159,10 @@ public class HttpCommunicate {
 					himpl = new AndroidVolleyCommunicateImpl(name,_tmp);
 				}else if(type == HttpCommunicateType.HttpClient){
 					himpl = new HttpClientCommunicateImpl(name,_tmp);
-				}else{
+				}else if(type == HttpCommunicateType.HttpURLConnection){
 					himpl = new HttpURLConnectionCommunicateImpl(name,_tmp);
+				}else if(type == HttpCommunicateType.OkHttp3){
+					himpl = new OkHttp3CommunicateImpl(name,_tmp);
 				}
 				impl = new WeakReference<HttpCommunicateImpl>(himpl);
 				himpl.addHttpRequestListener(mGlobalListner);

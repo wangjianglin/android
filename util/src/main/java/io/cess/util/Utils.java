@@ -207,6 +207,9 @@ public class Utils {
 	
 	
 	public static String printStackTrace(Throwable ex){
+		if(ex == null){
+			return "null";
+		}
 		Writer writer =new StringWriter();
 		PrintWriter printWriter = new PrintWriter(writer);
 		ex.printStackTrace(printWriter);

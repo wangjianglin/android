@@ -13,6 +13,7 @@ public abstract class AbstractHttpRequestHandle implements HttpRequestHandle{
 
 	@Override
 	public void preprocess(HttpPackage pack,HttpCommunicate.Params params){}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, Object> getParams(HttpPackage pack) {
@@ -33,7 +34,6 @@ public abstract class AbstractHttpRequestHandle implements HttpRequestHandle{
 			}
 		}
 		@SuppressWarnings("rawtypes")
-//		Map map = io.cess.json.JSONUtil.toParameters(textParams);
 		Map map = io.cess.util.JsonUtil.toParameters(textParams);
 		map.putAll(contentParams);
 		return map;

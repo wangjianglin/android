@@ -1,6 +1,7 @@
 package io.cess.comm.http;
 
 import java.net.URL;
+import java.util.Map;
 
 /**
  * Created by lin on 1/9/16.
@@ -12,15 +13,20 @@ public interface HttpCommunicateDownloadFile  extends Aboutable{
 
     void setListener(ProgressResultListener listener);
 
-    void download(URL url);
+    void setPackage(HttpPackage pack);
 
-    HttpFileInfo getFileInfo(URL url);
+//    void download(URL url);
+
+    void download(String url);
+
+    HttpFileInfo getFileInfo(String url);
 
     void setParams(HttpCommunicate.Params params);
 
-    static class HttpFileInfo{
+    class HttpFileInfo{
         private long fileSize;
         private long lastModified;
+        private String fileName;
 
         public long getFileSize() {
             return fileSize;
@@ -36,6 +42,14 @@ public interface HttpCommunicateDownloadFile  extends Aboutable{
 
         public void setLastModified(long lastModified) {
             this.lastModified = lastModified;
+        }
+
+        public String getFileName() {
+            return fileName;
+        }
+
+        public void setFileName(String fileName) {
+            this.fileName = fileName;
         }
     }
 }

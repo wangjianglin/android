@@ -9,5 +9,5 @@ package io.cess.comm.http;
 public enum HttpCommunicateType {
 
 //	GET,POST,DELETE,PUT,HEADER
-	HttpURLConnection,HttpClient,Volley
+	OkHttp3,HttpURLConnection,HttpClient,Volley
 }

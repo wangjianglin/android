@@ -24,7 +24,7 @@ public class DemoApplication extends Application {
         super.onCreate();
 
         LocalStorage.init(this);
-        HttpCommunicate.setType(HttpCommunicateType.HttpURLConnection);
+        HttpCommunicate.setType(HttpCommunicateType.OkHttp3);
         HttpCommunicate.init(this);
 
         HttpCommunicate.setHttpDNS(new AliHttpDNS(this,"172280"){
