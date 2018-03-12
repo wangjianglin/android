@@ -6,7 +6,8 @@ import android.util.AttributeSet;
 import io.cess.core.annotation.BindCls;
 
 /**
- * Created by lin on 16/01/2017.
+ * @author lin
+ * @date 16/01/2017.
  */
 
 @BindCls(io.cess.demo.databinding.ActivityBindViewBinding.class)

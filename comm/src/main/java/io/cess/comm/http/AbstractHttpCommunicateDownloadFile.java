@@ -4,14 +4,19 @@ import android.content.Context;
 import android.os.Environment;
 
 import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
- * Created by lin on 9/24/15.
+ * @author lin
+ * @date 9/24/15.
  */
 public abstract class AbstractHttpCommunicateDownloadFile implements HttpCommunicateDownloadFile {
 
     protected static final int DOWNLOAD_SIZE = 800 * 1024;
+
+    private static Pattern mFileNamePattern = Pattern.compile("filename\\s*=\\s*\"(.*)\"");
 
     protected ProgressResultListener mListener;
 
@@ -52,7 +57,6 @@ public abstract class AbstractHttpCommunicateDownloadFile implements HttpCommuni
             fileInfo = downloadImpl(url);
         }catch (Throwable e){
             //有问题，异常有可能是 listener 中产生的
-            e.printStackTrace();
 //                    lin.client.http.Error error = new Error();
 //                    error.setStackTrace(Utils.printStackTrace(e));
             Error error = new Error(-2,
@@ -87,7 +91,6 @@ public abstract class AbstractHttpCommunicateDownloadFile implements HttpCommuni
         //conn.getLastModified()
         String cacheFileName = path.getAbsoluteFile() + "/download-cache-" + md5s;// + (new Date()).getTime();// + "-" + conn.getLastModified();
         File file = new File(cacheFileName + ".cache");
-        //                file = File.createTempFile(md5s,".cache");
 
         long length = 0;
         long lastModified = 0;
@@ -103,7 +106,6 @@ public abstract class AbstractHttpCommunicateDownloadFile implements HttpCommuni
             file.delete();
         }
 
-
         File dFile = new File(cacheFileName + ".download");
 
         path.mkdirs();
@@ -113,7 +115,7 @@ public abstract class AbstractHttpCommunicateDownloadFile implements HttpCommuni
         FileInfo fileInfo = null;
         do {
             fileInfo = downFilePartial(url, dFile, buffer);
-        }while (getStatusCode() == 206);
+        }while (getStatusCode() == 206 && fileInfo.getLength() != dFile.length());
 
         //416 (Requested Range Not Satisfiable/请求范围无法满足)
         //416表示客户端包含了一个服务器无法满足的Range头信息的请求。该状态是新加入 HTTP 1.1的。
@@ -121,16 +123,9 @@ public abstract class AbstractHttpCommunicateDownloadFile implements HttpCommuni
             dFile.delete();
             do {
                 fileInfo = downFilePartial(url, dFile, buffer);
-            }while (getStatusCode() == 206);
+            }while (getStatusCode() == 206 && fileInfo.getLength() != dFile.length());
         }
 
-        //                if((statusCode == HttpURLConnection.HTTP_OK
-        //                        || statusCode == HttpURLConnection.HTTP_PARTIAL)
-        //                        && length > 0 && dFile.length() == length){
-        //                    dFile.delete();
-        //                }else{
-        //                    //dFile.renameTo(file);
-        //                }
         length = fileInfo.getLength();
         if(length <= 0 || (length > 0 && dFile.length() == length)){
             dFile.renameTo(file);
@@ -140,8 +135,8 @@ public abstract class AbstractHttpCommunicateDownloadFile implements HttpCommuni
             throw new RuntimeException("文件损坏");
         }
 
-        return fileInfo;
-        //                HttpURLConnection.setFollowRedirects(true);
+        return new FileInfo(fileInfo.getUrl(),file,fileInfo.getFileName(),
+                fileInfo.getLastModified(),fileInfo.getLength());
 
     }
 
@@ -160,5 +155,20 @@ public abstract class AbstractHttpCommunicateDownloadFile implements HttpCommuni
         return mHttpFileInfo;
     }
 
-    //    abstract protected FileInfo downloadImpl(String url) throws Throwable;
+    protected String parserFileName(String value){
+
+        if(value == null){
+            return null;
+        }
+        Matcher m = mFileNamePattern.matcher(value);
+
+        if(m.find()){
+            if(m.groupCount() > 0){
+                return m.group(1);
+            }
+            return m.group();
+        }
+        return null;
+    }
+
 }

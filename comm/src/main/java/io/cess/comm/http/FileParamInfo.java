@@ -7,53 +7,67 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 /**
- * Created by lin on 1/9/16.
+ * 文件上传参数
+ * @author lin
+ * @date 1/9/16.
  */
 public class FileParamInfo {
 
-    private String mimeType;
-    private String fileName;
-    private InputStream file;
-    private long length = 0;
+    /**
+     * 上传文件的 mime-type，如：image/jpeg、image/png
+     */
+    private String mMimeType;
+    /**
+     * 文件名称，当下载些文件是，作为下载文件名
+     */
+    private String mFileName;
+    /**
+     * 对应文件的输入流
+     */
+    private InputStream mFile;
+    /**
+     * 文件大小，以字符为单位，-1表示大小未知
+     */
+    private long mLength = 0;
 
     public String getMimeType() {
-        return mimeType;
+        return mMimeType;
     }
 
     void setMimeType(String mimeType) {
-        this.mimeType = mimeType;
+        this.mMimeType = mimeType;
     }
 
     public String getFileName() {
-        return fileName;
+        return mFileName;
     }
 
     void setFileName(String fileName) {
-        this.fileName = fileName;
+        this.mFileName = fileName;
     }
 
 
 
     public InputStream getFile() {
-        return file;
+        return mFile;
     }
 
     void setFile(InputStream file) {
-        this.file = file;
-        length = -1;
+        this.mFile = file;
+        mLength = -1;
     }
 
     void setFile(byte[] bs){
-        file = new ByteArrayInputStream(bs);
-        length = bs.length;
+        mFile = new ByteArrayInputStream(bs);
+        mLength = bs.length;
     }
 
     void setFile(File f) throws FileNotFoundException {
-        file = new FileInputStream(f);
-        length = f.length();
+        mFile = new FileInputStream(f);
+        mLength = f.length();
     }
 
     public long getLength(){
-        return length;
+        return mLength;
     }
 }

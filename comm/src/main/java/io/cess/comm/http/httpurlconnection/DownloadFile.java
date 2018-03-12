@@ -31,7 +31,8 @@ import io.cess.comm.http.HttpUtils;
 import io.cess.comm.http.ProgressResultListener;
 
 /**
- * Created by lin on 9/24/15.
+ * @author lin
+ * @date 9/24/15.
  */
 public class DownloadFile extends AbstractHttpCommunicateDownloadFile {
 
@@ -305,15 +306,6 @@ public class DownloadFile extends AbstractHttpCommunicateDownloadFile {
 
         rStart = Integer.parseInt(rs[0]);
         rEnd = Integer.parseInt(rs[1]);
-    }
-
-    ////attachment; filename="buyers_own.apk"
-    private String parserFileName(String value){
-
-        if(value != null && value.length() > 23){
-            return value.substring(22,value.length()-1);
-        }
-        return null;
     }
 
     private int getLen(GZIPInputStream in) {

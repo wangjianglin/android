@@ -4,7 +4,8 @@ import android.graphics.PointF;
 import android.view.MotionEvent;
 
 /**
- * Created by lin on 08/01/2017.
+ * @author lin
+ * @date 08/01/2017.
  */
 
 public class ViewPagerContentIndicator {

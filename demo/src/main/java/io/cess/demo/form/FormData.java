@@ -3,7 +3,8 @@ package io.cess.demo.form;
 import io.cess.util.LocalStorage;
 
 /**
- * Created by lin on 18/01/2017.
+ * @author lin
+ * @date 18/01/2017.
  */
 
 public class FormData {

@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by lin on 7/6/16.
+ * @author lin
+ * @date 7/6/16.
  */
 class Utils {
 

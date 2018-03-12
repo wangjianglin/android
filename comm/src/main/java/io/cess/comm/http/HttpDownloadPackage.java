@@ -1,7 +1,8 @@
 package io.cess.comm.http;
 
 /**
- * Created by lin on 05/03/2018.
+ * @author lin
+ * @date 05/03/2018.
  */
 
 public class HttpDownloadPackage extends HttpPackage<FileInfo> {

@@ -27,13 +27,8 @@ public class DemoApplication extends Application {
         HttpCommunicate.setType(HttpCommunicateType.OkHttp3);
         HttpCommunicate.init(this);
 
-        HttpCommunicate.setHttpDNS(new AliHttpDNS(this,"172280"){
-            @Override
-            public String getIpByHost(String hostName) {
-                return super.getIpByHost(hostName);
-//                return "120.25.147.21";
-            }
-        });
+        AliHttpDNS httpDNS = new AliHttpDNS(this,"118215");
+        HttpCommunicate.setHttpDNS(httpDNS);
         HttpCommunicate.getHttpDNS().setDegradationFilter(new HttpDNS.DegradationFilter() {
             @Override
             public boolean shouldDegradeHttpDNS(String hostName) {
@@ -41,7 +36,7 @@ public class DemoApplication extends Application {
             }
         });
 
-        HttpCommunicate.getHttpDNS().setPreResolveHosts(Arrays.asList("s.feicuibaba.com"));
+        HttpCommunicate.getHttpDNS().setPreResolveHosts("s.feicuibaba.com");
 
         try {
 //            HttpCommunicate.setCommUrl(new URL("http://192.168.1.66:8080"));

@@ -9,7 +9,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by lin on 16/01/2017.
+ * @author lin
+ * @date 16/01/2017.
  */
 
 @Target(ElementType.TYPE)

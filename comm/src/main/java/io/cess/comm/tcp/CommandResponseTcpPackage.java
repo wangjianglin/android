@@ -4,7 +4,8 @@ import io.cess.comm.tcp.annotation.Command;
 import io.cess.util.Bytes;
 
 /**
- * Created by lin on 1/28/16.
+ * @author lin
+ * @date 1/28/16.
  */
 public abstract class CommandResponseTcpPackage extends ResponseTcpPackage implements CommandTcpPackage {
     private int command = 0;

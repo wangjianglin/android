@@ -9,7 +9,8 @@ import java.lang.annotation.Target;
 import io.cess.core.mvvm.BaseView;
 
 /**
- * Created by lin on 09/02/2017.
+ * @author lin
+ * @date 09/02/2017.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

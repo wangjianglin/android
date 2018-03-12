@@ -10,7 +10,8 @@ import io.cess.core.viewpager.indicator.ViewPagerContentIndicator;
 import io.cess.core.viewpager.indicator.ViewPagerIndicator;
 
 /**
- * Created by lin on 09/01/2017.
+ * @author lin
+ * @date 09/01/2017.
  */
 
 public class ViewPagerProcess {

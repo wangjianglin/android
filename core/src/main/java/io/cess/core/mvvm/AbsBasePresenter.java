@@ -4,7 +4,8 @@ import android.content.Context;
 import android.databinding.BaseObservable;
 
 /**
- * Created by lin on 23/11/2016.
+ * @author lin
+ * @date 23/11/2016.
  */
 
 public abstract class AbsBasePresenter<V extends BaseView> extends BaseObservable implements BasePresenter<V> {

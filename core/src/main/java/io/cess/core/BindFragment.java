@@ -15,7 +15,8 @@ import io.cess.core.annotation.BindCls;
 import io.cess.core.annotation.OptionsMenu;
 
 /**
- * Created by lin on 18/01/2017.
+ * @author lin
+ * @date 18/01/2017.
  */
 public class BindFragment <T extends ViewDataBinding> extends AbsFragment{
     private Class<T> cls = null;

@@ -1,10 +1,9 @@
-package io.cess.comm.http.okhttp;
+package io.cess.comm.http.okhttp3;
 
 import io.cess.comm.http.AbstractHttpCommunicateImpl;
 import io.cess.comm.http.HttpCommunicate;
 import io.cess.comm.http.HttpCommunicateDownloadFile;
 import io.cess.comm.http.HttpCommunicateHandler;
-import okhttp3.OkHttpClient;
 
 /**
  * 

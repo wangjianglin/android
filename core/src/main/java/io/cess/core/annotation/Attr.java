@@ -10,7 +10,8 @@ import io.cess.core.AttrType;
 
 
 /**
- * Created by lin on 31/12/2016.
+ * @author lin
+ * @date 31/12/2016.
  */
 
 @Target(ElementType.TYPE)

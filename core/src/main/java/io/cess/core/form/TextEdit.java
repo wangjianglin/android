@@ -22,7 +22,8 @@ import io.cess.core.annotation.Touch;
 import io.cess.core.annotation.ViewById;
 
 /**
- * Created by lin on 20/01/2017.
+ * @author lin
+ * @date 20/01/2017.
  */
 @ResCls(R.class)
 @ResId(id="io_cess_core_form_text_edit")

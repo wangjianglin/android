@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by lin on 21/06/2017.
+ * @author lin
+ * @date 21/06/2017.
  */
 
 public interface HttpClientResponse {

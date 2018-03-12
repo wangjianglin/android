@@ -6,7 +6,8 @@ import android.util.AttributeSet;
 import io.cess.core.ReView;
 
 /**
- * Created by lin on 18/01/2017.
+ * @author lin
+ * @date 18/01/2017.
  */
 
 public class FormView extends ReView {

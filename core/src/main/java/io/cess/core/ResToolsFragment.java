@@ -13,7 +13,8 @@ import io.cess.core.annotation.ToolsBindCls;
 
 
 /**
- * Created by lin on 30/12/2016.
+ * @author lin
+ * @date 30/12/2016.
  */
 
 public class ResToolsFragment<T extends ViewDataBinding> extends ResFragment {

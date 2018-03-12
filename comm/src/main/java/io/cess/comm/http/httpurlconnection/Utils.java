@@ -21,7 +21,8 @@ import javax.net.ssl.X509TrustManager;
 import io.cess.comm.httpdns.HttpDNS;
 
 /**
- * Created by lin on 4/25/16.
+ * @author lin
+ * @date 4/25/16.
  */
 class Utils {
 

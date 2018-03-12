@@ -6,7 +6,8 @@ import io.cess.comm.http.HttpCommunicateDownloadFile;
 import io.cess.comm.http.HttpCommunicateHandler;
 
 /**
- * Created by lin on 1/9/16.
+ * @author lin
+ * @date 1/9/16.
  */
 public class HttpClientCommunicateImpl extends AbstractHttpCommunicateImpl{
 

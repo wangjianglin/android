@@ -15,7 +15,8 @@ import io.cess.core.annotation.OptionsMenu;
 import io.cess.core.annotation.ToolsResId;
 
 /**
- * Created by lin on 23/02/2017.
+ * @author lin
+ * @date 23/02/2017.
  */
 
 public abstract class AbsFragment extends android.support.v4.app.Fragment {

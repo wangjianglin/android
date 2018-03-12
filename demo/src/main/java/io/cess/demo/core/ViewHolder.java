@@ -10,7 +10,8 @@ import io.cess.core.annotation.ResId;
 import io.cess.demo.R;
 
 /**
- * Created by lin on 14/01/2017.
+ * @author lin
+ * @date 14/01/2017.
  */
 @ResId(R.layout.activity_view_holder_item)
 public class ViewHolder extends io.cess.core.ViewHolder {

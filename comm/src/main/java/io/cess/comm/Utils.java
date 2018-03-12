@@ -4,7 +4,8 @@ import android.content.Context;
 import android.os.Build;
 
 /**
- * Created by lin on 4/25/16.
+ * @author lin
+ * @date 4/25/16.
  */
 public class Utils {
 

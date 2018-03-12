@@ -7,7 +7,8 @@ import java.util.Date;
 import io.cess.util.JsonUtil;
 
 /**
- * Created by lin on 14/01/2018.
+ * @author lin
+ * @date 14/01/2018.
  */
 
 public class OAuth2Token {

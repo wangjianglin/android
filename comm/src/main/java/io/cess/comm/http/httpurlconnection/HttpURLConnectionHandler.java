@@ -18,7 +18,8 @@ import io.cess.comm.http.Error;
 
 
 /**
- * Created by lin on 1/8/16.
+ * @author lin
+ * @date 1/8/16.
  */
 class HttpURLConnectionHandler extends AbstractHttpCommunicateHandler<HttpURLConnectionCommunicateImpl> {
 
@@ -33,20 +34,17 @@ class HttpURLConnectionHandler extends AbstractHttpCommunicateHandler<HttpURLCon
         HttpClientResponseImpl response = new HttpClientResponseImpl();
         try {
             runImpl(response, HttpUtils.uri(mImpl, mPack), false, null);
-        }catch (UnsupportedEncodingException e){
         }catch (IOException e) {
-            response.setStatusCode(700);
-            response.setMessage(io.cess.util.Utils.printStackTrace(e));
+            response.setStatusCode(701);
+            response.setMessage("读取网络数据错误");
+            response.setStackTrace(io.cess.util.Utils.printStackTrace(e));
         }catch (Throwable e) {
-            io.cess.comm.http.Error error = new Error(-2,
-                    "未知错误",
-                    e.getMessage(),
-                    io.cess.util.Utils.printStackTrace(e));
-
-            response.setStatusCode(800);
-            response.setMessage(io.cess.util.Utils.printStackTrace(e));
+            response.setStatusCode(700);
+            response.setMessage("未知错误");
+            response.setStackTrace(io.cess.util.Utils.printStackTrace(e));
 
         }
+
         response.setData(buffer);
         listener.response(response);
     }
@@ -84,9 +82,9 @@ class HttpURLConnectionHandler extends AbstractHttpCommunicateHandler<HttpURLCon
         conn.setReadTimeout(this.mParams.getTimeout());
 
 
-        for (Map.Entry<String, String> item : mImpl.defaultHeaders().entrySet()) {
-            conn.setRequestProperty(item.getKey(), item.getValue());
-        }
+//        for (Map.Entry<String, String> item : mImpl.defaultHeaders().entrySet()) {
+//            conn.setRequestProperty(item.getKey(), item.getValue());
+//        }
 
         for (Map.Entry<String, String> item : this.mParams.headers().entrySet()){
             conn.setRequestProperty(item.getKey(), item.getValue());

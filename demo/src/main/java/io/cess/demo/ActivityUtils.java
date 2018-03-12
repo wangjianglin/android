@@ -7,7 +7,8 @@ import android.support.v4.app.FragmentTransaction;
 
 //import static com.google.common.base.Preconditions.checkNotNull;
 /**
- * Created by lin on 12/12/2016.
+ * @author lin
+ * @date 12/12/2016.
  */
 
 public class ActivityUtils {

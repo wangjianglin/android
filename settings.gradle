@@ -1,4 +1,2 @@
-include ':util', ':core', ':comm', ':demo', 'web'
+include ':util', ':core', ':comm', ':demo', ':test', ':test-ui', 'web'
 //':web_plugin', ':web_xwalk', ':web' , 'xwalk_lib'
-//, ':pulltorefresh'
-//

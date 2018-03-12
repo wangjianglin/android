@@ -1,7 +1,8 @@
 package io.cess.core.mvvm;
 
 /**
- * Created by lin on 23/11/2016.
+ * @author lin
+ * @date 23/11/2016.
  */
 
 public interface BasePresenter<V extends BaseView> {

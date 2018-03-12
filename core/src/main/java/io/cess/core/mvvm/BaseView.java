@@ -3,7 +3,8 @@ package io.cess.core.mvvm;
 import android.content.Context;
 
 /**
- * Created by lin on 23/11/2016.
+ * @author lin
+ * @date 23/11/2016.
  */
 
 public interface BaseView<T extends BasePresenter> {

@@ -1,7 +1,8 @@
 package io.cess.core.viewpager.indicator;
 
 /**
- * Created by lin on 08/01/2017.
+ * @author lin
+ * @date 08/01/2017.
  */
 
 public class ViewPagerIndicator {

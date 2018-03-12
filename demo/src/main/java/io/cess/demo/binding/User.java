@@ -6,7 +6,8 @@ import android.databinding.Bindable;
 import io.cess.demo.BR;
 
 /**
- * Created by lin on 7/4/16.
+ * @author lin
+ * @date 7/4/16.
  */
 public class User extends BaseObservable {
 

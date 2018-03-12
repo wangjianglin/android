@@ -12,7 +12,8 @@ import io.cess.core.annotation.ViewById;
 import io.cess.demo.R;
 
 /**
- * Created by lin on 9/6/15.
+ * @author lin
+ * @date 9/6/15.
  */
 @ResId(R.layout.activity_tabbar_tabbar_item)
 public class TabItemView4 extends ResView {

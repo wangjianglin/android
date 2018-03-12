@@ -21,7 +21,8 @@ import io.cess.demo.R;
 import io.cess.util.Utils;
 
 /**
- * Created by lin on 10/30/15.
+ * @author lin
+ * @date 10/30/15.
  */
 public class WeixinHelper {
     private static final String WEIXIN_PKG = "com.tencent.mm";

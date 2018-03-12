@@ -13,7 +13,8 @@ import io.cess.comm.http.HttpMethod;
 import io.cess.comm.http.HttpPackage;
 
 /**
- * Created by lin on 5/1/16.
+ * @author lin
+ * @date 5/1/16.
  */
 public class HttpDNSPlugin extends LinWebPlugin {
 

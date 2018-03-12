@@ -1,35 +1,34 @@
 package io.cess.comm.http.auth;
 
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 
 import io.cess.util.ThreadUtil;
 
 /**
- * Created by lin on 14/01/2018.
+ * @author lin
+ * @date 14/01/2018.
  */
 
 public class OAuth2Authentication implements Authentication {
 
     private class InMoneryOAuth2TokenStore implements OAuth2TokenStore{
 
+        private OAuth2Token mToken;
         @Override
         public void store(OAuth2Token token) {
-
+            this.mToken = token;
         }
 
         @Override
         public OAuth2Token load() {
-            return null;
+            return this.mToken;
         }
     }
 
@@ -149,42 +148,6 @@ public class OAuth2Authentication implements Authentication {
 
             this.setToken(OAuth2Token.loadToken(sb.toString(),type));
         }
-//            JSONObject json = new JSONObject(sb.toString());
-//            String host = json.getString("host");
-//            long ttl = json.getLong("ttl");
-//        var request = URLRequest(url: url!, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 10.0);
-//
-//        request.httpMethod = "POST";
-//
-//        request.setValue("application/x-www-form-urlencoded; charset=utf-8",forHTTPHeaderField:"Content-Type")
-//
-//        request.setValue(base.auth(),forHTTPHeaderField:"Authorization")
-//        request.httpBody = queryString.data(using: String.Encoding.utf8)
-//
-//        let config:URLSessionConfiguration = URLSessionConfiguration.default;
-//            let session = Foundation.URLSession(configuration: config, delegate: nil, delegateQueue: nil)
-//
-//            let semaphore = DispatchSemaphore(value: 0)
-//
-//            session.dataTask(with: request) {[weak self] (data, response, error) in
-//
-//            if error != nil {
-//                self?.token = nil;
-//            }else{
-//                let resp = response as! HTTPURLResponse;
-//                if resp.statusCode == 200 {
-//                    let str = NSString(data: data!, encoding: String.Encoding.utf8.rawValue) as String? ?? ""
-//                    self?.token = OAuth2Token.loadToken(str,type: type);
-//                }else{
-//                    self?.token = nil;
-//                }
-//            }
-//
-//            semaphore.signal();
-//
-//        }.resume();
-//
-//        return semaphore;
     }
 
     private void getToken(OAuth2GrantType type,int timeout) throws IOException {
@@ -198,7 +161,6 @@ public class OAuth2Authentication implements Authentication {
                 queryString,
                 timeout
         );
-//        _ = semaphore.wait(timeout: DispatchTime.init(uptimeNanoseconds: DispatchTime.now().uptimeNanoseconds + 5 * 1000 * 1000 * 1000))
     }
 
     public BaseAuthentication getBase() {

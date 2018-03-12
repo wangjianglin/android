@@ -6,7 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
 /**
- * Created by lin on 10/01/2017.
+ * @author lin
+ * @date 10/01/2017.
  */
 
 public class PtrRecyclerView extends PtrViewBase<RecyclerView>{

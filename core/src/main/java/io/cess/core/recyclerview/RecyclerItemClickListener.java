@@ -1,7 +1,8 @@
 package io.cess.core.recyclerview;
 
 /**
- * Created by lin on 27/12/2016.
+ * @author lin
+ * @date 27/12/2016.
  */
 
 import android.content.Context;

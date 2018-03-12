@@ -6,7 +6,8 @@ import android.util.AttributeSet;
 import io.cess.core.annotation.Click;
 
 /**
- * Created by lin on 18/01/2017.
+ * @author lin
+ * @date 18/01/2017.
  * <io.cess.core.form.Button app:onClick="" />
  */
 

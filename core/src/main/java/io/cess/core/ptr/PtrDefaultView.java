@@ -7,7 +7,8 @@ import io.cess.core.ptr.ui.PtrDefaultFooter;
 import io.cess.core.ptr.ui.PtrDefaultHeader;
 
 /**
- * Created by lin on 10/01/2017.
+ * @author lin
+ * @date 10/01/2017.
  */
 
 public class PtrDefaultView extends PtrView {

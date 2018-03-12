@@ -8,7 +8,8 @@ import io.cess.core.ResView;
 import io.cess.core.annotation.ViewById;
 
 /**
- * Created by lin on 11/11/15.
+ * @author lin
+ * @date 11/11/15.
  */
 public class GroupHeaderView extends ResView {
     public GroupHeaderView(Context context) {

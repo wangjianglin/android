@@ -3,7 +3,8 @@ package io.cess.comm.tcp;
 import io.cess.comm.tcp.annotation.Command;
 
 /**
- * Created by lin on 1/28/16.
+ * @author lin
+ * @date 1/28/16.
  */
 public class CommandPackageManager {
 

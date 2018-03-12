@@ -8,7 +8,8 @@ import io.cess.core.mvvm.BasePresenter;
 import io.cess.core.mvvm.BaseView;
 
 /**
- * Created by lin on 23/11/2016.
+ * @author lin
+ * @date 23/11/2016.
  */
 
 public interface MainContract {

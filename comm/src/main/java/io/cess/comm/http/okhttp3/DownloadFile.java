@@ -1,48 +1,31 @@
-package io.cess.comm.http.okhttp;
-
-//import org.apache.http.HttpEntity;
-//import org.apache.http.HttpResponse;
-//import org.apache.http.HttpStatus;
-//import org.apache.http.client.HttpClient;
-//import org.apache.http.client.methods.HttpGet;
+package io.cess.comm.http.okhttp3;
 
 import android.content.Context;
-import android.os.Environment;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
 
 import io.cess.comm.http.AbstractHttpCommunicateDownloadFile;
-import io.cess.comm.http.Error;
 import io.cess.comm.http.FileInfo;
 import io.cess.comm.http.HttpClientResponseImpl;
-import io.cess.comm.http.HttpCommunicate;
-import io.cess.comm.http.HttpCommunicateDownloadFile;
-import io.cess.comm.http.HttpCommunicateImpl;
-import io.cess.comm.http.HttpMethod;
-import io.cess.comm.http.HttpPackage;
-import io.cess.comm.http.HttpUtils;
-import io.cess.comm.http.ProgressResultListener;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by lin on 9/24/15.
+ * @author lin
+ * @date 9/24/15.
  */
 public class DownloadFile extends AbstractHttpCommunicateDownloadFile {
 
@@ -57,10 +40,6 @@ public class DownloadFile extends AbstractHttpCommunicateDownloadFile {
         Request.Builder requestBuilder = new Request.Builder()
                 .url(url);
 
-
-        //先禁gzip测试
-        //                conn.setDoOutput(true);// 是否输入参数
-        //                conn.setRequestMethod("POST");
         long start = dFile.length();
         if (start > 0) {
             requestBuilder.addHeader("Range", "bytes=" + start + "-" + (start + DOWNLOAD_SIZE - 1));
@@ -69,11 +48,11 @@ public class DownloadFile extends AbstractHttpCommunicateDownloadFile {
             requestBuilder.addHeader("Range", "bytes=" + start + "-" + (start + DOWNLOAD_SIZE - 1));
         }
 
-
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(1200,TimeUnit.SECONDS)
                 .writeTimeout(20,TimeUnit.SECONDS)
+                .dns(new OkHttp3Dns(mImpl.getHttpDNS()))
                 .build();
         Call call = okHttpClient.newCall(requestBuilder.build());
 
@@ -114,8 +93,6 @@ public class DownloadFile extends AbstractHttpCommunicateDownloadFile {
             long total = start;
             while ((count = _in.read(buffer)) != -1) {
                 _out.write(buffer, 0, count);
-
-                //                        System.out.println("1 progress:"+total+"\ttotal:"+length);
                 if (isGZIP) {
                     total += getLen(_zin);
                 } else {
@@ -123,6 +100,7 @@ public class DownloadFile extends AbstractHttpCommunicateDownloadFile {
                 }
                 mListener.progress(total, length);
             }
+            _out.flush();
             _in.close();
         }
         FileInfo fileInfo = new FileInfo(url,dFile,fileName,lastModified,length);
@@ -160,15 +138,6 @@ public class DownloadFile extends AbstractHttpCommunicateDownloadFile {
 
         rStart = Integer.parseInt(rs[0]);
         rEnd = Integer.parseInt(rs[1]);
-    }
-
-    ////attachment; filename="buyers_own.apk"
-    private String parserFileName(String value){
-
-        if(value != null && value.length() > 23){
-            return value.substring(22,value.length()-1);
-        }
-        return null;
     }
 
     private long parserLastModified(String s){
@@ -215,6 +184,7 @@ public class DownloadFile extends AbstractHttpCommunicateDownloadFile {
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(1200,TimeUnit.SECONDS)
                 .writeTimeout(20,TimeUnit.SECONDS)
+                .dns(new OkHttp3Dns(mImpl.getHttpDNS()))
                 .build();
         Call call = okHttpClient.newCall(request);
 

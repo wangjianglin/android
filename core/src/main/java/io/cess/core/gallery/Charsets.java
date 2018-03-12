@@ -3,7 +3,8 @@ package io.cess.core.gallery;
 import java.nio.charset.Charset;
 
 /**
- * Created by lin on 28/02/2017.
+ * @author lin
+ * @date 28/02/2017.
  */
 
 public class Charsets {

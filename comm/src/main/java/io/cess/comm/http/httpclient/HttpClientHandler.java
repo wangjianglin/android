@@ -51,7 +51,8 @@ import io.cess.comm.http.httpurlconnection.HttpURLConnectionCommunicateImpl;
 
 
 /**
- * Created by lin on 1/11/16.
+ * @author lin
+ * @date 1/11/16.
  */
 public class HttpClientHandler extends AbstractHttpCommunicateHandler<HttpURLConnectionCommunicateImpl> {
 
@@ -143,9 +144,7 @@ public class HttpClientHandler extends AbstractHttpCommunicateHandler<HttpURLCon
     }
 
     private void addHeaders(HttpPackage pack,HttpRequestBase request){
-        for (Map.Entry<String,String> item : mImpl.defaultHeaders().entrySet()){
-            request.addHeader(item.getKey(),item.getValue());
-        }
+
         for (Map.Entry<String,String> item : mParams.headers().entrySet()){
             request.removeHeaders(item.getKey());
             request.addHeader(item.getKey(),item.getValue());

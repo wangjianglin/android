@@ -14,7 +14,8 @@ import io.cess.core.annotation.ToolsBindCls;
 import io.cess.util.Tools;
 
 /**
- * Created by lin on 18/01/2017.
+ * @author lin
+ * @date 18/01/2017.
  */
 public class BindToolsFragment<V extends ViewDataBinding,T extends ViewDataBinding> extends BindFragment<V>{
 

@@ -11,21 +11,11 @@ import io.cess.comm.http.annotation.HttpParamName;
  *
  */
 @HttpPackageMethod(HttpMethod.POST)
-@HttpPackageUrl("/core/comm/test.action")
+@HttpPackageUrl("/comm/test.action")
 public class TestPackage extends HttpPackage<String>{
 
-	
-//	 @Override
-//	public Map<String, Object> getParams() {
-//		Map<String,Object> map = new HashMap<String, Object>();
-//		map.put("data", data);
-//		return map;
-//	}
-
 	@HttpParamName
-	private String data;// { get; set; }
-//     public override IDictionary<string, object> GetParams()
-//     {
+	private String data;
 
 	public String getData() {
 		return data;

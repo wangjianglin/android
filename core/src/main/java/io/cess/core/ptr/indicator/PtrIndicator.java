@@ -4,7 +4,8 @@ import android.content.Intent;
 import android.graphics.PointF;
 
 /**
- * Created by lin on 08/01/2017.
+ * @author lin
+ * @date 08/01/2017.
  */
 
 public class PtrIndicator {

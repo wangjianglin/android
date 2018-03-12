@@ -5,7 +5,8 @@ import com.android.volley.Response;
 import java.util.Map;
 
 /**
- * Created by lin on 28/06/2017.
+ * @author lin
+ * @date 28/06/2017.
  */
 
 public interface HttpCommunicateHandler<T extends HttpCommunicateImpl> extends Aboutable {

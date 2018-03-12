@@ -1,7 +1,8 @@
 package io.cess.comm.http;
 
 /**
- * Created by lin on 1/9/16.
+ * @author lin
+ * @date 1/9/16.
  */
 
 import android.content.Context;
@@ -61,7 +62,7 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
     private Handler mHandler = null;
 
-    private Authentication authentication;
+    private Authentication mAuthentication;
 
     protected AbstractHttpCommunicateImpl(String name,HttpCommunicate c) {
         if(c == null){
@@ -261,6 +262,11 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
     protected abstract HttpCommunicateHandler getHandler();
 
     private void processPackHttpHeaders(HttpPackage pack, HttpCommunicate.Params params) {
+
+        for (Map.Entry<String, String> item : this.defaultHeaders().entrySet()) {
+            params.addHeader(item.getKey(), item.getValue());
+        }
+
         if (mSessionInfo.mCookieStore != null) {
             List<HttpCookie> cookies = mSessionInfo.mCookieStore.getCookies();
 //            try {
@@ -379,8 +385,8 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 //                if (pack.getMethod() != HttpMethod.POST && pack.isMultipart()) {
 //                    throw new RuntimeException("Multipart必须采用post请求！");
 //                }
-                if(authentication != null){
-                    params.addHeader("Authorization",authentication.auth());
+                if(mAuthentication != null){
+                    params.addHeader("Authorization",mAuthentication.auth());
                 }
 
                 handler.setPackage(pack);
@@ -743,7 +749,7 @@ public abstract class AbstractHttpCommunicateImpl implements HttpCommunicateImpl
 
     @Override
     public void setAuthentication(Authentication authentication) {
-        this.authentication = authentication;
+        this.mAuthentication = authentication;
     }
 
     @Override

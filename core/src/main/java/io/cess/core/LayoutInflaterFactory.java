@@ -22,7 +22,8 @@ import io.cess.core.tabbar.TabbarFactory2;
 import io.cess.core.tabbar.TabbarItemFactory2;
 
 /**
- * Created by lin on 30/12/2016.
+ * @author lin
+ * @date 30/12/2016.
  */
 
 public class LayoutInflaterFactory {

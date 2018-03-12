@@ -5,7 +5,8 @@ import android.util.AttributeSet;
 import android.widget.GridView;
 
 /**
- * Created by lin on 16/10/2017.
+ * @author lin
+ * @date 16/10/2017.
  *
  * 实现  GridView 中自动布局
  */

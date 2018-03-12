@@ -7,7 +7,8 @@ import java.util.List;
 
 
 /**
- * Created by lin on 2/23/16.
+ * @author lin
+ * @date 2/23/16.
  */
 public class NormalHttpRequestHandle  extends AbstractHttpRequestHandle{
 

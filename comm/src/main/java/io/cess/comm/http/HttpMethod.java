@@ -1,5 +1,8 @@
 package io.cess.comm.http;
 
+/**
+ * http 请求方法
+ */
 public enum HttpMethod {
 	//GET,POST,PUT,HEAD,DELETE;
 	GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS, TRACE;

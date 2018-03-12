@@ -11,7 +11,8 @@ import io.cess.core.ptr.indicator.PtrIndicator;
 import static io.cess.core.ptr.PtrView.*;
 
 /**
- * Created by lin on 09/01/2017.
+ * @author lin
+ * @date 09/01/2017.
  */
 
 public class PtrProcess {

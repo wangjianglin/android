@@ -8,7 +8,8 @@ import java.util.Map;
 import io.cess.comm.httpdns.HttpDNS;
 
 /**
- * Created by lin on 24/06/2017.
+ * @author lin
+ * @date 24/06/2017.
  */
 
 public abstract class AbstractHttpCommunicateHandler<T extends HttpCommunicateImpl> implements HttpCommunicateHandler<T> {

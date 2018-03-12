@@ -8,7 +8,8 @@ import io.cess.core.LayoutInflaterFactory;
 import io.cess.core.TabBar;
 
 /**
- * Created by lin on 30/12/2016.
+ * @author lin
+ * @date 30/12/2016.
  */
 
 public class TabbarFactory2 extends LayoutInflaterFactory.AbsFactory2 {

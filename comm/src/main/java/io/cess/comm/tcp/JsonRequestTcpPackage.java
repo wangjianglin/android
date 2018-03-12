@@ -5,7 +5,8 @@ import io.cess.comm.tcp.annotation.RespType;
 import java.util.Map;
 
 /**
- * Created by lin on 1/28/16.
+ * @author lin
+ * @date 1/28/16.
  */
 @RespType(JsonResponseTcpPackage.class)
 public class JsonRequestTcpPackage extends RequestTcpPackage implements JsonTcpPackage {

@@ -10,7 +10,8 @@ import java.lang.reflect.Field;
 import io.cess.core.ResView;
 
 /**
- * Created by lin on 7/6/16.
+ * @author lin
+ * @date 7/6/16.
  */
 //public class ViewModelProcessor implements FieldProcessor,ClassProcessor{
 //    @Override

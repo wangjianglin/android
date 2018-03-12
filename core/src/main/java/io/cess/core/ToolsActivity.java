@@ -11,7 +11,8 @@
 //
 //
 ///**
-// * Created by lin on 15/01/2017.
+// * @author lin
+// * @date 15/01/2017.
 // */
 //
 //public class ToolsActivity extends ViewActivity {

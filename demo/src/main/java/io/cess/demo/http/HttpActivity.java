@@ -64,11 +64,11 @@ public class HttpActivity extends ViewActivity {
     @Click(R.id.activity_http_button1)
     private void c1(){
 
-//        ExceptionPackage pack = new ExceptionPackage();
+        ExceptionPackage pack = new ExceptionPackage();
 //        pack.setWarning(true);
-        AuthTestPackage pack = new AuthTestPackage();
+//        AuthTestPackage pack = new AuthTestPackage();
 
-        pack.setData("测试数据！");
+//        pack.setData("测试数据！");
 
 //        ExceptionPackage pack = new ExceptionPackage();
 
@@ -87,6 +87,7 @@ public class HttpActivity extends ViewActivity {
 
         try {
             impl.setCommUrl(new URL("https://s.feicuibaba.com"));
+//            impl.setCommUrl(new URL("http://192.168.1.66:5555"));
 //            HttpCommunicate.setCommUrl(new URL("http://192.168.0.100:8080/fcbb_b2b2c"));
 //            HttpCommunicate.setCommUrl(new URL("http://192.168.1.66:8080/fcbb_b2b2c"));
 //            HttpCommunicate. setCommUrl(new URL("http://120.76.68.177/"));
@@ -136,13 +137,9 @@ public class HttpActivity extends ViewActivity {
         impl.setDebug(true);
         impl.setMainThread(true);
 
-        impl.setHttpDNS(new AliHttpDNS(this,"172280"){
-//            @Override
-//            public String getIpByHost(String hostName) {
-////                return super.getIpByHost(hostName);
-//                return "120.76.68.177";
-//            }
-        });
+        if(impl.getHttpDNS() == null) {
+            impl.setHttpDNS(new AliHttpDNS(this, "172280"));
+        }
 
         try {
             impl.setCommUrl(new URL("https://s.feicuibaba.com"));

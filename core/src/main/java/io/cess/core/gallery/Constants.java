@@ -1,7 +1,8 @@
 package io.cess.core.gallery;
 
 /**
- * Created by lin on 07/03/2017.
+ * @author lin
+ * @date 07/03/2017.
  */
 
 public class Constants {

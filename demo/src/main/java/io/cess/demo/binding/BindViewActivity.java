@@ -8,7 +8,8 @@ import io.cess.core.ViewActivity;
 import io.cess.demo.R;
 
 /**
- * Created by lin on 16/01/2017.
+ * @author lin
+ * @date 16/01/2017.
  */
 
 public class BindViewActivity extends ViewActivity {

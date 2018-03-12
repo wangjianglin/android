@@ -8,7 +8,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 /**
- * Created by lin on 7/7/16.
+ * @author lin
+ * @date 7/7/16.
  */
 public class HandlersProcessor  implements ClassProcessor{
 

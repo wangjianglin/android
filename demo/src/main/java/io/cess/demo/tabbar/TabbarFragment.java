@@ -18,7 +18,8 @@ import io.cess.demo.R;
 import io.cess.demo.plugin.LinWeixinPlugin;
 
 /**
- * Created by lin on 28/12/2016.
+ * @author lin
+ * @date 28/12/2016.
  */
 
 @ResId(R.layout.activity_tabbar_frag)

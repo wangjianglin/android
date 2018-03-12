@@ -6,7 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by lin on 1/25/16.
+ * @author lin
+ * @date 1/25/16.
  */
 
 @Target(value = { ElementType.FIELD })

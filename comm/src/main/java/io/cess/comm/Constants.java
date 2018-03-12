@@ -8,48 +8,35 @@ package io.cess.comm;
  */
 public class Constants {
 
-//	/**
-//	 * 
-//	 */
-//	public static final String CloudResult = "__result__";
-//	
-//	/**
-//	 * 
-//	 */
-//	public static final String  ErrorCode = "exceptionCode";
-	
-	
 	/**
 	 * json数据的参数名
 	 */
 	public static final String HTTP_JSON_PARAM = "__json_param__";
+
 	/**
-	 * 响应数据的类型，默认为html，支持html、json、xml
-	 */
-	//private static final String RESULT = "__result__";
-	
-	/**
-	 * 数据通信协议版本的参数，无此参数，则表示不采用此种通信协议进行通信
-	 */
-	//private static final String VERSION = "__version__";
-	/**
-	 * 客户端请求数据的编码参数方式
+	 * 客户端请求数据的编码参数方式，默认为utf-8
 	 */
 	public static final String HTTP_REQUEST_CODING = "__request_coding__";
 
-	public static final String DEFAULT_CONTENT_CHARSET = "utf-8";
-	
 	/**
-	 * 客户端要求响应数据的编码方式，默认为utf-8
+	 * http请求协议头，值为协议版本，默认为 0.1
 	 */
-	//private static final String RESPONSE_CODING = "__response_coding__";
-
 	public static final String HTTP_COMM_PROTOCOL = "__http_comm_protocol__";
+	/**
+	 * http返回是否带有警告信息
+	 */
 	public static final String HTTP_COMM_WITH_WARNING = "__http_comm_with_warning__";
+	/**
+	 * http返回是否为错误信息
+	 */
+	public static final String HTTP_COMM_WITH_ERROR = "__http_comm_with_error__";
+	/**
+	 * 表示当请求产生错误时，是否返回用于跟踪错误的调试信息
+	 */
 	public static final String HTTP_COMM_PROTOCOL_DEBUG = "__http_comm_protocol_debug__";
-	public static final String HTTP_COMM_PROTOCOL_VERSION = "/__http_comm_protocol__/__version__";
+	/**
+	 * 当前协议版本 0.2
+	 */
 	public static final String HTTP_VERSION = "0.2";
-	
-//	public static final String DEFAULT_LOCATION = "/WEB-INF/content/";
-//	public static final String LOCATION_PARAM = "location";
+
 }

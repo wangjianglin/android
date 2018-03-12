@@ -19,7 +19,8 @@ import io.cess.core.annotation.ResId;
 import io.cess.core.annotation.ViewById;
 
 /**
- * Created by lin on 18/01/2017.
+ * @author lin
+ * @date 18/01/2017.
  */
 @BindingMethods({
         @BindingMethod(type = Switch.class, attribute = "form_row_switch", method = "setSwitch")

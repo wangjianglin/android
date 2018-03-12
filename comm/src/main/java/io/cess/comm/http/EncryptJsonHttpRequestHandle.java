@@ -99,13 +99,6 @@ public class EncryptJsonHttpRequestHandle implements HttpRequestHandle {
         sb.append(",\"sequeueid\":");
         sb.append(HttpUtils.getSequeue());
 
-        //增加版本信息
-//        sb.append(",\"version\":{\"major\":");
-//        sb.append(pack.getVersion().getMajor());
-//        sb.append(",\"minor\":");
-//        sb.append(pack.getVersion().getMinor());
-//        sb.append("}");
-
         //增加参数信息
         sb.append(",\"data\":");
         Map<String, Object> dict = pack.getParams();

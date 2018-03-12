@@ -3,7 +3,8 @@ package io.cess.comm.http.auth;
 import io.cess.util.Base64;
 
 /**
- * Created by lin on 14/01/2018.
+ * @author lin
+ * @date 14/01/2018.
  */
 
 public class BaseAuthentication implements Authentication {

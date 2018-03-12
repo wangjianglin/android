@@ -2,14 +2,13 @@ package io.cess.comm.httpdns;
 
 import android.content.Context;
 
-import java.util.Date;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -19,43 +18,78 @@ import io.cess.util.LocalStorage;
 import io.cess.util.LocalStorageImpl;
 
 /**
- * Created by lin on 4/25/16.
+ * @author lin
+ * @date 4/25/16.
  */
 public abstract class AbstractHttpDNS implements HttpDNS {
 
+    /**
+     * 最大线程数
+     */
     private static final int MAX_THREAD_NUM = 5;
 
-    private HttpDNS.SessionMode sessionMode = SessionMode.Sticky;
+    /**
+     * 如果 http dns 返回有多个 ip，客户用ip的策略
+     */
+    private HttpDNS.SessionMode mSessionMode = SessionMode.Sticky;
 
-    private boolean isExpiredIpAvailable = true;
+    /**
+     * 表示如果ip已经过期，是否还可用,true：表示，ip过期了，必须从服务获取新的ip
+     */
+    private boolean mIsExpiredIpAvailable = true;
 
-    private Lock lock = new ReentrantLock();
+    /**
+     * 同步锁
+     */
+    private Lock mLock = new ReentrantLock();
 
     private class QueryHostTask implements Callable<HostObject> {
-        private String hostName;
-        private int timeout;
+        /**
+         * 主机名
+         */
+        private String mHostName;
+        /**
+         * 超时时间，以毫秒为单位
+         */
+        private int mTimeout;
 //        private boolean isRequestRetried = false;
 
         //timeout以毫秒为单位
         public QueryHostTask(String hostToQuery,int timeout) {
-            this.hostName = hostToQuery;
-            this.timeout = timeout;
+            this.mHostName = hostToQuery;
+            this.mTimeout = timeout;
         }
 
         @Override
         public HostObject call() {
-            HostObject hostObject = fetch(this.hostName,this.timeout);
-            return pushHostObject(hostObject,this.hostName);
+            HostObject hostObject = fetch(this.mHostName,this.mTimeout);
+            return pushHostObject(hostObject,this.mHostName);
         }
 
     }
 
-    private ConcurrentMap<String, HostObject> hostManager = new ConcurrentHashMap<String, HostObject>();
-    //    private static HttpDNS instance = new HttpDNS();
-    private ExecutorService pool = Executors.newFixedThreadPool(MAX_THREAD_NUM);
-    private DegradationFilter degradationFilter = null;
+    /**
+     * http dns 查询的结果缓存
+     */
+    private ConcurrentMap<String, HostObject> mHostManager = new ConcurrentHashMap<String, HostObject>();
+    /**
+     * 线程池
+     */
+    private ExecutorService mPool = new ThreadPoolExecutor(1, MAX_THREAD_NUM,
+            200L, TimeUnit.SECONDS,
+            new LinkedBlockingQueue<Runnable>(),
+            new ThreadPoolExecutor.CallerRunsPolicy());
 
+    /**
+     * http dns 降级策略
+     */
+    private DegradationFilter mDegradationFilter = null;
+
+    /**
+     * http dsn 存储，实现当app退出第二次进入时，仍可以使用上次的结果，提高app打开时的响应速度
+     */
     private LocalStorageImpl mHttpDnsStoreage = null;
+
     public AbstractHttpDNS(Context context) {
         LocalStorage.init(context);
         if(context == null) {
@@ -65,14 +99,19 @@ public abstract class AbstractHttpDNS implements HttpDNS {
 
     // 是否允许过期的IP返回
     public void setExpiredIpAvailable(boolean flag) {
-        isExpiredIpAvailable = flag;
+        mIsExpiredIpAvailable = flag;
     }
 
     public boolean isExpiredIpAvailable() {
-        return isExpiredIpAvailable;
+        return mIsExpiredIpAvailable;
     }
 
-    public void setPreResolveHosts(final List<String> hosts){
+    /**
+     * 预加载
+     * @param hosts
+     */
+    @Override
+    public void setPreResolveHosts(final String ... hosts){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -83,8 +122,20 @@ public abstract class AbstractHttpDNS implements HttpDNS {
         }).start();
     }
 
+    /**
+     *
+     * @param hostName
+     * @param timeout
+     * @return
+     */
     protected abstract HostObject fetch(String hostName,int timeout);
 
+    /**
+     *
+     * @param hostObject
+     * @param hostName
+     * @return
+     */
     private HostObject pushHostObject(HostObject hostObject,String hostName){
 
         if(hostObject == null){
@@ -94,10 +145,10 @@ public abstract class AbstractHttpDNS implements HttpDNS {
         if(hostObject.getTtl() <= 0){
             hostObject.setTtl(120);
         }
-        hostObject.setSessionMode(sessionMode);
-        hostObject.status(hostManager.get(hostName));
+        hostObject.setSessionMode(mSessionMode);
+        hostObject.status(mHostManager.get(hostName));
         hostObject.setQueryTime(System.currentTimeMillis() / 1000);
-        hostManager.put(hostName, hostObject);
+        mHostManager.put(hostName, hostObject);
         if(mHttpDnsStoreage != null) {
             mHttpDnsStoreage.setItem(hostName, JsonUtil.serialize(hostObject));
         }
@@ -117,10 +168,10 @@ public abstract class AbstractHttpDNS implements HttpDNS {
             hostObject = JsonUtil.deserialize(hostObjectStr,HostObject.class);
         }catch (Throwable e){}
 
-        Future<HostObject> future = pool.submit(new QueryHostTask(hostName, timeout));
+        Future<HostObject> future = mPool.submit(new QueryHostTask(hostName, timeout));
 
         if(hostObject != null){
-            hostManager.put(hostName, hostObject);
+            mHostManager.put(hostName, hostObject);
             if(System.currentTimeMillis() / 1000 - hostObject.getQueryTime() > 86400) {
                 if(mHttpDnsStoreage != null) {
                     mHttpDnsStoreage.remove(hostName);
@@ -142,15 +193,15 @@ public abstract class AbstractHttpDNS implements HttpDNS {
     }
 
     private String getIpByHost(String hostName,int timeout) {
-        if (degradationFilter != null) {
-            if (degradationFilter.shouldDegradeHttpDNS(hostName)) {
+        if (mDegradationFilter != null) {
+            if (mDegradationFilter.shouldDegradeHttpDNS(hostName)) {
                 return null;
             }
         }
-        HostObject host = hostManager.get(hostName);
+        HostObject host = mHostManager.get(hostName);
         if (host == null || (host.isExpired() && !isExpiredIpAvailable())) {
-            lock.lock();
-            host = hostManager.get(hostName);
+            mLock.lock();
+            host = mHostManager.get(hostName);
             if (host == null || (host.isExpired() && !isExpiredIpAvailable())) {
                 fetchWithCache(hostName, timeout);
 //                Future<HostObject> future = pool.submit(new QueryHostTask(hostName, timeout));
@@ -161,302 +212,31 @@ public abstract class AbstractHttpDNS implements HttpDNS {
 //                }
 //                pushHostObject(hostObject, hostName);
             }
-            lock.unlock();
+            mLock.unlock();
         }
 
-        host = hostManager.get(hostName);
+        host = mHostManager.get(hostName);
         if(host == null){
             return null;
         }else if (host.isExpired()) {
             // 同步返回，异步更新
             host.setQueryTime(System.currentTimeMillis()/1000);
-            pool.submit(new QueryHostTask(hostName,20000));
+            mPool.submit(new QueryHostTask(hostName,20000));
             return host.getIp();
         }
         return host.getIp();
     }
 
     public void setDegradationFilter(DegradationFilter filter) {
-        degradationFilter = filter;
+        mDegradationFilter = filter;
     }
 
     public SessionMode getSessionMode() {
-        return sessionMode;
+        return mSessionMode;
     }
 
+    @Override
     public void setSessionMode(SessionMode sessionMode) {
-        this.sessionMode = sessionMode;
+        this.mSessionMode = sessionMode;
     }
 }
-
-
-//
-//package alibaba.httpdns_api_demo;
-//
-//        import android.util.Log;
-//
-//        import org.json.JSONArray;
-//        import org.json.JSONObject;
-//
-//        import java.io.BufferedReader;
-//        import java.io.InputStream;
-//        import java.io.InputStreamReader;
-//        import java.net.HttpURLConnection;
-//        import java.net.URL;
-//        import java.util.concurrent.Callable;
-//        import java.util.concurrent.ConcurrentHashMap;
-//        import java.util.concurrent.ConcurrentMap;
-//        import java.util.concurrent.ExecutorService;
-//        import java.util.concurrent.Executors;
-//        import java.util.concurrent.Future;
-//
-//public class HttpDNS {
-//
-//    private static final String SERVER_IP = "203.107.1.1";
-//    private static final String ACCOUNT_ID = "139450";
-//    private static final int MAX_THREAD_NUM = 5;
-//    private static final int RESOLVE_TIMEOUT_IN_SEC = 10;
-//    private static final int MAX_HOLD_HOST_NUM = 100;
-//    private static final int EMPTY_RESULT_HOST_TTL = 30;
-//
-//    private boolean isExpiredIpAvailable = false;
-//
-//    public static class HttpDNSLog {
-//
-//        private static final String TAG = "HttpDNS";
-//        private static boolean enableLog;
-//
-//        /**
-//         * 打开log观察调试信息
-//         */
-//        public static void enableLog(boolean enable) {
-//            enableLog = enable;
-//        }
-//
-//        /**
-//         * @return if log is enabled, return true, else false.
-//         */
-//        public static boolean isLogEnabled() {
-//            return enableLog;
-//        }
-//
-//        /**
-//         * verbose级别log
-//         *
-//         * @param msg message to print out.
-//         */
-//        protected static void logV(String msg) {
-//            if (enableLog) {
-//                Log.v(TAG, msg);
-//            }
-//        }
-//
-//        /**
-//         *
-//         * @param msg message to print out.
-//         */
-//        protected static void logD(String msg) {
-//            if (enableLog) {
-//                Log.d(TAG, msg);
-//            }
-//        }
-//
-//        /**
-//         * info级别log
-//         *
-//         * @param msg message to print out.
-//         */
-//        protected static void logI(String msg) {
-//            if (enableLog) {
-//                Log.i(TAG, msg);
-//            }
-//        }
-//
-//        /**
-//         * warning级别log
-//         *
-//         * @param msg message to print out.
-//         */
-//        protected static void logW(String msg) {
-//            if (enableLog) {
-//                Log.w(TAG, msg);
-//            }
-//        }
-//
-//        /**
-//         * error级别log
-//         *
-//         * @param msg message to print out.
-//         */
-//        protected static void logE(String msg) {
-//            if (enableLog) {
-//                Log.e(TAG, msg);
-//            }
-//        }
-//    }
-//
-//    class HostObject {
-//
-//        @Override
-//        public String toString() {
-//            return "HostObject [hostName=" + hostName + ", ip=" + ip + ", ttl=" + ttl + ", queryTime="
-//                    + queryTime + "]";
-//        }
-//
-//        private String hostName;
-//        private String ip;
-//        private long ttl;
-//        private long queryTime;
-//
-//        public boolean isExpired() {
-//            return getQueryTime() + ttl < System.currentTimeMillis() / 1000;
-//        }
-//
-//        public String getIp() {
-//            return ip;
-//        }
-//
-//        public void setIp(String ip) {
-//            this.ip = ip;
-//        }
-//
-//        public void setHostName(String hostName) {
-//            this.hostName = hostName;
-//        }
-//
-//        public String getHostName() {
-//            return hostName;
-//        }
-//
-//        public long getTtl() {
-//            return ttl;
-//        }
-//
-//        public void setTtl(long ttl) {
-//            this.ttl = ttl;
-//        }
-//
-//        public long getQueryTime() {
-//            return queryTime;
-//        }
-//
-//        public void setQueryTime(long queryTime) {
-//            this.queryTime = queryTime;
-//        }
-//    }
-//
-//    class QueryHostTask implements Callable<String> {
-//        private String hostName;
-//        private boolean isRequestRetried = false;
-//
-//        public QueryHostTask(String hostToQuery) {
-//            this.hostName = hostToQuery;
-//        }
-//
-//        @Override
-//        public String call() {
-//            String resolveUrl = "http://" + SERVER_IP + "/" + ACCOUNT_ID + "/d?host=" + hostName;
-//            HttpDNSLog.logD("[QueryHostTask.call] - buildUrl: " + resolveUrl);
-//            try {
-//                HttpURLConnection conn = (HttpURLConnection) new URL(resolveUrl).openConnection();
-//                conn.setConnectTimeout(RESOLVE_TIMEOUT_IN_SEC * 1000);
-//                conn.setReadTimeout(RESOLVE_TIMEOUT_IN_SEC * 1000);
-//                if (conn.getResponseCode() != 200) {
-//                    HttpDNSLog.logW("[QueryHostTask.call] - response code: " + conn.getResponseCode());
-//                } else {
-//                    InputStream in = conn.getInputStream();
-//                    BufferedReader streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-//                    StringBuilder sb = new StringBuilder();
-//                    String line;
-//                    while ((line = streamReader.readLine()) != null) {
-//                        sb.append(line);
-//                    }
-//                    JSONObject json = new JSONObject(sb.toString());
-//                    String host = json.getString("host");
-//                    long ttl = json.getLong("ttl");
-//                    JSONArray ips = json.getJSONArray("ips");
-//                    if (host != null) {
-//                        if (ttl == 0) {
-//                            // 如果有结果返回，但是ip列表为空，ttl也为空，那默认没有ip就是解析结果，并设置ttl为一个较长的时间
-//                            // 避免一直请求同一个ip冲击sever
-//                            ttl = EMPTY_RESULT_HOST_TTL;
-//                        }
-//                        HostObject hostObject = new HostObject();
-//                        String ip = (ips == null) ? null : ips.getString(0);
-//                        HttpDNSLog.logD("[QueryHostTask.call] - resolve host:" + host + " ip:" + ip + " ttl:" + ttl);
-//                        hostObject.setHostName(host);
-//                        hostObject.setTtl(ttl);
-//                        hostObject.setIp(ip);
-//                        hostObject.setQueryTime(System.currentTimeMillis() / 1000);
-//                        if (hostManager.size() < MAX_HOLD_HOST_NUM) {
-//                            hostManager.put(hostName, hostObject);
-//                        }
-//                        return ip;
-//                    }
-//                }
-//            } catch (Exception e) {
-//                if (HttpDNSLog.isLogEnabled()) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            if (!isRequestRetried) {
-//                isRequestRetried = true;
-//                return call();
-//            }
-//            return null;
-//        }
-//    }
-//
-//    private ConcurrentMap<String, HostObject> hostManager = new ConcurrentHashMap<String, HostObject>();
-//    private static HttpDNS instance = new HttpDNS();
-//    private ExecutorService pool = Executors.newFixedThreadPool(MAX_THREAD_NUM);
-//    private DegradationFilter degradationFilter = null;
-//
-//    private HttpDNS() {
-//    }
-//
-//    public static HttpDNS getInstance() {
-//        return instance;
-//    }
-//
-//    // 是否允许过期的IP返回
-//    public void setExpiredIpAvailable(boolean flag) {
-//        isExpiredIpAvailable = flag;
-//    }
-//
-//    public boolean isExpiredIpAvailable() {
-//        return isExpiredIpAvailable;
-//    }
-//
-//    public String getIpByHost(String hostName) {
-//        if (degradationFilter != null) {
-//            if (degradationFilter.shouldDegradeHttpDNS(hostName)) {
-//                return null;
-//            }
-//        }
-//        HostObject host = hostManager.get(hostName);
-//        if (host == null || (host.isExpired() && !isExpiredIpAvailable())) {
-//            HttpDNSLog.logD("[getIpByHost] - fetch result from network, host: " + hostName);
-//            Future<String> future = pool.submit(new QueryHostTask(hostName));
-//            try {
-//                return future.get();
-//            } catch (Exception e) {
-//                if (HttpDNSLog.isLogEnabled()) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            return null;
-//        } else if (host.isExpired()) {
-//            // 同步返回，异步更新
-//            HttpDNSLog.logD("[getIpByHost] - fetch result from cache, host: " + hostName);
-//            pool.submit(new QueryHostTask(hostName));
-//            return host.getIp();
-//        }
-//        HttpDNSLog.logD("[getIpByHost] - fetch result from cache, host: " + hostName);
-//        return host.getIp();
-//    }
-//
-//    public void setDegradationFilter(DegradationFilter filter) {
-//        degradationFilter = filter;
-//    }
-//}

@@ -6,17 +6,36 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by lin on 21/06/2017.
+ * @author lin
+ * @date 21/06/2017.
  */
 
 public class HttpClientResponseImpl implements HttpClientResponse {
 
+    /**
+     * http 响应状态
+     */
     private int statusCode;
+    /**
+     * http 响应头
+     */
     private Map<String,List<String>> mHeaders = new HashMap<String,List<String>>();
+    /**
+     * http 响应数据
+     */
     private byte[] data;
+    /**
+     * 用于显示对用户看的消息
+     */
     private String mMessage;
 
+    /**
+     * 用于跟踪错误的堆栈信息
+     */
+    private String mStackTrace;
+
     public void addHeader(String name,String value){
+        name = name.toLowerCase().trim();
         List<String> list = mHeaders.get(name);
         if(list == null){
             list = new ArrayList<>();
@@ -52,6 +71,7 @@ public class HttpClientResponseImpl implements HttpClientResponse {
     }
 
     public String getHeader(String name){
+        name = name.toLowerCase().trim();
         List<String> list = mHeaders.get(name);
         if(list == null || list.isEmpty()){
             return null;
@@ -85,5 +105,13 @@ public class HttpClientResponseImpl implements HttpClientResponse {
 
     public void setMessage(String message) {
         this.mMessage = message;
+    }
+
+    public String getStackTrace() {
+        return mStackTrace;
+    }
+
+    public void setStackTrace(String stackTrace) {
+        this.mStackTrace = stackTrace;
     }
 }

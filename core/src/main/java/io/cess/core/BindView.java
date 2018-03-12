@@ -13,7 +13,8 @@ import java.lang.reflect.Method;
 import io.cess.core.annotation.BindCls;
 
 /**
- * Created by lin on 01/01/2017.
+ * @author lin
+ * @date 01/01/2017.
  */
 
 public abstract class BindView<T extends ViewDataBinding> extends ResView {

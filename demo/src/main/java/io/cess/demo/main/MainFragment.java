@@ -34,7 +34,8 @@ import io.cess.demo.databinding.ActivityMainHeaderBinding;
 import io.cess.demo.databinding.ActivityMainItemBinding;
 
 /**
- * Created by lin on 23/11/2016.
+ * @author lin
+ * @date 23/11/2016.
  */
 @io.cess.core.mvvm.View
 @io.cess.core.mvvm.Presenter(MainPresenter.class)

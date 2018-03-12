@@ -17,7 +17,8 @@ import java.util.Map;
 import io.cess.core.annotation.ResCls;
 
 /**
- * Created by lin on 01/03/2017.
+ * @author lin
+ * @date 01/03/2017.
  */
 
 public class Menus {

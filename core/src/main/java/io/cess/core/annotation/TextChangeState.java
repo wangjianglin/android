@@ -1,7 +1,8 @@
 package io.cess.core.annotation;
 
 /**
- * Created by lin on 07/02/2017.
+ * @author lin
+ * @date 07/02/2017.
  */
 
 public enum  TextChangeState {

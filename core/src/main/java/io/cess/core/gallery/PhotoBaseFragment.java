@@ -26,7 +26,8 @@ import io.cess.core.gallery.utils.*;
 import static android.app.Activity.RESULT_OK;
 
 /**
- * Created by lin on 07/03/2017.
+ * @author lin
+ * @date 07/03/2017.
  */
 
 public abstract class PhotoBaseFragment extends ResFragment implements EasyPermissions.PermissionCallbacks {

@@ -3,7 +3,8 @@ package io.cess.comm.httpdns;
 import java.util.Arrays;
 
 /**
- * Created by lin on 5/5/16.
+ * @author lin
+ * @date 5/5/16.
  */
 public class HostObject {
     private String hostName;
@@ -70,7 +71,9 @@ public class HostObject {
             return;
         }
         this.ips = Arrays.copyOf(ips,ips.length);
-        ipIndex = (int)(Math.random()*ips.length) % ips.length;
+        if(ips.length > 0) {
+            ipIndex = (int) (Math.random() * ips.length) % ips.length;
+        }
     }
 
     public void setHostName(String hostName) {

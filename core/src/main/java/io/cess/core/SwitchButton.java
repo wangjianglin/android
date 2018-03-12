@@ -29,7 +29,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.CompoundButton;
 
 /**
- * Created by lin on 22/02/2017.
+ * @author lin
+ * @date 22/02/2017.
  */
 
 public class SwitchButton extends CompoundButton {

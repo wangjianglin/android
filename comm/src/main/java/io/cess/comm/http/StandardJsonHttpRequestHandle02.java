@@ -105,7 +105,7 @@ public class StandardJsonHttpRequestHandle02 extends AbstractHttpRequestHandle{
 		}catch (UnsupportedEncodingException e){
 			error = new Error(-1801,"",e.getMessage(), Utils.printStackTrace(e));
 		}catch (Throwable e){
-			error = new Error(-1802,"",e.getMessage(), Utils.printStackTrace(e));
+			error = new Error(-1800,"",e.getMessage(), Utils.printStackTrace(e));
 		}
 		listener.fault(error);
 	}
@@ -115,7 +115,9 @@ public class StandardJsonHttpRequestHandle02 extends AbstractHttpRequestHandle{
 	public void response(HttpPackage pack,HttpClientResponse response, ResultListener listener) {
 
 		if (response.getStatusCode() == 200) {
-			if(response.getHeader(Constants.HTTP_COMM_WITH_WARNING) != null) {
+			if(response.getHeader(Constants.HTTP_COMM_WITH_ERROR) != null) {
+				error(pack,response, listener);
+			}else if(response.getHeader(Constants.HTTP_COMM_WITH_WARNING) != null) {
 				resultWithWarning(pack,response, listener);
 			}else{
 				result(pack,response, listener);
@@ -123,7 +125,11 @@ public class StandardJsonHttpRequestHandle02 extends AbstractHttpRequestHandle{
 		}else if(response.getStatusCode() == 600) {
 			error(pack,response, listener);
 		}else{
-			listener.fault(new Error(-1000 - response.getStatusCode(),"","",response.getMessage()));
+			String stackTrace = null;
+			try {
+				stackTrace = new String(response.getData(), HttpUtils.parseCharset(response.getHeader("Content-Type"), "utf-8"));
+			}catch (Throwable e){}
+			listener.fault(new Error(-1000 - response.getStatusCode(),response.getMessage(),"",stackTrace));
 		}
 	}
 
@@ -143,7 +149,7 @@ public class StandardJsonHttpRequestHandle02 extends AbstractHttpRequestHandle{
 		}catch (UnsupportedEncodingException e){
 			error = new Error(-1801,"",e.getMessage(), Utils.printStackTrace(e));
 		}catch (Throwable e){
-			error = new Error(-1802,"",e.getMessage(), Utils.printStackTrace(e));
+			error = new Error(-1800,"",e.getMessage(), Utils.printStackTrace(e));
 		}
 		if(error != null){
 			HttpUtils.fireFault(listener, error);
@@ -163,7 +169,7 @@ public class StandardJsonHttpRequestHandle02 extends AbstractHttpRequestHandle{
 		}catch (UnsupportedEncodingException e){
 			error = new Error(-1801,"",e.getMessage(), Utils.printStackTrace(e));
 		}catch (Throwable e){
-			error = new Error(-1802,"",e.getMessage(), Utils.printStackTrace(e));
+			error = new Error(-1800,"",e.getMessage(), Utils.printStackTrace(e));
 		}
 		if(error != null){
 			HttpUtils.fireFault(listener, error);

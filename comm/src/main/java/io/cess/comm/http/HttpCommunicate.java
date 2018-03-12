@@ -12,7 +12,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import io.cess.comm.http.httpclient.HttpClientCommunicateImpl;
 import io.cess.comm.http.httpurlconnection.HttpURLConnectionCommunicateImpl;
-import io.cess.comm.http.okhttp.OkHttp3CommunicateImpl;
+import io.cess.comm.http.okhttp3.OkHttp3CommunicateImpl;
 import io.cess.comm.http.volley.AndroidVolleyCommunicateImpl;
 import io.cess.comm.httpdns.HttpDNS;
 
@@ -79,10 +79,10 @@ public class HttpCommunicate {
 	}
 
 
-	private static HttpCommunicateType type = HttpCommunicateType.OkHttp3;
+	private static HttpCommunicateType mType = HttpCommunicateType.OkHttp3;
 
 	public static void setType(HttpCommunicateType type){
-		HttpCommunicate.type = type;
+		mType = type;
 	}
 
 	private HttpCommunicate(){}
@@ -138,7 +138,7 @@ public class HttpCommunicate {
 	private static Map<String,WeakReference<HttpCommunicateImpl>> mImpls = new HashMap<String, WeakReference<HttpCommunicateImpl>>();
 
 	public static HttpCommunicateImpl get(String name) {
-		return get(name,type);
+		return get(name,mType);
 	}
 
 	public static HttpCommunicateImpl get(String name,HttpCommunicateType type) {
@@ -203,7 +203,7 @@ public class HttpCommunicate {
 		if(mGlobalImpl != null){
 			return mGlobalImpl;
 		}
-		mGlobalImpl = get("global",type);
+		mGlobalImpl = get("global",mType);
 		return mGlobalImpl;
 	}
 

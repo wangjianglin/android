@@ -11,7 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by lin on 1/28/16.
+ * @author lin
+ * @date 1/28/16.
  */
 class JsonPackageImpl {
     private String path = "/";

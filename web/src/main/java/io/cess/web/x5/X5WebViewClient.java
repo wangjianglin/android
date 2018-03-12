@@ -4,7 +4,8 @@ import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
 
 /**
- * Created by lin on 05/02/2017.
+ * @author lin
+ * @date 05/02/2017.
  */
 
 public class X5WebViewClient extends WebViewClient {

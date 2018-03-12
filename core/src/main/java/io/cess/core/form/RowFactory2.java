@@ -7,7 +7,8 @@ import android.view.View;
 import io.cess.core.LayoutInflaterFactory;
 
 /**
- * Created by lin on 19/01/2017.
+ * @author lin
+ * @date 19/01/2017.
  */
 
 public class RowFactory2 extends LayoutInflaterFactory.AbsFactory2 {

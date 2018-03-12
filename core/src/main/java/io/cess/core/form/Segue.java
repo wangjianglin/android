@@ -11,7 +11,8 @@ import io.cess.core.R;
 import io.cess.core.annotation.Click;
 
 /**
- * Created by lin on 18/01/2017.
+ * @author lin
+ * @date 18/01/2017.
  */
 
 public class Segue extends Row {

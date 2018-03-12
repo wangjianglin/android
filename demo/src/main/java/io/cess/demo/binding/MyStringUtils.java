@@ -4,7 +4,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by lin on 7/4/16.
+ * @author lin
+ * @date 7/4/16.
  */
 public class MyStringUtils {
     private static Pattern sWordPattern = Pattern.compile("\\w+");

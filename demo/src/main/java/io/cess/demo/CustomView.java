@@ -10,7 +10,8 @@ import io.cess.core.annotation.ResId;
 import io.cess.core.annotation.ViewById;
 
 /**
- * Created by lin on 7/8/16.
+ * @author lin
+ * @date 7/8/16.
  */
 @ResCls(R.class)
 @ResId(R.layout.custome_view)

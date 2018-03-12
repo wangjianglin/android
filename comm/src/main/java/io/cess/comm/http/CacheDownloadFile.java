@@ -11,7 +11,8 @@ import java.util.Date;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * Created by lin on 2/15/16.
+ * @author lin
+ * @date 2/15/16.
  */
 public class CacheDownloadFile {
 

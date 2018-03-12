@@ -8,7 +8,8 @@ import io.cess.core.Crash;
 import io.cess.core.Utils;
 
 /**
- * Created by lin on 16/06/2017.
+ * @author lin
+ * @date 16/06/2017.
  */
 
 public class Util {

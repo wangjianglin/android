@@ -8,7 +8,8 @@ import io.cess.comm.http.HttpCommunicate;
 import io.cess.core.log.LogUploadPackage;
 
 /**
- * Created by lin on 9/25/15.
+ * @author lin
+ * @date 9/25/15.
  */
 public class LogTest extends AndroidTestCase {
 

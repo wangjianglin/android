@@ -6,7 +6,8 @@ import android.databinding.ViewDataBinding;
 import android.view.View;
 
 /**
- * Created by lin on 7/6/16.
+ * @author lin
+ * @date 7/6/16.
  */
 //public interface AnnotRes {
 //

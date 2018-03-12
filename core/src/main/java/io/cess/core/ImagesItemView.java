@@ -20,7 +20,8 @@ import io.cess.core.gallery.UILImageLoader;
 import io.cess.core.gallery.model.PhotoInfo;
 
 /**
- * Created by lin on 03/03/2017.
+ * @author lin
+ * @date 03/03/2017.
  */
 @ResCls(R.class)
 @ResId(id="io_cess_core_images_item")

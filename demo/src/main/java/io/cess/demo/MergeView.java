@@ -6,7 +6,8 @@ import android.util.AttributeSet;
 import io.cess.core.annotation.ResId;
 
 /**
- * Created by lin on 9/6/15.
+ * @author lin
+ * @date 9/6/15.
  */
 @ResId(R.layout.activity_merge_view)
 public class MergeView extends io.cess.core.ResView {

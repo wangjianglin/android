@@ -5,7 +5,8 @@
 //import android.support.v7.widget.RecyclerView;
 //
 ///**
-// * Created by lin on 27/12/2016.
+// * @author lin
+// * @date 27/12/2016.
 // */
 //
 //public class MyAnim extends RecyclerView.ItemAnimator{

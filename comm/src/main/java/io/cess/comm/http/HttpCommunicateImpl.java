@@ -11,7 +11,8 @@ import io.cess.comm.http.auth.Authentication;
 import io.cess.comm.httpdns.HttpDNS;
 
 /**
- * Created by lin on 1/9/16.
+ * @author lin
+ * @date 1/9/16.
  */
 public interface HttpCommunicateImpl {
     void init(Context context);

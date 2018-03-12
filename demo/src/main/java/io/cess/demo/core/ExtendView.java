@@ -10,7 +10,8 @@ import io.cess.core.annotation.ResId;
 import io.cess.demo.R;
 
 /**
- * Created by lin on 14/01/2017.
+ * @author lin
+ * @date 14/01/2017.
  */
 public class ExtendView extends BaseView {
     public ExtendView(Context context, AttributeSet attrs, int defStyle) {

@@ -111,14 +111,18 @@ public class HttpUtils {
 		return urlString;
 	}
 
-	public static Map<String,String> queryMap(Map<String, Object> params) throws UnsupportedEncodingException {
+	public static Map<String,String> queryMap(Map<String, Object> params,boolean encode) throws UnsupportedEncodingException {
     	Map<String,String> map = new HashMap<>();
 
     	if(params == null || params.isEmpty()){
     		return map;
 		}
 		for (Map.Entry<String, Object> item : params.entrySet()) {
-    		map.put(item.getKey(),encode(item.getValue().toString()));
+    		if(encode) {
+				map.put(item.getKey(), encode(item.getValue().toString()));
+			}else{
+    			map.put(item.getKey(),item.getValue().toString());
+			}
 		}
     	return map;
 	}

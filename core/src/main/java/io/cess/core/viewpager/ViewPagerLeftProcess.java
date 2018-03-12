@@ -4,7 +4,8 @@ import io.cess.core.ViewPager;
 import io.cess.core.viewpager.indicator.ViewPagerContentIndicator;
 
 /**
- * Created by lin on 09/01/2017.
+ * @author lin
+ * @date 09/01/2017.
  */
 
 public class ViewPagerLeftProcess extends ViewPagerProcess {

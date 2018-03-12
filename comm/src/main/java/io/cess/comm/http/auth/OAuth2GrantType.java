@@ -1,7 +1,8 @@
 package io.cess.comm.http.auth;
 
 /**
- * Created by lin on 14/01/2018.
+ * @author lin
+ * @date 14/01/2018.
  */
 
 public enum OAuth2GrantType {

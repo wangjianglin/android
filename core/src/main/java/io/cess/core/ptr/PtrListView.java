@@ -5,7 +5,8 @@ import android.util.AttributeSet;
 import android.widget.ListView;
 
 /**
- * Created by lin on 10/01/2017.
+ * @author lin
+ * @date 10/01/2017.
  */
 
 public class PtrListView extends PtrViewBase<ListView> {

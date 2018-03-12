@@ -1,7 +1,8 @@
 package io.cess.comm.http;
 
 /**
- * Created by lin on 2/19/16.
+ * @author lin
+ * @date 2/19/16.
  */
 public class CacheFile {
 

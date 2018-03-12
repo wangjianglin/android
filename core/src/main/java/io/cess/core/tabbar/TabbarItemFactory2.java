@@ -15,7 +15,8 @@ import io.cess.core.ViewHolder;
 
 
 /**
- * Created by lin on 30/12/2016.
+ * @author lin
+ * @date 30/12/2016.
  */
 
 public class TabbarItemFactory2 extends LayoutInflaterFactory.AbsFactory2 {

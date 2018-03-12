@@ -15,7 +15,8 @@
 //import io.cess.core.gallery.model.PhotoInfo;
 //
 ///**
-// * Created by lin on 07/03/2017.
+// * @author lin
+ //* @date 07/03/2017.
 // */
 //
 //public class Utils {

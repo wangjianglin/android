@@ -5,7 +5,8 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 
 /**
- * Created by lin on 28/11/2016.
+ * @author lin
+ * @date 28/11/2016.
  */
 
 public class Data extends BaseObservable {

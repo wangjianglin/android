@@ -20,7 +20,8 @@ import io.cess.core.ptr.indicator.PtrIndicator;
 import io.cess.core.R;
 
 /**
- * Created by lin on 08/01/2017.
+ * @author lin
+ * @date 08/01/2017.
  * @BindingAdapter({"app:ptr_load_more"})
 public static void setOnLoadMoreListener(PtrView view, PtrView.OnLoadMoreListener listener) {
 view.setOnLoadMoreListener(listener);

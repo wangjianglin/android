@@ -11,7 +11,8 @@ import io.cess.comm.http.HttpCommunicateResult;
 import io.cess.comm.http.TestPackage;
 
 /**
- * Created by lin on 09/07/2017.
+ * @author lin
+ * @date 09/07/2017.
  */
 
 public class CommTest {

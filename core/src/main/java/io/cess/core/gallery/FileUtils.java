@@ -24,7 +24,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by lin on 28/02/2017.
+ * @author lin
+ * @date 28/02/2017.
  */
 
 public class FileUtils {

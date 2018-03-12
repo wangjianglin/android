@@ -15,7 +15,8 @@ import io.cess.core.annotation.ResId;
 import io.cess.core.annotation.ViewById;
 
 /**
- * Created by lin on 11/01/2017.
+ * @author lin
+ * @date 11/01/2017.
  */
 
 //加指示器   左、中、右

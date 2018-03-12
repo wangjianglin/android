@@ -13,7 +13,8 @@ import io.cess.comm.http.httpurlconnection.*;
 import io.cess.comm.http.httpurlconnection.DownloadFile;
 
 /**
- * Created by lin on 22/06/2017.
+ * @author lin
+ * @date 22/06/2017.
  */
 
 public class AndroidVolleyCommunicateImpl extends AbstractHttpCommunicateImpl {

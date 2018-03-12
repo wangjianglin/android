@@ -6,7 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * Created by lin on 10/01/2017.
+ * @author lin
+ * @date 10/01/2017.
  */
 
 public abstract class PtrViewBase<T extends View> extends PtrDefaultView {

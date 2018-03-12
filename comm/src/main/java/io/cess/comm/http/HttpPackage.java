@@ -23,31 +23,44 @@ import io.cess.comm.http.annotation.HttpPath;
  *
  */
 public abstract class HttpPackage<T> {
+
 	public static final HttpRequestHandle JSON = new EncryptJsonHttpRequestHandle();
 	public static final HttpRequestHandle STANDARD_JSON = new StandardJsonHttpRequestHandle02();
 	public static final HttpRequestHandle NONE = new NoneHttpRequestHandle();
 	public static final HttpRequestHandle NORMAL = new NormalHttpRequestHandle();
 
 
-    /// <summary>
-    /// 是否启用缓存，默认不启用
-    /// </summary>
-    //[DefaultValue(false)]
-    private boolean mEnableCache;// { get; protected set; }
+    /**
+	 * 是否启用缓存，默认不启用，如果不启用缓存，会在每次请求时会在url后面加上一个时间戳
+     */
+    private boolean mEnableCache;
 	private HttpRequestHandle mRequestHandle = STANDARD_JSON;
 	private boolean mMultipart = false;
 
+	/**
+	 * http 请求方法，默认为 post
+	 */
 	private HttpMethod mMethod = HttpMethod.POST;
+
+	/**
+	 * 返回数据类型，在请求结束后，会把返回来数据反序列化成相关的 Java 类
+	 */
 	private Type mRespType  = String.class;//{ get;protected set; }
 
+	/**
+	 * 请求时的http请求头信息
+	 */
 	private Map<String,String> mHeaders = new HashMap<String, String>();
 
 	private HttpCommParams mCommParams = new HttpCommParams();
     public HttpPackage(){
     	this.init();
     }
-    
-    private void init(){
+
+	/**
+	 * 初始化对象数据
+	 */
+	private void init(){
 		Class<?> cls = this.getClass();
     	HttpPackageUrl urla = cls.getAnnotation(HttpPackageUrl.class);
 
@@ -101,7 +114,13 @@ public abstract class HttpPackage<T> {
     	this.mMethod = method;
     }
 
-    private String mOriginUrl;
+	/**
+	 * 原始url，如：/userinfo/:userId
+	 */
+	private String mOriginUrl;
+	/**
+	 * 经处理后的url,如：/userinfo/234
+	 */
     private String mUrl;
 
     public HttpRequestHandle getRequestHandle() { 
@@ -112,6 +131,10 @@ public abstract class HttpPackage<T> {
 	}
 
 
+	/**
+	 * 处理url
+	 * @param f
+	 */
 	private void processHttpPath(Field f){
 		HttpPath path = f.getAnnotation(HttpPath.class);
 		if(path == null){
@@ -125,11 +148,12 @@ public abstract class HttpPackage<T> {
 		f.setAccessible(true);
 		try {
 			Object pathValue = f.get(this);
-			this.mUrl = this.mUrl.replaceAll(":"+pathName,pathValue != null?pathValue.toString():"");
+			this.mUrl = this.mUrl.replaceAll(":\\s*"+pathName, pathValue != null?pathValue.toString():"");
+			this.mUrl = this.mUrl.replaceAll("{\\s*"+pathName+"\\s*}", pathValue != null?pathValue.toString():"");
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
 		}
 	}
+
 	private void processHttpParams(Map<String,Object> params,Field f){
 		HttpParamName item = f.getAnnotation(HttpParamName.class);
 		if(item == null){
@@ -256,9 +280,11 @@ public abstract class HttpPackage<T> {
 		}
 		return headers;
 	}
+
 	public void addHeader(String name,String value){
 		mHeaders.put(name,value);
 	}
+
 	public Map<String,String> getHeaders(){
 		Map<String,String> r = new HashMap<String,String>();
 		Map<String,String> h = getAnonHeaders();

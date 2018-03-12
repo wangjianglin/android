@@ -1,7 +1,8 @@
 package io.cess.comm.http.httpclient;
 
 /**
- * Created by lin on 1/10/16.
+ * @author lin
+ * @date 1/10/16.
  */
 
 
@@ -38,7 +39,8 @@ import io.cess.comm.http.AbstractHttpCommunicateDownloadFile;
 import io.cess.comm.http.FileInfo;
 
 /**
- * Created by lin on 9/24/15.
+ * @author lin
+ * @date 9/24/15.
  */
 
 class DownloadFile extends AbstractHttpCommunicateDownloadFile {

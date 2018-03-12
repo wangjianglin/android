@@ -8,7 +8,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 /**
- * Created by lin on 28/02/2017.
+ * @author lin
+ * @date 28/02/2017.
  */
 
 public abstract class RecyclingPagerAdapter extends PagerAdapter {

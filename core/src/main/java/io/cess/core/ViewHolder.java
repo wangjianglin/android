@@ -6,7 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * Created by lin on 31/12/2016.
+ * @author lin
+ * @date 31/12/2016.
  */
 
 public abstract class ViewHolder implements AttrsView {

@@ -6,7 +6,8 @@ import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
 /**
- * Created by lin on 23/02/2017.
+ * @author lin
+ * @date 23/02/2017.
  */
 
 public class SectionHeader extends RelativeLayout {

@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by lin on 1/21/16.
+ * @author lin
+ * @date 1/21/16.
  */
 public class ServerCommunicate extends AbstractCommunicate{
 

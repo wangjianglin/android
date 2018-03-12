@@ -25,7 +25,8 @@ import io.cess.comm.httpdns.HttpDNS;
 import io.cess.comm.tcp.Session;
 
 /**
- * Created by lin on 24/06/2017.
+ * @author lin
+ * @date 24/06/2017.
  */
 
 public class AndroidVolleyRequestHandler extends AbstractHttpCommunicateHandler<AndroidVolleyCommunicateImpl> {
@@ -167,9 +168,6 @@ public class AndroidVolleyRequestHandler extends AbstractHttpCommunicateHandler<
                 map.put("Host",mOriginHostname);
             }
             map.put("Cookie",mHandler.mImpl.mSessionInfo.cookie);
-            for (Map.Entry<String, String> item : mHandler.mImpl.defaultHeaders().entrySet()) {
-                map.put(item.getKey(),item.getValue());
-            }
 
             for (Map.Entry<String, String> item : mHandler.mParams.headers().entrySet()){
                 map.put(item.getKey(),item.getValue());

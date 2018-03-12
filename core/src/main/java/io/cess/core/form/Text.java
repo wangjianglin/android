@@ -16,7 +16,8 @@ import io.cess.core.R;
 import io.cess.core.annotation.Click;
 
 /**
- * Created by lin on 18/01/2017.
+ * @author lin
+ * @date 18/01/2017.
  */
 @BindingMethods({
         @BindingMethod(type = Text.class, attribute = "form_row_text_hint", method = "setHint"),

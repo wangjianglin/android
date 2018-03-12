@@ -9,7 +9,8 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
- * Created by lin on 14/01/2018.
+ * @author lin
+ * @date 14/01/2018.
  */
 
 public class ThreadUtil {

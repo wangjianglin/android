@@ -6,7 +6,8 @@ import android.util.AttributeSet;
 import io.cess.core.ResView;
 
 /**
- * Created by lin on 05/01/2017.
+ * @author lin
+ * @date 05/01/2017.
  */
 
 public class NavView extends ResView {

@@ -9,7 +9,8 @@ import android.view.ViewGroup;
 import java.lang.reflect.Constructor;
 
 /**
- * Created by lin on 01/01/2017.
+ * @author lin
+ * @date 01/01/2017.
  */
 
 class ViewHolderFactory2 implements LayoutInflater.Factory2 {

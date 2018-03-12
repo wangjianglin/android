@@ -15,7 +15,8 @@ import io.cess.core.annotation.ViewById;
 import io.cess.demo.R;
 
 /**
- * Created by lin on 30/12/2016.
+ * @author lin
+ * @date 30/12/2016.
  */
 
 @ResId(R.layout.activity_tabbar_tabbar_item)

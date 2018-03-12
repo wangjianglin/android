@@ -1,7 +1,8 @@
 package io.cess.comm.http;
 
 /**
- * Created by lin on 18/05/2017.
+ * @author lin
+ * @date 18/05/2017.
  */
 
 public class HttpCommParams {

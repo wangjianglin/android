@@ -22,7 +22,8 @@ import io.cess.core.annotation.ResId;
 import io.cess.demo.R;
 
 /**
- * Created by lin on 05/01/2017.
+ * @author lin
+ * @date 05/01/2017.
  */
 
 @ResId(R.layout.activity_nav_frag)
